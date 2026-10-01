@@ -40,6 +40,10 @@ lib/
     feedback_provider.dart     # FeedbackNotifier（送信・オフラインキュー管理）
   widgets/
     feedback_form_page.dart    # フィードバック送信フォーム画面
+functions/                     # Cloud Functions テンプレート（各アプリの
+  src/                         # Firebase プロジェクトにコピーしてデプロイする）
+    index.ts
+    feedback-github-issue.ts   # feedback コレクション onCreate → GitHub Issue 自動作成
 ```
 
 ## 機能1: フィードバック機能（バグ報告・改善要望）
@@ -83,19 +87,66 @@ Navigator.push(
 送信に失敗した場合は `SharedPreferences` にローカルキューとして保存され、
 次回 `retryPendingReports()` 呼び出し時（通常はアプリ起動時）に再送信されます。
 
-### GitHub Issue 化（半自動連携）の構想
+## 機能2: GitHub Issue 自動化（Cloud Functions, 半自動連携）
 
-Firestore の `feedback` コレクションを **Cloud Functions の `onCreate` トリガー**で監視し、
-GitHub Issues API（`POST /repos/{owner}/{repo}/issues`）を呼び出すことで、
-アプリから送られたフィードバックを自動的に GitHub Issue 化する連携を想定しています。
+`functions/` に、Firestore の `feedback` コレクションへの書き込みを検知して
+GitHub Issue を自動作成する Cloud Functions のテンプレートを同梱しています。
+各アプリは Firebase プロジェクトが別々（マルチプロジェクト構成）のため、
+**このコードを各アプリの `functions/` にコピーしてデプロイする**運用とします
+（npm パッケージとして配布するほどの規模ではないため、テンプレートコピー方式）。
 
-- `FeedbackType.githubLabel`（`bug` → `bug`、`feature` → `enhancement`、`other` → `feedback`）
-  を Issue の label にマッピング
-- Issue タイトルは `[appName] title`、本文に `description` / `platform` / `appVersion` /
-  `createdAt` を記載
-- 作成した Issue の URL を Firestore 側の `githubIssueUrl` フィールドに書き戻す
-  （`FeedbackReport.githubIssueUrl`）ことで、アプリ側からも対応状況を参照可能にする
-- Cloud Functions 本体の実装は各アプリの Firebase プロジェクト側、または
-  `shared_core/infrastructure` 配下での一元管理を検討中（未実装）
+### 動作
 
-この Cloud Functions 部分は Flutter パッケージ本体の範囲外のため、本リポジトリには含めません。
+1. アプリ側で `feedbackProvider.notifier.setSubmitHandler()` が Firestore の
+   `feedback` コレクションに `FeedbackReport.toJson()` を書き込む
+2. `onFeedbackCreated`（`functions/src/feedback-github-issue.ts`）が onCreate を検知
+3. `FeedbackType` を label にマッピング（`bug`→`bug`, `feature`→`enhancement`,
+   `other`→`feedback`）し、GitHub Issues API で Issue を作成
+4. 作成した Issue の URL を同じ Firestore ドキュメントの `githubIssueUrl` に書き戻し、
+   `status` を `'reviewing'` に更新（アプリ側からも対応状況を参照可能）
+
+### 各アプリへの導入手順
+
+#### Step 1: functions/ にコピー
+
+対象アプリの Firebase Functions プロジェクト（無ければ `firebase init functions` で作成）に、
+本リポジトリの `functions/src/feedback-github-issue.ts` をコピーし、`src/index.ts` から
+export する。
+
+```ts
+// アプリ側 functions/src/index.ts
+export { onFeedbackCreated } from './feedback-github-issue';
+```
+
+#### Step 2: GitHub Issue 作成先リポジトリと PAT を設定
+
+Issue を作成するリポジトリは `GITHUB_OWNER` / `GITHUB_REPO` 環境変数（アプリごとに値が異なる）、
+認証は Secret の `GITHUB_TOKEN` で設定する。PAT は対象リポジトリへの
+**"Issues: Read and write" のみを持つ fine-grained PAT** を推奨（最小権限）。
+
+```bash
+firebase functions:secrets:set GITHUB_TOKEN
+# 環境変数は functions/.env.<project-id> もしくは Secret Manager で管理
+echo "GITHUB_OWNER=zka32101" >> .env.<project-id>
+echo "GITHUB_REPO=kokugo-kore" >> .env.<project-id>
+```
+
+#### Step 3: デプロイ
+
+```bash
+cd functions
+npm install
+npm run build
+npm run deploy
+```
+
+### ローカルでの動作確認
+
+```bash
+cd functions
+npm install
+npm run build   # tsc の型チェック・コンパイルのみ確認可能
+```
+
+実際の GitHub Issue 作成の動作確認は、Firebase Emulator Suite 上で
+`feedback` コレクションにドキュメントを作成して確認する。

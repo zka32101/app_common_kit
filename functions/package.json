@@ -1,0 +1,22 @@
+{
+  "name": "app_common_kit-functions",
+  "description": "app_common_kit: フィードバックの GitHub Issue 自動化 Cloud Functions（各アプリの Firebase プロジェクトにコピーして使うテンプレート）",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "private": true
+}

@@ -1,0 +1,10 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+pubspec.lock
+
+# Node (functions/)
+functions/node_modules/
+functions/lib/
+functions/*.log
