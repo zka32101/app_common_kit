@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../outfit/outfit_models.dart';
 import 'mascot_models.dart';
 import 'standard_character.dart';
 
@@ -18,8 +19,10 @@ class MascotWidget extends StatefulWidget {
     this.stage = MascotStage.lv1,
     this.expression = MascotExpression.normal,
     this.examPhase = ExamPhase.none,
+    this.outfit,
     this.display = MascotDisplay.normal,
     this.size = 160,
+    this.animate = true,
     this.line,
     this.onTap,
   });
@@ -28,8 +31,14 @@ class MascotWidget extends StatefulWidget {
   final MascotStage stage;
   final MascotExpression expression;
   final ExamPhase examPhase;
+
+  /// 着ている衣装。
+  final Outfit? outfit;
   final MascotDisplay display;
   final double size;
+
+  /// false なら動かさない（共有カードの画像化など）。
+  final bool animate;
 
   /// 吹き出しのセリフ。
   final String? line;
@@ -57,7 +66,7 @@ class _MascotWidgetState extends State<MascotWidget> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     if (widget.display == MascotDisplay.hidden) return const SizedBox.shrink();
 
-    final reduce = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reduce = !widget.animate || (MediaQuery.maybeOf(context)?.disableAnimations ?? false);
     if (reduce) {
       if (_c.isAnimating) _c.stop();
     } else if (!_c.isAnimating) {
@@ -83,6 +92,7 @@ class _MascotWidgetState extends State<MascotWidget> with SingleTickerProviderSt
             accent: accent,
             outline: theme.colorScheme.onSurface.withValues(alpha: 0.75),
             examPhase: widget.examPhase,
+            outfit: widget.outfit,
             bob: reduce ? 0 : math.sin(_c.value * math.pi * 2),
           ),
         ),
@@ -92,7 +102,7 @@ class _MascotWidgetState extends State<MascotWidget> with SingleTickerProviderSt
     final line = widget.line;
     return Semantics(
       button: widget.onTap != null,
-      label: '${widget.pack.name} レベル${widget.stage.level}${line == null ? '' : '。$line'}',
+      label: '${widget.pack.name} レベル${widget.stage.level}${widget.outfit == null ? '' : '、${widget.outfit!.name}'}${line == null ? '' : '。$line'}',
       excludeSemantics: true,
       child: ConstrainedBox(
         // タップ領域は 44pt 以上

@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../outfit/outfit_models.dart';
+import '../theme/ukalab_palette.dart';
 import 'mascot_models.dart';
 
 /// 標準キャラ「フラスコの助手」のコード描画。画像ファイルは使わない。
@@ -16,6 +18,7 @@ class StandardCharacterPainter extends CustomPainter {
     required this.accent,
     required this.outline,
     this.examPhase = ExamPhase.none,
+    this.outfit,
     this.bob = 0,
   });
 
@@ -26,6 +29,9 @@ class StandardCharacterPainter extends CustomPainter {
   final Color accent;
   final Color outline;
   final ExamPhase examPhase;
+
+  /// 着ている衣装（資格別の小物・合格記念・試験日・準備完了）。
+  final Outfit? outfit;
 
   /// 上下のゆれ（-1〜1）。動きを減らす設定のときは 0。
   final double bob;
@@ -82,9 +88,13 @@ class StandardCharacterPainter extends CustomPainter {
     if (stage.index >= 2) _goggles(canvas, u);
     if (stage == MascotStage.lv4) _labCap(canvas, u);
     if (stage == MascotStage.lv5) _doctorCap(canvas, u);
-    if (examPhase == ExamPhase.close || examPhase == ExamPhase.eve || examPhase == ExamPhase.today) {
+    if (examPhase == ExamPhase.close ||
+        examPhase == ExamPhase.eve ||
+        examPhase == ExamPhase.today ||
+        outfit?.kind == OutfitKind.examDay) {
       _headband(canvas, u);
     }
+    if (outfit != null) _outfit(canvas, u, outfit!);
     if (expression == MascotExpression.joy) _sparkles(canvas, u);
     canvas.restore();
   }
@@ -195,6 +205,120 @@ class StandardCharacterPainter extends CustomPainter {
     c.drawLine(Offset(63 * u, 25 * u), Offset(70 * u, 30 * u), band..strokeWidth = 2 * u);
   }
 
+  // ---- 衣装 ---------------------------------------------------------------
+
+  void _outfit(Canvas c, double u, Outfit o) {
+    switch (o.kind) {
+      case OutfitKind.regular:
+        _fieldBadge(c, u, o.field);
+      case OutfitKind.passMemorial:
+        _medal(c, u);
+      case OutfitKind.readiness:
+        _readyFlag(c, u);
+      case OutfitKind.examDay:
+        break; // はちまきは上で描く
+    }
+  }
+
+  /// 分野の小物（胸の位置）。公式ロゴ・制服は使わず、一般的な形だけ。
+  void _fieldBadge(Canvas c, double u, UkalabField f) {
+    final cx = 66 * u;
+    final cy = 82 * u;
+    final w = Colors.white;
+    final ink = Paint()
+      ..color = const Color(0xFF1B2430)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2 * u
+      ..strokeCap = StrokeCap.round;
+    final fill = Paint()..color = w;
+    switch (f) {
+      case UkalabField.it: // チップ
+        c.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(cx, cy), width: 9 * u, height: 9 * u), Radius.circular(1.5 * u)), fill);
+        c.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(cx, cy), width: 9 * u, height: 9 * u), Radius.circular(1.5 * u)), ink);
+        for (final d in [-2.5, 0.0, 2.5]) {
+          c.drawLine(Offset(cx + d * u, cy - 4.5 * u), Offset(cx + d * u, cy - 6.5 * u), ink);
+          c.drawLine(Offset(cx + d * u, cy + 4.5 * u), Offset(cx + d * u, cy + 6.5 * u), ink);
+        }
+      case UkalabField.ai: // つながった3つの点
+        final pts = [Offset(cx - 4 * u, cy + 3 * u), Offset(cx + 4 * u, cy + 3 * u), Offset(cx, cy - 4 * u)];
+        c.drawLine(pts[0], pts[1], ink);
+        c.drawLine(pts[1], pts[2], ink);
+        c.drawLine(pts[2], pts[0], ink);
+        for (final p in pts) {
+          c.drawCircle(p, 2.2 * u, fill);
+          c.drawCircle(p, 2.2 * u, ink);
+        }
+      case UkalabField.biz: // 電卓
+        final r = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(cx, cy), width: 9 * u, height: 12 * u), Radius.circular(1.5 * u));
+        c.drawRRect(r, fill);
+        c.drawRRect(r, ink);
+        c.drawRect(Rect.fromLTWH(cx - 3 * u, cy - 4.5 * u, 6 * u, 2.4 * u), Paint()..color = const Color(0xFF3A4452));
+        for (final dx in [-2.5, 0.0, 2.5]) {
+          for (final dy in [0.0, 3.0]) {
+            c.drawCircle(Offset(cx + dx * u, cy + dy * u), 0.7 * u, Paint()..color = const Color(0xFF3A4452));
+          }
+        }
+      case UkalabField.tech: // 安全帽
+        final hat = Path()
+          ..moveTo(cx - 6 * u, cy + 2 * u)
+          ..arcToPoint(Offset(cx + 6 * u, cy + 2 * u), radius: Radius.circular(6 * u))
+          ..close();
+        c.drawPath(hat, Paint()..color = const Color(0xFFF5C400));
+        c.drawPath(hat, ink);
+        c.drawLine(Offset(cx - 7.5 * u, cy + 2 * u), Offset(cx + 7.5 * u, cy + 2 * u), ink..strokeWidth = 1.8 * u);
+      case UkalabField.lang: // ふきだし
+        final b = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(cx, cy), width: 12 * u, height: 8.5 * u), Radius.circular(3 * u));
+        c.drawRRect(b, fill);
+        c.drawRRect(b, ink);
+        c.drawLine(Offset(cx - 2 * u, cy + 4.2 * u), Offset(cx - 4 * u, cy + 7 * u), ink);
+    }
+  }
+
+  void _medal(Canvas c, double u) {
+    final ribbon = Paint()
+      ..color = const Color(0xFFD7282F)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.2 * u
+      ..strokeCap = StrokeCap.round;
+    c.drawLine(Offset(43 * u, 38 * u), Offset(50 * u, 53 * u), ribbon);
+    c.drawLine(Offset(57 * u, 38 * u), Offset(50 * u, 53 * u), ribbon);
+    c.drawCircle(Offset(50 * u, 56 * u), 4.2 * u, Paint()..color = const Color(0xFFF5C400));
+    c.drawCircle(
+      Offset(50 * u, 56 * u),
+      4.2 * u,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1 * u
+        ..color = const Color(0xFF9A7A00),
+    );
+  }
+
+  void _readyFlag(Canvas c, double u) {
+    final pole = Paint()
+      ..color = const Color(0xFF3A4452)
+      ..strokeWidth = 1.6 * u
+      ..strokeCap = StrokeCap.round;
+    c.drawLine(Offset(14 * u, 12 * u), Offset(14 * u, 40 * u), pole);
+    final flag = Path()
+      ..moveTo(14 * u, 12 * u)
+      ..lineTo(32 * u, 16 * u)
+      ..lineTo(14 * u, 22 * u)
+      ..close();
+    c.drawPath(flag, Paint()..color = const Color(0xFF1E8E3E));
+    // ✓
+    c.drawPath(
+      Path()
+        ..moveTo(18 * u, 17 * u)
+        ..lineTo(20 * u, 19 * u)
+        ..lineTo(24 * u, 15.5 * u),
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2 * u
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
   void _sparkles(Canvas c, double u) {
     final p = Paint()
       ..color = const Color(0xFFF5C400)
@@ -213,5 +337,6 @@ class StandardCharacterPainter extends CustomPainter {
       old.accent != accent ||
       old.outline != outline ||
       old.examPhase != examPhase ||
+      old.outfit?.id != outfit?.id ||
       old.bob != bob;
 }
