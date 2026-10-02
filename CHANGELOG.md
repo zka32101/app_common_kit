@@ -10,6 +10,7 @@
 - 会計・経営のライトは warning を #8A6100 に差し替え
 - 共通UI部品（ui_kit）: `QuestionCard`／`ChoiceTile`（idle・selected・correct・incorrect。正誤は✓／✕＋文言）／`ExplanationPanel`（出典つき）／`ProgressRing`／`StreakBadge`／`ResultSummary`／`EmptyState`・`ErrorState`／`UkalabShell`（下部5タブ）
 - 学習コイン（coin）: `CoinService`（獲得 `grant`／購入 `purchase`／装備）、`CoinEvent` 11種、`CoinRules`（数値は差し替え可）、追記専用の `CoinLedger`（残高は台帳の合計。同じ行は統合しても二重にならない）、`CoinStore`（端末内。財布は**アプリごと**）、Riverpod の `coinProvider`、`ShopItem`・`validateShop`。有償・広告視聴での付与は実装しない
+- 推し（mascot）: `CharacterPack`（id・名前・口調・画像ビルダー・分野差し色・署名）、標準キャラ「フラスコの助手」のコード描画（Lv1〜5で装いが重なる／よろこびの表情／試験日が近いとはちまき）、`MascotWidget`（非表示・小さく・動きを減らす設定に対応、吹き出し）、`MasteryModel`（習得度＝網羅率×正答率、段階の境目と係数は差し替え可、次の段階まであと何問）、`MascotDayState`（表情・「おかえり」・試験日の装い）、`MascotLines`（セリフ集）と禁止表現チェック（責める・消える・恋愛依存）
 - テスト: 全部品を文字拡大200%・ライト／ダークで表示、タップ領域44pt、Semantics
 - テスト: 全トークンのコントラスト（AA未満は失敗）、資格15色×ライト/ダーク、文字拡大200%
 
