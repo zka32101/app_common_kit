@@ -39,6 +39,7 @@ enum UkalabCert {
   hazmat4('hazmat4', '危険物乙4', UkalabField.tech, Color(0xFFC23D16), Color(0xFFF0997F)),
   denken3('denken3', '電験三種', UkalabField.tech, Color(0xFFB23B26), Color(0xFFE69789)),
   drone('drone', 'ドローン国家資格', UkalabField.tech, Color(0xFFAB1319), Color(0xFFF17E83)),
+  bikeLicense('bike_license', '運転免許（二輪）', UkalabField.tech, Color(0xFFB84A12), Color(0xFFF2A07A)),
   japaneseTeacher('japanese_teacher', '登録日本語教員', UkalabField.lang, Color(0xFFC2347A), Color(0xFFE18EB7));
 
   const UkalabCert(this.id, this.label, this.field, this.light, this.dark);

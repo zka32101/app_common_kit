@@ -60,9 +60,9 @@ void main() {
       expect(contrastRatio(d.fill, d.onFill), closeTo(6.35, 0.02));
     });
 
-    test('15資格・id が一意', () {
-      expect(UkalabCert.values, hasLength(15));
-      expect(UkalabCert.values.map((c) => c.id).toSet(), hasLength(15));
+    test('16資格・id が一意', () {
+      expect(UkalabCert.values, hasLength(16));
+      expect(UkalabCert.values.map((c) => c.id).toSet(), hasLength(16));
       expect(UkalabCert.fromId('g_kentei'), UkalabCert.gKentei);
       expect(UkalabCert.fromId('nope'), isNull);
     });
