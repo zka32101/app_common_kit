@@ -287,3 +287,16 @@ MascotWidget(
 - 習得度の式と段階の境目は暫定（網羅率×正答率、0.2／0.4／0.6／0.8）。`MasteryModel` の引数で差し替える
 - セリフは `findForbiddenExpressions` で検査する。追加するときは test/mascot_test.dart の検査に通すこと
 - 設定の「推しを小さく／非表示」は `MascotDisplay`、「動きを減らす」は端末設定に従う
+
+
+## 衣装・資格連動（v0.2）
+
+| 衣装 | 入手 | 呼び出し |
+|---|---|---|
+| 通常（資格別の小物） | コインで買う（300） | `CoinService.purchase(OutfitCatalog.idOf(cert, OutfitKind.regular))` |
+| 合格記念 | 合格報告で「合格」を選んだ場合のみ（無料） | `OutfitService.reportPassed(cert)`（コインの `CoinEvent.passReport` は別に付与） |
+| 試験日の装い | 試験日を設定した人だけ（無料） | `examPhase` を渡す |
+| 準備完了 | 最短ルートの目標達成（無料） | `OutfitService.markReady(cert)` |
+
+- 衣装は分野の小物と資格のシンボルだけで表す。試験団体のロゴ・制服・公式の意匠は使わない
+- 共有カードは `PassShareCard(data: ShareCardData(...))`。名前・メール・IDの欄は作らない。画像化は `RepaintBoundary` に key を付けて `captureShareCard(key)`
