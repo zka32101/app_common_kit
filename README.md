@@ -232,3 +232,20 @@ MaterialApp(
 - 資格を省くと分野色になる。`cert.field` と `field` が合わないと assert で失敗する
 - 色のトークンは `UkalabPalette.resolve(...)`、コントラスト比は `contrastRatio(a, b)`
 - **success（ライト #1E8E3E）は背景の上で 4.0〜4.2:1 で、文字としては AA に届かない**。✓アイコンなど図形として使い、正誤は必ず✓／✕と文言を併記する
+
+
+## 共通UI部品（v0.2）
+
+テーマ（`UkalabTheme`）の上で使う。色は `Theme` から取るので直書きしない。文言は引数で差し替えられる（既定は日本語）。
+
+```dart
+QuestionCard(index: 3, total: 10, text: '…', child: Column(children: [
+  ChoiceTile(label: 'A', text: '…', state: ChoiceState.correct),   // ✓＋「正解」
+  ChoiceTile(label: 'B', text: '…', state: ChoiceState.incorrect), // ✕＋「不正解」
+]));
+ExplanationPanel(body: '…', sourceRef: '道路交通法第34条', checkedAt: '2026-10-02');
+UkalabShell(pages: [home, learn, mock, record, settings]); // ホーム／学ぶ／模擬／記録／設定
+```
+
+- 正誤は色だけにせず、✓／✕のアイコンと文言を必ず併記する
+- `ProgressRing` は文字拡大でも収まるよう縮める。値の範囲外・NaN は丸める
