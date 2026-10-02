@@ -15,3 +15,5 @@ export 'ads/ad_rules.dart';
 export 'ads/ads_backend.dart';
 export 'ads/google_ads_backend.dart';
 export 'models/feedback_limits.dart';
+export 'theme/ukalab_palette.dart';
+export 'theme/ukalab_theme.dart';

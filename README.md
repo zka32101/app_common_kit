@@ -216,3 +216,19 @@ final rewarded = await ads.showRewarded(); // 「今日の特訓10問」追加�
 - 戻す手順: `ref` を前のタグへ → `flutter pub get` → ビルド確認。
 - 変更は [CHANGELOG.md](CHANGELOG.md) に記録。破壊的変更は major を上げる。
 - ローカル開発は `pubspec_overrides.yaml`（コミットしない）で path 参照に切り替える。
+
+
+## テーマ（v0.2）
+
+分野（と資格）を渡すだけで、共通デザイン仕様 v0.4 の ThemeData が作れる。色の直書きはしない。
+
+```dart
+MaterialApp(
+  theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),
+  darkTheme: UkalabTheme.dark(field: UkalabField.ai, cert: UkalabCert.gKentei),
+)
+```
+
+- 資格を省くと分野色になる。`cert.field` と `field` が合わないと assert で失敗する
+- 色のトークンは `UkalabPalette.resolve(...)`、コントラスト比は `contrastRatio(a, b)`
+- **success（ライト #1E8E3E）は背景の上で 4.0〜4.2:1 で、文字としては AA に届かない**。✓アイコンなど図形として使い、正誤は必ず✓／✕と文言を併記する
