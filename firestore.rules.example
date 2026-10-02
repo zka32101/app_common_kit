@@ -1,0 +1,33 @@
+rules_version = '2';
+// app_common_kit フィードバック用ルールの雛形。各アプリの firestore.rules に取り込む。
+// 上限は lib/models/feedback_limits.dart の FeedbackLimits と揃えること。
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /feedback/{id} {
+      // 作成: 自分の UID のみ。文字数上限あり。ステータス等は書き換えさせない。
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.description.size() <= 2000
+        && request.resource.data.status == 'open'
+        && !('githubIssueUrl' in request.resource.data && request.resource.data.githubIssueUrl != null);
+
+      // 読み取り: 自分の投稿のみ。
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      // 更新・削除はクライアントから不可（運営側が Admin SDK で行う）。
+      allow update, delete: if false;
+
+      // 返信（v0.2 の「お知らせ・返信」画面用に予約）: 本人は読み取りのみ。
+      match /replies/{replyId} {
+        allow read: if request.auth != null
+          && get(/databases/$(database)/documents/feedback/$(id)).data.userId == request.auth.uid;
+        allow write: if false;
+      }
+    }
+  }
+}

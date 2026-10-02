@@ -15,6 +15,7 @@ Petit Works apps 全体で使う共通ユーティリティパッケージです
 ## 設計方針
 
 - `cross_promo_kit` と同じく、依存は機能ごとに最小限に絞ります。
+- 例外として権利管理は `purchases_flutter`、広告ゲートは `google_mobile_ads` に依存します（広めのレンジ指定）。
 - Firebase（`cloud_firestore` / `firebase_auth` 等）には直接依存しません。
   実データの送受信は各アプリ側がコールバックとして注入する設計です
   （`shared_core` の「型・共通ロジックは shared_core、実データ/実処理はアプリ側」という
@@ -26,7 +27,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: main
+      ref: v0.1.0   # タグ固定。main は参照しない
 ```
 
 ## 構成
@@ -36,10 +37,14 @@ lib/
   app_common_kit.dart          # エントリポイント（公開API）
   models/
     feedback_model.dart        # フィードバック（バグ報告・改善要望）モデル
+    feedback_limits.dart       # 入力上限（文字数・1日の回数）と検証
   providers/
     feedback_provider.dart     # FeedbackNotifier（送信・オフラインキュー管理）
   widgets/
     feedback_form_page.dart    # フィードバック送信フォーム画面
+  entitlement/                 # 権利管理（noads / premium）
+  ads/                         # 広告ゲート（UMP・頻度制御）
+firestore.rules.example        # フィードバック用ルール雛形
 functions/                     # Cloud Functions テンプレート（各アプリの
   src/                         # Firebase プロジェクトにコピーしてデプロイする）
     index.ts
@@ -150,3 +155,58 @@ npm run build   # tsc の型チェック・コンパイルのみ確認可能
 
 実際の GitHub Issue 作成の動作確認は、Firebase Emulator Suite 上で
 `feedback` コレクションにドキュメントを作成して確認する。
+
+## 機能3: 権利管理（Entitlement）
+
+権利名は `noads`（広告なし・買い切り）と `premium`（期間付き／買い切り）。どちらかを持てば `adsHidden == true`。
+
+```dart
+final entitlement = await RevenueCatEntitlementService.init(
+  publicSdkKey: rcPublicKey, // 公開SDKキー。コミットしない
+  beforePurchase: (productId) => showParentalGate(context), // 子ども向けのみ
+);
+
+runApp(ProviderScope(
+  overrides: [entitlementServiceProvider.overrideWithValue(entitlement)],
+  child: const MyApp(),
+));
+
+// UI
+final hidden = ref.watch(adsHiddenProvider);
+await entitlement.purchase('noads_480'); // PurchaseOutcome を返す
+await entitlement.restore();
+```
+
+- 端末移行（匿名→Google/Apple連携）は `logIn(appUserId)` で RevenueCat の ID を引き継ぐ。
+- 期間パス（30日／90日）は非更新型、買い切りは非消耗型。期限は RevenueCat の Entitlement で管理。
+- テストでは `FakeEntitlementService` を使う。
+
+## 機能4: 広告ゲート（AdGate）
+
+```dart
+final ads = await AdGate.init(
+  config: AdConfig(
+    unitIds: AdUnitIds(banner: ..., interstitial: ..., rewarded: ...), // 本番IDは引数で渡す
+    childDirected: false, // 子ども向けアプリは true
+  ),
+  adsHidden: () => entitlement.state.adsHidden,
+);
+
+await ads.maybeShowInterstitial(InterstitialTrigger.sessionEnd); // 学習セッション終了時
+await ads.maybeShowInterstitial(InterstitialTrigger.mockExamResult); // 模擬試験の結果後
+Widget banner = ads.banner(BannerPlacement.home); // home / result / weakDrill のみ
+final rewarded = await ads.showRewarded(); // 「今日の特訓10問」追加など
+```
+
+- 出題中・解説表示中の契機/場所は型として存在しない（呼べない）。
+- インタースティシャルは最短3分間隔・1日5回（暫定。`updateRules(AdRules(...))` で上書き）。
+- 有料（`adsHidden`）の間は広告SDKを初期化しない。
+- リリースビルドで Google のテスト広告IDを使うと `StateError`。
+- iOS の ATT 文言は UMP の同意フォームで扱う。
+
+## バージョン運用
+
+- アプリは `ref: vX.Y.Z` で参照する。タグは削除・付け替えしない。修正は新タグで出す。
+- 戻す手順: `ref` を前のタグへ → `flutter pub get` → ビルド確認。
+- 変更は [CHANGELOG.md](CHANGELOG.md) に記録。破壊的変更は major を上げる。
+- ローカル開発は `pubspec_overrides.yaml`（コミットしない）で path 参照に切り替える。

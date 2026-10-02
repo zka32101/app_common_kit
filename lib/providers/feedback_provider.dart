@@ -6,9 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../models/feedback_limits.dart';
 import '../models/feedback_model.dart';
 
 const _pendingKey = 'app_common_kit_feedback_pending_queue';
+const _dayKeyPref = 'app_common_kit_feedback_day';
+const _countPref = 'app_common_kit_feedback_count';
 const _uuid = Uuid();
 
 /// 送信の状態。
@@ -39,6 +42,17 @@ typedef FeedbackSubmitHandler = Future<void> Function(FeedbackReport report);
 
 class FeedbackNotifier extends Notifier<FeedbackSubmitState> {
   FeedbackSubmitHandler? _submitHandler;
+  FeedbackLimits _limits = FeedbackLimits.standard;
+  DateTime Function() _clock = DateTime.now;
+
+  /// 入力上限・日次上限を差し替える（既定は [FeedbackLimits.standard]）。
+  /// [clock] はテスト用。
+  void configure({FeedbackLimits? limits, DateTime Function()? clock}) {
+    if (limits != null) _limits = limits;
+    if (clock != null) _clock = clock;
+  }
+
+  static String _dayKey(DateTime t) => '${t.year}-${t.month}-${t.day}';
 
   /// 各アプリが実際の送信処理（Firestoreの `feedback` コレクションへの書き込み等）を注入する。
   void setSubmitHandler(FeedbackSubmitHandler handler) {
@@ -76,13 +90,31 @@ class FeedbackNotifier extends Notifier<FeedbackSubmitState> {
     String appVersion = '',
     String? userId,
   }) async {
+    final invalid = _limits.validate(title: title, description: description);
+    if (invalid != null) {
+      state = state.copyWith(status: FeedbackSubmitStatus.error, errorMessage: invalid);
+      return;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    final today = _dayKey(_clock());
+    final sentToday = prefs.getString(_dayKeyPref) == today ? (prefs.getInt(_countPref) ?? 0) : 0;
+    if (sentToday >= _limits.dailyMax) {
+      state = state.copyWith(
+        status: FeedbackSubmitStatus.error,
+        errorMessage: '1日の送信上限（${_limits.dailyMax}件）に達しました。明日もう一度お試しください',
+      );
+      return;
+    }
+    await prefs.setString(_dayKeyPref, today);
+    await prefs.setInt(_countPref, sentToday + 1);
+
     state = state.copyWith(status: FeedbackSubmitStatus.submitting, errorMessage: null);
 
     final report = FeedbackReport(
       id: _uuid.v4(),
       type: type,
-      title: title,
-      description: description,
+      title: title.trim(),
+      description: description.trim(),
       appName: appName,
       appVersion: appVersion,
       platform: _detectPlatform(),
