@@ -1,6 +1,6 @@
 name: app_common_kit
 description: "Petit Works Apps 全体で使う共通パッケージ（フィードバック機能など）。小学コレシリーズに限らない全アプリが対象。"
-version: 0.1.0
+version: 0.1.1
 publish_to: 'none'
 
 environment:

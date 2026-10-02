@@ -15,6 +15,12 @@ abstract class EntitlementService {
   /// 購入。[BeforePurchase] が false なら [PurchaseOutcome.blockedByGate]。
   Future<PurchaseOutcome> purchase(String productId);
 
+  /// 現在購入できる商品の一覧。取得できない場合は空。
+  Future<List<EntitlementOffer>> offers();
+
+  /// [offers] の商品を購入する。ゲートと結果の扱いは [purchase] と同じ。
+  Future<PurchaseOutcome> purchaseOffer(String offerId);
+
   /// 購入の復元。
   Future<EntitlementState> restore();
 

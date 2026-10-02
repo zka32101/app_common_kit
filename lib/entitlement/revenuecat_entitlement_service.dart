@@ -65,6 +65,37 @@ class RevenueCatEntitlementService implements EntitlementService {
   @override
   Stream<EntitlementState> get stateStream => _controller.stream;
 
+  Future<List<Package>> _packages() async {
+    try {
+      return (await Purchases.getOfferings()).current?.availablePackages ??
+          const [];
+    } on PlatformException {
+      return const [];
+    }
+  }
+
+  @override
+  Future<List<EntitlementOffer>> offers() async => [
+        for (final p in await _packages())
+          EntitlementOffer(
+            id: p.identifier,
+            productId: p.storeProduct.identifier,
+            title: p.storeProduct.title,
+            priceString: p.storeProduct.priceString,
+          ),
+      ];
+
+  @override
+  Future<PurchaseOutcome> purchaseOffer(String offerId) async {
+    final matches = (await _packages()).where((p) => p.identifier == offerId);
+    if (matches.isEmpty) return PurchaseOutcome.failed;
+    final package = matches.first;
+    return _purchase(
+      package.storeProduct.identifier,
+      PurchaseParams.package(package),
+    );
+  }
+
   @override
   Future<PurchaseOutcome> purchase(String productId) async {
     final gate = _beforePurchase;
@@ -74,8 +105,27 @@ class RevenueCatEntitlementService implements EntitlementService {
     try {
       final products = await Purchases.getProducts([productId]);
       if (products.isEmpty) return PurchaseOutcome.failed;
-      final result =
-          await Purchases.purchase(PurchaseParams.storeProduct(products.first));
+      return await _purchase(
+        productId,
+        PurchaseParams.storeProduct(products.first),
+        gated: true,
+      );
+    } on PlatformException {
+      return PurchaseOutcome.failed;
+    }
+  }
+
+  Future<PurchaseOutcome> _purchase(
+    String productId,
+    PurchaseParams params, {
+    bool gated = false,
+  }) async {
+    final gate = _beforePurchase;
+    if (!gated && gate != null && !await gate(productId)) {
+      return PurchaseOutcome.blockedByGate;
+    }
+    try {
+      final result = await Purchases.purchase(params);
       _apply(result.customerInfo);
       return PurchaseOutcome.success;
     } on PlatformException catch (e) {

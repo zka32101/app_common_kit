@@ -175,6 +175,10 @@ runApp(ProviderScope(
 final hidden = ref.watch(adsHiddenProvider);
 await entitlement.purchase('noads_480'); // PurchaseOutcome を返す
 await entitlement.restore();
+
+// 月額・年額など（Offering）
+final offers = await entitlement.offers(); // id / title / priceString
+await entitlement.purchaseOffer(offers.first.id);
 ```
 
 - 端末移行（匿名→Google/Apple連携）は `logIn(appUserId)` で RevenueCat の ID を引き継ぐ。
@@ -188,6 +192,8 @@ final ads = await AdGate.init(
   config: AdConfig(
     unitIds: AdUnitIds(banner: ..., interstitial: ..., rewarded: ...), // 本番IDは引数で渡す
     childDirected: false, // 子ども向けアプリは true
+    maxAdContentRating: AdContentRating.g, // 任意。児童向けは g 推奨
+    nonPersonalizedAds: true, // 任意
   ),
   adsHidden: () => entitlement.state.adsHidden,
 );

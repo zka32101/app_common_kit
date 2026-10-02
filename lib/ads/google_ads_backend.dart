@@ -10,6 +10,9 @@ import 'ads_backend.dart';
 /// google_mobile_ads 実装。同意は UMP（iOS の ATT 文言は同意フォーム側で扱う）。
 class GoogleAdsBackend implements AdsBackend {
   late AdConfig _config;
+
+  AdRequest get _request =>
+      AdRequest(nonPersonalizedAds: _config.nonPersonalizedAds);
   InterstitialAd? _interstitial;
 
   @override
@@ -23,6 +26,13 @@ class GoogleAdsBackend implements AdsBackend {
         tagForUnderAgeOfConsent: config.childDirected
             ? TagForUnderAgeOfConsent.yes
             : TagForUnderAgeOfConsent.unspecified,
+        maxAdContentRating: switch (config.maxAdContentRating) {
+          AdContentRating.g => MaxAdContentRating.g,
+          AdContentRating.pg => MaxAdContentRating.pg,
+          AdContentRating.t => MaxAdContentRating.t,
+          AdContentRating.ma => MaxAdContentRating.ma,
+          null => null,
+        },
       ),
     );
 
@@ -51,7 +61,7 @@ class GoogleAdsBackend implements AdsBackend {
     final done = Completer<void>();
     await InterstitialAd.load(
       adUnitId: _config.unitIds.interstitial,
-      request: const AdRequest(),
+      request: _request,
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitial = ad;
@@ -91,7 +101,7 @@ class GoogleAdsBackend implements AdsBackend {
     final loaded = Completer<RewardedAd?>();
     await RewardedAd.load(
       adUnitId: _config.unitIds.rewarded,
-      request: const AdRequest(),
+      request: _request,
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: loaded.complete,
         onAdFailedToLoad: (_) => loaded.complete(null),
@@ -117,13 +127,14 @@ class GoogleAdsBackend implements AdsBackend {
 
   @override
   Widget buildBanner(BannerPlacement placement) =>
-      _AdaptiveBanner(adUnitId: _config.unitIds.banner);
+      _AdaptiveBanner(adUnitId: _config.unitIds.banner, request: _request);
 }
 
 class _AdaptiveBanner extends StatefulWidget {
-  const _AdaptiveBanner({required this.adUnitId});
+  const _AdaptiveBanner({required this.adUnitId, required this.request});
 
   final String adUnitId;
+  final AdRequest request;
 
   @override
   State<_AdaptiveBanner> createState() => _AdaptiveBannerState();
@@ -148,7 +159,7 @@ class _AdaptiveBannerState extends State<_AdaptiveBanner> {
     final ad = BannerAd(
       adUnitId: widget.adUnitId,
       size: size,
-      request: const AdRequest(),
+      request: widget.request,
       listener: BannerAdListener(
         onAdLoaded: (a) {
           if (mounted) {

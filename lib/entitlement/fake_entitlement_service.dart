@@ -9,12 +9,16 @@ class FakeEntitlementService implements EntitlementService {
     EntitlementState initial = EntitlementState.free,
     this.beforePurchase,
     this.grantOnPurchase,
+    this.availableOffers = const [],
   }) : _state = initial;
 
   final BeforePurchase? beforePurchase;
 
   /// productId → 購入後の状態。未指定の productId は failed。
   final Map<String, EntitlementState>? grantOnPurchase;
+
+  /// [offers] が返す商品。購入時は offer.productId を [grantOnPurchase] で引く。
+  final List<EntitlementOffer> availableOffers;
 
   final _controller = StreamController<EntitlementState>.broadcast();
   EntitlementState _state;
@@ -44,6 +48,16 @@ class FakeEntitlementService implements EntitlementService {
     if (granted == null) return PurchaseOutcome.failed;
     setState(granted);
     return PurchaseOutcome.success;
+  }
+
+  @override
+  Future<List<EntitlementOffer>> offers() async => availableOffers;
+
+  @override
+  Future<PurchaseOutcome> purchaseOffer(String offerId) async {
+    final offer = availableOffers.where((o) => o.id == offerId);
+    if (offer.isEmpty) return PurchaseOutcome.failed;
+    return purchase(offer.first.productId);
   }
 
   @override
