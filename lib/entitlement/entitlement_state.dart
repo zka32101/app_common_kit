@@ -40,5 +40,25 @@ class EntitlementState {
       'EntitlementState(noAds: $hasNoAds, premium: $hasPremium, expires: $premiumExpiresAt)';
 }
 
+/// 購入できる商品（RevenueCat の Offering の Package に相当）。
+class EntitlementOffer {
+  const EntitlementOffer({
+    required this.id,
+    required this.productId,
+    required this.title,
+    required this.priceString,
+  });
+
+  /// [EntitlementService.purchaseOffer] に渡す識別子。
+  final String id;
+
+  /// ストア側の商品ID。
+  final String productId;
+  final String title;
+
+  /// 通貨記号付きの表示用価格（例: ¥300）。
+  final String priceString;
+}
+
 /// 購入結果。
 enum PurchaseOutcome { success, cancelled, blockedByGate, failed }

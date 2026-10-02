@@ -57,4 +57,37 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(c.read(adsHiddenProvider), isTrue);
   });
+
+  group('offers', () {
+    const offer = EntitlementOffer(
+      id: r'$rc_monthly',
+      productId: 'premium-monthly',
+      title: '月額',
+      priceString: '¥300',
+    );
+
+    test('offers を返し、purchaseOffer で購入できる', () async {
+      final s = FakeEntitlementService(
+        availableOffers: [offer],
+        grantOnPurchase: {'premium-monthly': noAds},
+      );
+      expect((await s.offers()).single.priceString, '¥300');
+      expect(await s.purchaseOffer(offer.id), PurchaseOutcome.success);
+      expect(s.state.hasNoAds, isTrue);
+    });
+
+    test('未知の offerId は failed', () async {
+      final s = FakeEntitlementService(availableOffers: [offer]);
+      expect(await s.purchaseOffer('nope'), PurchaseOutcome.failed);
+    });
+
+    test('purchaseOffer も beforePurchase に止められる', () async {
+      final s = FakeEntitlementService(
+        availableOffers: [offer],
+        beforePurchase: (_) async => false,
+        grantOnPurchase: {'premium-monthly': noAds},
+      );
+      expect(await s.purchaseOffer(offer.id), PurchaseOutcome.blockedByGate);
+    });
+  });
 }

@@ -4,6 +4,9 @@ enum InterstitialTrigger { sessionEnd, mockExamResult }
 /// バナーを出してよい場所。出題中・解説表示中の場所は存在しない。
 enum BannerPlacement { home, result, weakDrill }
 
+/// 配信する広告の最大コンテンツレーティング。
+enum AdContentRating { g, pg, t, ma }
+
 /// 表示ルール。既定値は暫定で、Remote Config（v0.2）で上書きする想定。
 class AdRules {
   const AdRules({
@@ -54,6 +57,8 @@ class AdConfig {
     required this.unitIds,
     this.rules = const AdRules(),
     this.childDirected = false,
+    this.maxAdContentRating,
+    this.nonPersonalizedAds = false,
   });
 
   final AdUnitIds unitIds;
@@ -61,4 +66,10 @@ class AdConfig {
 
   /// 子ども向けアプリ。児童向けタグと under-age-of-consent を設定する。
   final bool childDirected;
+
+  /// 配信する広告の最大レーティング。null なら制限しない（児童向けは g を推奨）。
+  final AdContentRating? maxAdContentRating;
+
+  /// 非パーソナライズ広告のみをリクエストする。
+  final bool nonPersonalizedAds;
 }
