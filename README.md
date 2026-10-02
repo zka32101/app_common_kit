@@ -267,3 +267,23 @@ await coin.purchase('hat'); // purchased / insufficient / alreadyOwned / unknown
 - 端末移行・同期: `CoinLedger.toJson()` を共通アカウントに保存し、`CoinService.mergeLedger` で統合（何度統合しても同じ）。**サーバー側の保存は未実装**（アプリ側の Firestore などに置く）
 - 数値は暫定（学習コイン仕様 §2）。`CoinRules` を作り直して調整
 - 網羅率や正答率の**到達判定**は呼び出し側（学習ログ）が行い、到達したらイベントを渡す
+
+
+## 推し（v0.2）
+
+```dart
+final model = MasteryModel.standard;
+final stage = model.stageOf(MasteryInput(coverage: 0.3, accuracy: 0.8)); // Lv2
+final day = MascotDayState(studiedToday: true, examDate: examDate);
+MascotWidget(
+  stage: stage,
+  expression: day.expression,          // 学習した日はよろこび。責める表情はない
+  examPhase: day.examPhase(DateTime.now()),
+  line: MascotLines.gentle.pick(MascotSituation.studied, seed: dayOfYear),
+);
+```
+
+- 標準キャラはコード描画で画像不要。AI 画像のパックは `CharacterPack(imageBuilder: ...)` を渡す（画像がまだ取れないときは null を返せば標準の描画に戻る）
+- 習得度の式と段階の境目は暫定（網羅率×正答率、0.2／0.4／0.6／0.8）。`MasteryModel` の引数で差し替える
+- セリフは `findForbiddenExpressions` で検査する。追加するときは test/mascot_test.dart の検査に通すこと
+- 設定の「推しを小さく／非表示」は `MascotDisplay`、「動きを減らす」は端末設定に従う

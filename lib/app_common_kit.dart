@@ -30,3 +30,8 @@ export 'coin/coin_ledger.dart';
 export 'coin/coin_service.dart';
 export 'coin/coin_provider.dart';
 export 'coin/shop.dart';
+export 'mascot/mascot_models.dart';
+export 'mascot/mascot_logic.dart';
+export 'mascot/mascot_lines.dart';
+export 'mascot/standard_character.dart';
+export 'mascot/mascot_widget.dart';
