@@ -8,6 +8,8 @@
 - テーマ: `UkalabTheme.light/dark(field:, cert:)`。分野（`UkalabField` 5種）と資格（`UkalabCert` 15種。決定77）から ThemeData を生成。色トークン `UkalabPalette`、コントラスト比 `contrastRatio`
 - 文字サイズ（本文16／解説17・行間1.6／見出し20・24／注釈13）、角丸（カード16／ボタン12）、タップ領域44pt以上を共通化
 - 会計・経営のライトは warning を #8A6100 に差し替え
+- 共通UI部品（ui_kit）: `QuestionCard`／`ChoiceTile`（idle・selected・correct・incorrect。正誤は✓／✕＋文言）／`ExplanationPanel`（出典つき）／`ProgressRing`／`StreakBadge`／`ResultSummary`／`EmptyState`・`ErrorState`／`UkalabShell`（下部5タブ）
+- テスト: 全部品を文字拡大200%・ライト／ダークで表示、タップ領域44pt、Semantics
 - テスト: 全トークンのコントラスト（AA未満は失敗）、資格15色×ライト/ダーク、文字拡大200%
 
 ## [0.1.2] - 2026-10-02
