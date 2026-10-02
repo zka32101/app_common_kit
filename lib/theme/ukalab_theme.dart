@@ -32,7 +32,7 @@ class UkalabTheme {
     UkalabCert? cert,
     required Brightness brightness,
   }) {
-    assert(cert == null || cert.field == field, '資格 ${cert!.id} の分野は ${cert.field}');
+    assert(cert == null || cert.field == field, '資格 ${cert.id} の分野は ${cert.field}');
     final p = UkalabPalette.resolve(field: field, cert: cert, brightness: brightness);
     final scheme = ColorScheme(
       brightness: brightness,
