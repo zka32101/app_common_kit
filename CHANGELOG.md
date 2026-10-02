@@ -12,6 +12,7 @@
 - 学習コイン（coin）: `CoinService`（獲得 `grant`／購入 `purchase`／装備）、`CoinEvent` 11種、`CoinRules`（数値は差し替え可）、追記専用の `CoinLedger`（残高は台帳の合計。同じ行は統合しても二重にならない）、`CoinStore`（端末内。財布は**アプリごと**）、Riverpod の `coinProvider`、`ShopItem`・`validateShop`。有償・広告視聴での付与は実装しない
 - 推し（mascot）: `CharacterPack`（id・名前・口調・画像ビルダー・分野差し色・署名）、標準キャラ「フラスコの助手」のコード描画（Lv1〜5で装いが重なる／よろこびの表情／試験日が近いとはちまき）、`MascotWidget`（非表示・小さく・動きを減らす設定に対応、吹き出し）、`MasteryModel`（習得度＝網羅率×正答率、段階の境目と係数は差し替え可、次の段階まであと何問）、`MascotDayState`（表情・「おかえり」・試験日の装い）、`MascotLines`（セリフ集）と禁止表現チェック（責める・消える・恋愛依存）
 - 衣装・資格連動（outfit）: `OutfitCatalog`（15資格×4着: 通常・合格記念・試験日・準備完了）、`OutfitService`（合格報告で記念衣装、最短ルート達成で準備完了、試験日設定で試験日の装い。通常衣装はコイン購入）、標準キャラの衣装描画（分野の小物5種・メダル・準備完了の旗・はちまき）、`PassShareCard`（推しと合格の共有カード。個人情報なし）と `captureShareCard`（PNG化）。`MascotWidget` に `outfit`・`animate`
+- アイコン生成（tools/icon_gen）: 試験名・シンボルSVG・資格IDから 1024px PNG、Android adaptive の前景／背景、最小サイズ用（上段なし・シンボル拡大）を出力。色は `ukalab_palette.dart` から読む（二重管理しない）。`check_icons.py` で サイズ・コントラスト（4.5:1）・要素の重なり・端の余白・adaptive の中央66%・最小サイズ版の上段なしを検査。CI に `icons` ジョブ（フォント fonts-noto-cjk）。サンプル6種（G検定・乙4・簿記3・電験3・ITパス・診断士）
 - テスト: 全部品を文字拡大200%・ライト／ダークで表示、タップ領域44pt、Semantics
 - テスト: 全トークンのコントラスト（AA未満は失敗）、資格15色×ライト/ダーク、文字拡大200%
 
