@@ -2,6 +2,11 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.1.2] - 2026-10-02
+
+### Fixed
+- `google_mobile_ads` の下限を `>=4.0.0` から `>=5.3.1` に修正。UMP の `ConsentForm.loadAndShowConsentFormIfRequired` / `ConsentInformation.canRequestAds` が 4.0.0 に無く、kanken(4.0.0)でビルドが通らなかった。5.3.1 で kanken の debug APK ビルド成功を確認
+
 ## [0.1.1] - 2026-10-02
 
 kanken 導入で見つかった不足分。
