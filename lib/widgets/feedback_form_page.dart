@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/feedback_limits.dart';
 import '../models/feedback_model.dart';
 import '../providers/feedback_provider.dart';
 
@@ -115,8 +116,7 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
                 hintText: '例：〇〇画面でボタンが反応しない',
                 border: OutlineInputBorder(),
               ),
-              validator: (value) =>
-                  (value == null || value.trim().isEmpty) ? 'タイトルを入力してください' : null,
+              validator: FeedbackLimits.standard.validateTitle,
             ),
             const SizedBox(height: 20),
             Text('詳細', style: labelStyle),
@@ -130,8 +130,7 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
                 hintText: 'できるだけ詳しく状況を教えてください',
                 border: OutlineInputBorder(),
               ),
-              validator: (value) =>
-                  (value == null || value.trim().isEmpty) ? '詳細を入力してください' : null,
+              validator: FeedbackLimits.standard.validateDescription,
             ),
             const SizedBox(height: 24),
             SizedBox(

@@ -14,3 +14,4 @@ export 'ads/ad_gate.dart';
 export 'ads/ad_rules.dart';
 export 'ads/ads_backend.dart';
 export 'ads/google_ads_backend.dart';
+export 'models/feedback_limits.dart';
