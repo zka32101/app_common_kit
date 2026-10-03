@@ -19,6 +19,11 @@
 - `showTermCard`: `TermCard` をボトムシートで開くヘルパー
 - `TappableTermText`: 問題文・解説文などの本文中の用語に下線つきのタップ領域を重ねるテキスト部品
 
+## [Unreleased]
+
+### 追加
+- `firebase/`: うかラボ共通 Firebase（`ukalab-prod`／`ukalab-dev`）のルール、ルール検査（`test_rules.py`）、設定、手順。ライブラリ本体（lib/）は変更なし
+
 ## [0.2.1] - 2026-10-03
 
 ### 追加

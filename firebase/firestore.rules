@@ -1,0 +1,64 @@
+rules_version = '2';
+// うかラボ共通の Firebase プロジェクト（ukalab-prod / ukalab-dev）の Firestore ルール。
+// 方針（決定事項ログ §5）: パスに examId を含め、ルールはアプリ（試験）単位で厳密に。
+// 新しい資格を足したら、下の examIds に UkalabCert の id を追加する（追加を忘れると拒否される）。
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 資格ID（app_common_kit の UkalabCert.id と揃える）。
+    function examIds() {
+      return [
+        'g_kentei', 'gen_ai_passport', 'gen_ai_practitioner',
+        'data_management', 'info_security', 'ds_kentei', 'it_passport', 'fe',
+        'boki3', 'sme_consultant', 'sme_ma',
+        'hazmat4', 'denken3', 'drone', 'bike_license',
+        'japanese_teacher'
+      ];
+    }
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // ユーザーの学習データ: users/{uid}/exams/{examId}/...
+    // 本人だけが読み書きできる。examId は登録済みの資格だけ。
+    // 匿名認証 → Google/Apple へのリンクでも uid は変わらないので、そのまま引き継がれる。
+    match /users/{uid}/exams/{examId}/{document=**} {
+      allow read, write: if signedIn()
+        && request.auth.uid == uid
+        && examId in examIds();
+    }
+
+    // フィードバック（app_common_kit のフィードバック機能）。
+    // 作成: 自分の UID のみ。文字数上限あり。ステータス等は書き換えさせない。
+    // 上限は lib/models/feedback_limits.dart の FeedbackLimits と揃えること。
+    match /feedback/{id} {
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.description.size() <= 2000
+        && request.resource.data.status == 'open'
+        && !('githubIssueUrl' in request.resource.data && request.resource.data.githubIssueUrl != null);
+
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+
+      // 更新・削除はクライアントから不可（運営側が Admin SDK で行う）。
+      allow update, delete: if false;
+
+      match /replies/{replyId} {
+        allow read: if signedIn()
+          && get(/databases/$(database)/documents/feedback/$(id)).data.userId == request.auth.uid;
+        allow write: if false;
+      }
+    }
+
+    // それ以外はすべて拒否。
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
