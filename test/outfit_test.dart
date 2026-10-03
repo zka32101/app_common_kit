@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('衣装の台帳', () {
-    test('16資格 × 4着（通常・合格記念・試験日・準備完了）で id が一意', () {
-      expect(OutfitCatalog.all, hasLength(64));
-      expect(OutfitCatalog.all.map((o) => o.id).toSet(), hasLength(64));
+    test('17資格 × 4着（通常・合格記念・試験日・準備完了）で id が一意', () {
+      expect(OutfitCatalog.all, hasLength(68));
+      expect(OutfitCatalog.all.map((o) => o.id).toSet(), hasLength(68));
       for (final c in UkalabCert.values) {
         expect(OutfitCatalog.forCert(c).map((o) => o.kind).toSet(), OutfitKind.values.toSet());
       }
@@ -21,7 +21,7 @@ void main() {
 
     test('ショップ品目の価格は衣装の目安（200〜500）に収まる', () {
       final items = OutfitCatalog.shopItems();
-      expect(items, hasLength(16));
+      expect(items, hasLength(17));
       expect(validateShop(items), isEmpty);
     });
 

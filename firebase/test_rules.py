@@ -31,6 +31,7 @@ good_fb = {'userId': 'u1', 'title': 'タイトル', 'description': '本文', 'st
 cases = [
     case('本人は自分の学習データを読める', 'get', 'users/u1/exams/g_kentei/progress/p1', 'u1', 'ALLOW'),
     case('本人は自分の学習データを書ける', 'create', 'users/u1/exams/bike_license/progress/p1', 'u1', 'ALLOW', {'x': 1}),
+    case('漢字検定の学習データも本人は書ける', 'create', 'users/u1/exams/kanji_kentei/progress/p1', 'u1', 'ALLOW', {'x': 1}),
     case('他人の学習データは読めない', 'get', 'users/u1/exams/g_kentei/progress/p1', 'u2', 'DENY'),
     case('他人の学習データは書けない', 'create', 'users/u1/exams/g_kentei/progress/p1', 'u2', 'DENY', {'x': 1}),
     case('未ログインは読めない', 'get', 'users/u1/exams/g_kentei/progress/p1', None, 'DENY'),

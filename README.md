@@ -343,3 +343,4 @@ python tools/icon_gen/check_icons.py --spec tools/icon_gen/specs/sample.json --o
 - 日本語の太字フォントが必要（Windows は游ゴシック、CI は fonts-noto-cjk）。`--font` で指定もできる
 - AI 画像は使わない。試験団体のロゴ・「公式」「認定」の文字は入れない
 - シンボルの最終デザインは未決（サンプルは仮）
+- 実際のアプリ用の定義は `tools/icon_gen/specs/ukalab_apps.json`（今は `bike_license` のみ。シンボル `motorcycle` は仮のデザイン）。アプリのアイコンを更新するときは、これで生成して `<id>_1024.png`・`<id>_fg.png`・`<id>_bg.png` を使う
