@@ -40,3 +40,8 @@ export 'mascot/mascot_widget.dart';
 export 'outfit/outfit_models.dart';
 export 'outfit/outfit_service.dart';
 export 'outfit/share_card.dart';
+export 'outfit/outfit_provider.dart';
+export 'outfit/readiness.dart';
+export 'outfit/wardrobe_screen.dart';
+export 'outfit/pass_report.dart';
+export 'ui_kit/coin_breakdown.dart';

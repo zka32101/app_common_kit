@@ -12,7 +12,7 @@ service cloud.firestore {
         'data_management', 'info_security', 'ds_kentei', 'it_passport', 'fe',
         'boki3', 'sme_consultant', 'sme_ma',
         'hazmat4', 'denken3', 'drone', 'bike_license',
-        'japanese_teacher'
+        'japanese_teacher', 'kanji_kentei'
       ];
     }
 

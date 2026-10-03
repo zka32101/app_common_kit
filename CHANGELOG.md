@@ -19,6 +19,27 @@
 - `showTermCard`: `TermCard` をボトムシートで開くヘルパー
 - `TappableTermText`: 問題文・解説文などの本文中の用語に下線つきのタップ領域を重ねるテキスト部品
 
+## [0.4.0] - 2026-10-03
+
+※ 0.3.0（用語カード）・0.3.1（本文差し替え）はタグ未作成のまま main に入っているため、タグ `v0.4.0` にそれらも含まれる。
+
+バイク免許コレで作った「ショップ・着替え」を共通化し、合格報告・準備完了・コイン内訳を追加。追加のみで、v0.2 の API に破壊的変更はない。
+
+### 追加
+- 資格 `UkalabCert.kanjiKentei`（漢字検定、分野: 言語・教育）。資格は17種、衣装は68着
+- 衣装の状態管理: `outfitServiceProvider`（アプリで上書き）、`outfitProvider`／`OutfitNotifier`（`equip`・`reportPassed`・`markReady`）、`equippedOutfitProvider`
+- `WardrobeScreen`: 資格1つぶんのショップ・着替え画面（コインで通常衣装を購入、ロック理由の表示）。バイクの `OshiWardrobeView` を一般化したもの
+- `showPassReportDialog`: 合格報告。「合格しました」→ 学習コイン（資格ごとに1回）と合格記念の衣装を付与し、共有カード（個人情報なし）を見せる。「今回は合格できなかった」は責めず、コインも衣装も減らさない。`onShare` を渡すと共有ボタンが出る（OS の共有シートはアプリ側で実装。共通基盤は共有プラグインに依存しない）
+- `ReadinessRule`: 準備完了の暫定判定（習得度0.8以上＋模擬試験の合格1回以上）。最短ルートプランナー完成までの暫定
+- `CoinNotifier.takeRecent()` と `CoinState.recent`: セッション内の付与の履歴
+- `CoinBreakdownCard`: 結果画面のコイン内訳（付与がなければ何も出さない）
+- `firebase/`: 共通 Firebase（ukalab-prod／ukalab-dev）のルール・検査・手順。ルールの `examIds()` に `kanji_kentei` を追加
+
+### 利用側の注意
+- `OutfitService` をアプリで作って `outfitServiceProvider` を上書きする（`SharedPreferencesOutfitStore(appId)`）。`CoinService` の `shop` には `OutfitCatalog.shopItems([cert])` を渡す
+- 合格記念・準備完了の衣装を解放する入口は、アプリ側が `showPassReportDialog`／`outfitProvider.notifier.markReady` を呼ぶ
+- 新しい資格を足したときは、`firebase/firestore.rules` の `examIds()` にも id を追加して配備する
+
 ## [Unreleased]
 
 ### 追加
