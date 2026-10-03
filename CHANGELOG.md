@@ -16,6 +16,7 @@
 - `ReadinessRule`: 準備完了の暫定判定（習得度0.8以上＋模擬試験の合格1回以上）。最短ルートプランナー完成までの暫定
 - `CoinNotifier.takeRecent()` と `CoinState.recent`: セッション内の付与の履歴
 - `CoinBreakdownCard`: 結果画面のコイン内訳（付与がなければ何も出さない）
+- アイコン生成: シンボル `motorcycle`（仮）と、実アプリ用の定義 `specs/ukalab_apps.json`（`bike_license`）。検査（`check_icons.py`）を通る
 - `firebase/`: 共通 Firebase（ukalab-prod／ukalab-dev）のルール・検査・手順。ルールの `examIds()` に `kanji_kentei` を追加
 
 ### 利用側の注意

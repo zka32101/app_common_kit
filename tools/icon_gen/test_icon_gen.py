@@ -25,7 +25,7 @@ class IconGenTest(unittest.TestCase):
 
     def test_palette_is_read_from_dart(self):
         certs, fields = icon_gen.load_palette()
-        self.assertEqual(len(certs), 16)
+        self.assertEqual(len(certs), 17)
         self.assertEqual(certs["g_kentei"], (0x6D, 0x4A, 0xD8))
         self.assertEqual(fields["g_kentei"], "ai")
 
@@ -81,3 +81,14 @@ class IconGenTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class UkalabAppsSpecTest(unittest.TestCase):
+    """実際のアプリ用の定義（specs/ukalab_apps.json）が、そのまま生成・検査を通る。"""
+
+    def test_apps_spec_passes_all_checks(self):
+        import tempfile
+        spec = Path(__file__).resolve().parent / "specs" / "ukalab_apps.json"
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(icon_gen.main(["--spec", str(spec), "--out", tmp]), 0)
+            self.assertEqual(check_icons.check(spec, Path(tmp)), [])
+
