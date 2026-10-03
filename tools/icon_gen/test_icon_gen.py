@@ -25,7 +25,7 @@ class IconGenTest(unittest.TestCase):
 
     def test_palette_is_read_from_dart(self):
         certs, fields = icon_gen.load_palette()
-        self.assertEqual(len(certs), 15)
+        self.assertEqual(len(certs), 16)
         self.assertEqual(certs["g_kentei"], (0x6D, 0x4A, 0xD8))
         self.assertEqual(fields["g_kentei"], "ai")
 

@@ -250,6 +250,31 @@ UkalabShell(pages: [home, learn, mock, record, settings]); // ホーム／学ぶ
 - 正誤は色だけにせず、✓／✕のアイコンと文言を必ず併記する
 - `ProgressRing` は文字拡大でも収まるよう縮める。値の範囲外・NaN は丸める
 
+### 用語カード（v0.3、決定50「専門用語の解説（全アプリ共通）」）
+
+問題文・解説文中の専門用語に下線をつけ、タップでボトムシートに用語カードを開く。データ（`Term`・配信前検証）は `yourwish_kentei` 側。
+
+```dart
+TappableTermText(
+  text: '過学習はニューラルネットワークでも起こる。',
+  terms: const [TermReference(termId: 't1', matchText: '過学習')],
+  onTermTap: (termId) => showTermCard(
+    context,
+    term: '過学習',
+    headline: '練習問題は得意だが、新しい問題には弱くなること',
+    definition: '学習データに対して過剰に適合し、未知のデータへの汎化性能が低下する現象。',
+    analogy: '過去問だけを丸暗記して、少し出題形式が変わると解けなくなる状態に近い。',
+    relatedTerms: const [RelatedTermRef(termId: 't2', label: '正則化')],
+    onRelatedTermTap: (nextId) {
+      // 関連用語のタップで、その用語の showTermCard を呼び直して遷移する
+    },
+  ),
+);
+```
+
+- 下線は色だけに頼らない（`decorationThickness: 2`）
+- 関連用語・関連問題はコールバックが渡されなければ非活性
+
 
 ## 学習コイン（v0.2）
 
