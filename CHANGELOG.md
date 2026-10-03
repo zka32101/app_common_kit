@@ -2,23 +2,6 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
-## [0.3.1] - 2026-10-03
-
-`QuestionCard`・`ExplanationPanel` に、本文を差し替えられる後方互換のオプションを追加。追加のみで、v0.3.0 の API に破壊的変更はない。
-
-### 追加
-- `QuestionCard.textWidget`: 問題文の表示を `TappableTermText` などに差し替えられる。省略すれば従来どおり `text` をそのまま表示する
-- `ExplanationPanel.bodyWidget`: 解説文の表示を同様に差し替えられる。省略すれば従来どおり `body` をそのまま表示する
-
-## [0.3.0] - 2026-10-03
-
-専門用語の解説（決定50「専門用語の解説（全アプリ共通）」）のUI部品。追加のみで、v0.2 の API に破壊的変更はない。
-
-### 追加
-- `TermCard`: 用語カード（①ひとことで言うと→②正確な意味→③たとえ話→④よくある間違い→⑤関連用語→⑥関連問題の順に表示）
-- `showTermCard`: `TermCard` をボトムシートで開くヘルパー
-- `TappableTermText`: 問題文・解説文などの本文中の用語に下線つきのタップ領域を重ねるテキスト部品
-
 ## [0.4.0] - 2026-10-03
 
 ※ 0.3.0（用語カード）・0.3.1（本文差し替え）はタグ未作成のまま main に入っているため、タグ `v0.4.0` にそれらも含まれる。
@@ -39,6 +22,23 @@
 - `OutfitService` をアプリで作って `outfitServiceProvider` を上書きする（`SharedPreferencesOutfitStore(appId)`）。`CoinService` の `shop` には `OutfitCatalog.shopItems([cert])` を渡す
 - 合格記念・準備完了の衣装を解放する入口は、アプリ側が `showPassReportDialog`／`outfitProvider.notifier.markReady` を呼ぶ
 - 新しい資格を足したときは、`firebase/firestore.rules` の `examIds()` にも id を追加して配備する
+
+## [0.3.1] - 2026-10-03
+
+`QuestionCard`・`ExplanationPanel` に、本文を差し替えられる後方互換のオプションを追加。追加のみで、v0.3.0 の API に破壊的変更はない。
+
+### 追加
+- `QuestionCard.textWidget`: 問題文の表示を `TappableTermText` などに差し替えられる。省略すれば従来どおり `text` をそのまま表示する
+- `ExplanationPanel.bodyWidget`: 解説文の表示を同様に差し替えられる。省略すれば従来どおり `body` をそのまま表示する
+
+## [0.3.0] - 2026-10-03
+
+専門用語の解説（決定50「専門用語の解説（全アプリ共通）」）のUI部品。追加のみで、v0.2 の API に破壊的変更はない。
+
+### 追加
+- `TermCard`: 用語カード（①ひとことで言うと→②正確な意味→③たとえ話→④よくある間違い→⑤関連用語→⑥関連問題の順に表示）
+- `showTermCard`: `TermCard` をボトムシートで開くヘルパー
+- `TappableTermText`: 問題文・解説文などの本文中の用語に下線つきのタップ領域を重ねるテキスト部品
 
 ## [Unreleased]
 
