@@ -8,6 +8,7 @@ class ExplanationPanel extends StatelessWidget {
     this.title = '解説',
     this.sourceRef,
     this.checkedAt,
+    this.bodyWidget,
   });
 
   final String title;
@@ -18,6 +19,10 @@ class ExplanationPanel extends StatelessWidget {
 
   /// 出典を確認した日（YYYY-MM-DD）。
   final String? checkedAt;
+
+  /// 本文の表示を差し替える（例: [TappableTermText] で用語をタップ可能にする）。
+  /// 指定しなければ [body] をそのまま表示する。
+  final Widget? bodyWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,10 @@ class ExplanationPanel extends StatelessWidget {
           children: [
             Text(title, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
-            Text(body, style: theme.textTheme.bodyLarge),
+            DefaultTextStyle.merge(
+              style: theme.textTheme.bodyLarge,
+              child: bodyWidget ?? Text(body, style: theme.textTheme.bodyLarge),
+            ),
             if (src != null && src.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text(

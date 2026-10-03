@@ -8,6 +8,7 @@ class QuestionCard extends StatelessWidget {
     this.index,
     this.total,
     this.child,
+    this.textWidget,
   });
 
   final String text;
@@ -16,6 +17,10 @@ class QuestionCard extends StatelessWidget {
   final int? index;
   final int? total;
   final Widget? child;
+
+  /// 問題文の表示を差し替える（例: [TappableTermText] で用語をタップ可能にする）。
+  /// 指定しなければ [text] をそのまま表示する。
+  final Widget? textWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,10 @@ class QuestionCard extends StatelessWidget {
                   style: theme.textTheme.labelMedium,
                 ),
               ),
-            Text(text, style: theme.textTheme.bodyLarge),
+            DefaultTextStyle.merge(
+              style: theme.textTheme.bodyLarge,
+              child: textWidget ?? Text(text, style: theme.textTheme.bodyLarge),
+            ),
             if (child != null) ...[const SizedBox(height: 16), child!],
           ],
         ),
