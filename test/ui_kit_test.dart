@@ -86,6 +86,26 @@ void main() {
       expect(find.text('出典: 道路交通法第34条（2026-10-02 確認）'), findsOneWidget);
       expect(find.textContaining('出典:'), findsOneWidget);
     });
+
+    testWidgets('bodyWidget を渡すと body の代わりにそれが表示される', (tester) async {
+      await tester.pumpWidget(_app(const ExplanationPanel(
+        body: '使われない本文',
+        bodyWidget: Text('差し替えた本文'),
+      )));
+      expect(find.text('差し替えた本文'), findsOneWidget);
+      expect(find.text('使われない本文'), findsNothing);
+    });
+  });
+
+  group('QuestionCard', () {
+    testWidgets('textWidget を渡すと text の代わりにそれが表示される', (tester) async {
+      await tester.pumpWidget(_app(const QuestionCard(
+        text: '使われない問題文',
+        textWidget: Text('差し替えた問題文'),
+      )));
+      expect(find.text('差し替えた問題文'), findsOneWidget);
+      expect(find.text('使われない問題文'), findsNothing);
+    });
   });
 
   group('ResultSummary', () {

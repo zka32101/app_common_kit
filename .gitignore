@@ -8,3 +8,7 @@ pubspec.lock
 functions/node_modules/
 functions/lib/
 functions/*.log
+
+# Python (tools/icon_gen/)
+__pycache__/
+*.pyc
