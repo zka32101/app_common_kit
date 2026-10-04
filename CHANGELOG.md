@@ -44,6 +44,7 @@
 ## [Unreleased]
 
 ### 追加
+- `showMockRecordDialog`: 模擬試験で合格点を超えたときの「学習の記録カード」（保守版 v0.4.3 と同じ内容を main にも取り込み）。コインも衣装も付けない
 - `MasteryInput.fromCounts()`／`MasteryInput.fromLogs()`: 件数・回答ログから習得度の入力を作る共通計算（保守版 v0.4.2 と同じ内容を main にも取り込み）
 
 ## [0.4.1] - 2026-10-04（保守版・ブランチ `release/0.4`）
