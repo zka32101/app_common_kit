@@ -26,6 +26,7 @@ export 'ui_kit/result_summary.dart';
 export 'ui_kit/empty_error_state.dart';
 export 'ui_kit/app_shell.dart';
 export 'ui_kit/boundary_slider.dart';
+export 'ui_kit/failure_gallery.dart';
 export 'ui_kit/predict_run.dart';
 export 'ui_kit/route_planner.dart';
 export 'ui_kit/teach_mascot.dart';
