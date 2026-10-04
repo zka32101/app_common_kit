@@ -11,6 +11,37 @@ class MasteryInput {
 
   /// 正答率。
   final double accuracy;
+
+  /// 件数から作る。網羅率＝解いた問題の種類÷全問題数、正答率＝正解数÷回答数。
+  /// 全問題数か回答数が0以下なら、どちらも0。
+  factory MasteryInput.fromCounts({
+    required int distinctAnswered,
+    required int totalQuestions,
+    required int correct,
+    required int answered,
+  }) {
+    if (totalQuestions <= 0 || answered <= 0) {
+      return const MasteryInput(coverage: 0, accuracy: 0);
+    }
+    return MasteryInput(
+      coverage: (distinctAnswered / totalQuestions).clamp(0.0, 1.0),
+      accuracy: (correct / answered).clamp(0.0, 1.0),
+    );
+  }
+
+  /// 回答ログから作る。[questionIds] の範囲外の回答は数えない。
+  factory MasteryInput.fromLogs({
+    required Set<String> questionIds,
+    required Iterable<({String questionId, bool isCorrect})> logs,
+  }) {
+    final inScope = logs.where((l) => questionIds.contains(l.questionId)).toList();
+    return MasteryInput.fromCounts(
+      distinctAnswered: inScope.map((l) => l.questionId).toSet().length,
+      totalQuestions: questionIds.length,
+      correct: inScope.where((l) => l.isCorrect).length,
+      answered: inScope.length,
+    );
+  }
 }
 
 /// 習得度と成長段階の計算。端末内で行う。
