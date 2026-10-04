@@ -41,7 +41,9 @@
 - `showTermCard`: `TermCard` をボトムシートで開くヘルパー
 - `TappableTermText`: 問題文・解説文などの本文中の用語に下線つきのタップ領域を重ねるテキスト部品
 
-## [Unreleased]
+## [0.8.0] - 2026-10-04
+
+※ v0.4.0 以降、別セッション（G検定・型部品）の追加（#24〜#31: 予測→実行、答案の添削、最短ルートプランナー、失敗図鑑、AdGate、ExamStatsService、用語マップ、評価指標ラボ）が、タグ・本ファイルへの記載なしで main に入っている。タグ `v0.8.0` にそれらも含まれる（pubspec は 0.7.0 まで進んでいた）。追加のみで破壊的変更はない。
 
 ### 追加
 - `ReadinessRule.progress()` と `ReadinessProgress`（習得度の達成率、あと何%、模擬試験の合格が要るか）、`ReadinessProgressCard`（「準備完了まで」の進み具合カード。責める表現なし）
