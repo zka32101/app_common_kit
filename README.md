@@ -444,3 +444,24 @@ MethodChoiceWidget(
 ```
 
 - 選択肢は `FailureChoiceSpec`（`failure_gallery.dart`）を再利用する。`ConfusionMatrixLabWidget` の選択パートと同じ構造で、混同行列の操作だけがない最小版
+
+
+## 機械学習ラボ（画期的な機能1）
+
+`MlLabWidget` は、2クラスのデータ点をk近傍法・決定木・線形分類の3手法で分類し、決定境界（背景の塗り分け）とハイパーパラメータによる過学習・未学習の変化を見せる。分類の計算（kNN・CART風の決定木・正則化付きロジスティック回帰）はこのウィジェット内で行う。
+
+```dart
+MlLabWidget(
+  title: '線形分離',
+  description: '2つのかたまりに分かれた点です。',
+  points: const [
+    MlLabPointSpec(x: 1, y: 1, label: 0),
+    MlLabPointSpec(x: 8, y: 8, label: 1),
+    // ...
+  ],
+)
+```
+
+- 座標は0〜10の範囲を想定（グリッド24×24で決定境界を塗り分ける）
+- ハイパーパラメータ: k近傍法は`k`（1〜15）、決定木は`深さ`（1〜6）、線形分類は`正則化`（0〜2.0）
+- クラスは色だけに頼らず形も変える（クラス0は丸、クラス1は三角）

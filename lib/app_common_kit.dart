@@ -61,3 +61,4 @@ export 'ui_kit/stats_compare.dart';
 export 'ui_kit/term_map.dart';
 export 'ui_kit/confusion_matrix_lab.dart';
 export 'ui_kit/method_choice.dart';
+export 'ui_kit/ml_lab.dart';
