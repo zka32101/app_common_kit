@@ -400,3 +400,26 @@ TermMapWidget(
 - `era` を持つ用語は `eraOrder` の順でタイムライン表示、持たない用語は関連（`relatedTermIds`）でつながる円形配置のネットワーク表示になる
 - `mastery`（`TermMastery.none` / `.weak` / `.mastered`）は色だけに頼らずアイコンでも区別する（weak: `!`、mastered: `✓`）
 - タイムライン・用語マップともタップで `onNodeTap(termId)` を呼ぶだけで、用語カードを開く処理はアプリ側（`showTermCard`）に委ねる
+
+
+## 評価指標ラボ（画期的な機能3）
+
+`ConfusionMatrixLabWidget` は、混同行列（TP/FP/FN/TN）をスライダーで自由に動かすと正解率・適合率・再現率・F値が連動する様子を見せ、続けて「偽陽性と偽陰性のどちらが重いか」の場面問題につなげる。
+
+```dart
+ConfusionMatrixLabWidget(
+  scenario: ConfusionMatrixScenarioSpec(
+    title: 'がん検診',
+    description: '見逃し(偽陰性)と誤検知(偽陽性)、どちらが重いか。',
+    initialTp: 40, initialFp: 10, initialFn: 10, initialTn: 40,
+    options: const [
+      FailureChoiceSpec(optionId: 'recall', text: '再現率を優先する', isCorrect: true),
+      FailureChoiceSpec(optionId: 'precision', text: '適合率を優先する', isCorrect: false),
+    ],
+    explanation: '病気を見逃す(偽陰性)方が重いため、再現率を優先する。',
+  ),
+)
+```
+
+- スライダーの可動範囲は初期値の合計と100の大きい方。初期値がそれを超えるデータでも壊れない
+- 選択肢は `FailureChoiceSpec`（`failure_gallery.dart`）を再利用する。正解を選ぶまで `ChoiceChip` は選択状態に戻らず、再挑戦できる
