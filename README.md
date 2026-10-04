@@ -344,3 +344,26 @@ python tools/icon_gen/check_icons.py --spec tools/icon_gen/specs/sample.json --o
 - AI 画像は使わない。試験団体のロゴ・「公式」「認定」の文字は入れない
 - シンボルの最終デザインは未決（サンプルは仮）
 - 実際のアプリ用の定義は `tools/icon_gen/specs/ukalab_apps.json`（今は `bike_license` のみ。シンボル `motorcycle` は仮のデザイン）。アプリのアイコンを更新するときは、これで生成して `<id>_1024.png`・`<id>_fg.png`・`<id>_bg.png` を使う
+
+
+## 全国平均点・偏差値の匿名集計（決定32）
+
+`ExamStatsService` は模擬試験結果を匿名で集計し、全国平均点・偏差値を結果画面に表示するための抽象。
+
+```dart
+await ref.read(examStatsServiceProvider).submitResult(ExamStatsSubmission(
+  certId: UkalabCert.gKentei.id,
+  examVersion: exam.version,
+  score: correct,
+  totalQuestions: total,
+));
+final summary = await ref.read(examStatsServiceProvider)
+    .fetchSummary(certId: UkalabCert.gKentei.id, examVersion: exam.version);
+// StatsCompareWidget(summary: summary, myScore: correct) を結果画面に出す
+```
+
+- Firestore には `exam_stats/{certId}_{examVersion}` に件数・合計・平方和の3フィールドだけを持つ（個々の提出は保存しない）。平均・標準偏差はこの3値から導出する（Cloud Functions 不要）
+- `examVersion` は出題配分（`ExamConfig` の章別問題数）が変わるたびに上げる。配分が違う回と混ぜて集計しないため
+- サンプルが10件未満、または分散が0の場合は `deviationScoreFor` が null を返す（`StatsCompareWidget` は偏差値欄を出さない）
+- `FirebaseExamStatsService` を使うには `firebase_core` の初期化（`google-services.json` / `GoogleService-Info.plist` の配置）が必要。実際の Firebase プロジェクトを用意するまでは `FakeExamStatsService` で動かす
+- Firestore ルールのテンプレートは `firestore.rules.template`。書き込みは増分の3フィールドのみに制限し、**Firebase Console の App Check を enforce にすること**（App Check 自体はコードではなくプロジェクト設定）
