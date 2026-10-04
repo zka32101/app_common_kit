@@ -423,3 +423,24 @@ ConfusionMatrixLabWidget(
 
 - スライダーの可動範囲は初期値の合計と100の大きい方。初期値がそれを超えるデータでも壊れない
 - 選択肢は `FailureChoiceSpec`（`failure_gallery.dart`）を再利用する。正解を選ぶまで `ChoiceChip` は選択状態に戻らず、再挑戦できる
+
+
+## 手法の選び方（事例仕分け、画期的な機能6）
+
+`MethodChoiceWidget` は、事例の説明を読んで適切な手法・モデル・評価指標を選び、正解すると理由を見る。
+
+```dart
+MethodChoiceWidget(
+  scenario: MethodChoiceScenarioSpec(
+    title: '顧客の離脱予測',
+    caseDescription: '顧客の年齢・購入履歴から、将来の離脱(はい/いいえ)を予測したい。',
+    options: const [
+      FailureChoiceSpec(optionId: 'classification', text: '分類（教師あり学習）', isCorrect: true),
+      FailureChoiceSpec(optionId: 'clustering', text: 'クラスタリング（教師なし学習）', isCorrect: false),
+    ],
+    explanation: '正解・不正解のラベル付きデータから学習するため、分類(教師あり学習)が適切。',
+  ),
+)
+```
+
+- 選択肢は `FailureChoiceSpec`（`failure_gallery.dart`）を再利用する。`ConfusionMatrixLabWidget` の選択パートと同じ構造で、混同行列の操作だけがない最小版
