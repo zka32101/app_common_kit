@@ -29,7 +29,13 @@ class ReadinessProgressCard extends StatelessWidget {
           children: [
             Text('準備完了まで', style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
-            LinearProgressIndicator(value: progress.masteryFraction, minHeight: 8),
+            LinearProgressIndicator(
+              value: progress.masteryFraction,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+              color: theme.colorScheme.primary,
+              backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+            ),
             const SizedBox(height: 8),
             Text(_message, style: theme.textTheme.bodySmall),
           ],
