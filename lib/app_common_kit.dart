@@ -57,3 +57,4 @@ export 'stats/exam_stats_provider.dart';
 export 'stats/fake_exam_stats_service.dart';
 export 'stats/firebase_exam_stats_service.dart';
 export 'ui_kit/stats_compare.dart';
+export 'ui_kit/term_map.dart';

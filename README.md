@@ -367,3 +367,36 @@ final summary = await ref.read(examStatsServiceProvider)
 - サンプルが10件未満、または分散が0の場合は `deviationScoreFor` が null を返す（`StatsCompareWidget` は偏差値欄を出さない）
 - `FirebaseExamStatsService` を使うには `firebase_core` の初期化（`google-services.json` / `GoogleService-Info.plist` の配置）が必要。実際の Firebase プロジェクトを用意するまでは `FakeExamStatsService` で動かす
 - Firestore ルールのテンプレートは `firestore.rules.template`。書き込みは増分の3フィールドのみに制限し、**Firebase Console の App Check を enforce にすること**（App Check 自体はコードではなくプロジェクト設定）
+
+
+## 用語マップ・AI系譜図（決定41、画期的な機能9）
+
+`TermMapWidget` は、関連用語でつながる地図（用語マップ）と、時代区分に沿ったタイムライン（系譜図）の両方を1つのウィジェットで出す。
+
+```dart
+TermMapWidget(
+  nodes: [
+    for (final t in terms)
+      TermMapNodeSpec(
+        termId: t.termId,
+        label: t.term,
+        era: t.era, // yourwish_kentei の Term.era。null なら用語マップ側のみ
+        relatedTermIds: t.relatedTermIds,
+        mastery: masteryOf(t.termId), // アプリ側が学習ログから判定
+      ),
+  ],
+  eraOrder: const {
+    'boom1': '第1次AIブーム',
+    'winter1': '第1次AIの冬',
+    'boom2': '第2次AIブーム',
+    'winter2': '第2次AIの冬',
+    'deep_learning': '深層学習の時代',
+    'generative_ai': '生成AIの時代',
+  },
+  onNodeTap: (termId) => showTermCard(context, ...),
+)
+```
+
+- `era` を持つ用語は `eraOrder` の順でタイムライン表示、持たない用語は関連（`relatedTermIds`）でつながる円形配置のネットワーク表示になる
+- `mastery`（`TermMastery.none` / `.weak` / `.mastered`）は色だけに頼らずアイコンでも区別する（weak: `!`、mastered: `✓`）
+- タイムライン・用語マップともタップで `onNodeTap(termId)` を呼ぶだけで、用語カードを開く処理はアプリ側（`showTermCard`）に委ねる
