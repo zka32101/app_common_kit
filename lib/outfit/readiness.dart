@@ -21,4 +21,43 @@ class ReadinessRule {
     if (requireMockPass && !mockPassed) return false;
     return model.mastery(mastery) >= minMastery;
   }
+
+  /// 準備完了までの進み具合。画面に「あと◯%」を出すための値。
+  ReadinessProgress progress({required MasteryInput mastery, required bool mockPassed, MasteryModel model = MasteryModel.standard}) {
+    final now = model.mastery(mastery).clamp(0.0, 1.0);
+    final masteryPart = minMastery <= 0 ? 1.0 : (now / minMastery).clamp(0.0, 1.0);
+    return ReadinessProgress(
+      mastery: now,
+      target: minMastery,
+      masteryFraction: masteryPart,
+      mockNeeded: requireMockPass && !mockPassed,
+    );
+  }
+}
+
+/// [ReadinessRule.progress] の結果。
+class ReadinessProgress {
+  const ReadinessProgress({
+    required this.mastery,
+    required this.target,
+    required this.masteryFraction,
+    required this.mockNeeded,
+  });
+
+  /// 今の習得度（0〜1）。
+  final double mastery;
+
+  /// 準備完了の習得度の目標。
+  final double target;
+
+  /// 習得度の目標に対する達成率（0〜1）。
+  final double masteryFraction;
+
+  /// 模擬試験の合格がまだ必要か。
+  final bool mockNeeded;
+
+  bool get isReady => masteryFraction >= 1.0 && !mockNeeded;
+
+  /// 習得度があと何%で目標か（0〜100の整数、切り上げ）。
+  int get masteryPercentLeft => ((target - mastery).clamp(0.0, 1.0) * 100 - 1e-9).ceil();
 }
