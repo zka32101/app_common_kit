@@ -51,6 +51,7 @@ export 'outfit/readiness.dart';
 export 'outfit/wardrobe_screen.dart';
 export 'outfit/pass_report.dart';
 export 'ui_kit/coin_breakdown.dart';
+export 'ui_kit/readiness_progress.dart';
 export 'stats/exam_stats_models.dart';
 export 'stats/exam_stats_service.dart';
 export 'stats/exam_stats_provider.dart';
