@@ -64,3 +64,4 @@ export 'ui_kit/confusion_matrix_lab.dart';
 export 'ui_kit/method_choice.dart';
 export 'ui_kit/ml_lab.dart';
 export 'ui_kit/ai_news_card.dart';
+export 'ui_kit/conv_lab.dart';
