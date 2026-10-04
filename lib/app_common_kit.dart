@@ -11,6 +11,7 @@ export 'entitlement/fake_entitlement_service.dart';
 export 'entitlement/revenuecat_entitlement_service.dart';
 export 'ads/ad_frequency_controller.dart';
 export 'ads/ad_gate.dart';
+export 'ads/ad_gate_provider.dart';
 export 'ads/ad_rules.dart';
 export 'ads/ads_backend.dart';
 export 'ads/google_ads_backend.dart';
