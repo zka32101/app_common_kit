@@ -44,6 +44,7 @@ TITLE_H = 0.15  # 「うかラボ」の高さ
 MARK_SCALE = 1.25  # 桜の大きさ（文字の高さに対する倍率）
 MARK_GAP = 0.025  # 桜とタイトルの間（SIZE比）
 SYMBOL_W = 0.40  # シンボルの幅
+IMAGE_SYMBOL_W = 0.66  # 中央に差し込む画像（横長の絵）の幅。シンボルより広く取る
 NAME_H = 0.19  # 試験名の高さ
 SMALL_SYMBOL_W = 0.52  # 最小サイズ版のシンボル幅
 ADAPTIVE_SAFE = 0.66  # adaptive 前景を収める中央の割合
@@ -97,6 +98,35 @@ def render_symbol(svg_path: Path, width_px: int, bg: tuple[int, int, int]) -> Im
     doc = pymupdf.open(stream=svg.encode("utf-8"), filetype="svg")
     pix = doc[0].get_pixmap(alpha=True)
     return Image.frombytes("RGBA", (pix.width, pix.height), pix.samples)
+
+
+def render_symbol_image(png_path: Path) -> Image.Image:
+    """単色背景に白で描かれた絵（Canva 等で作った PNG）から、白いシルエット（透明背景）を取り出す。
+
+    背景色は四隅の中央値とみなし、背景→白 の度合いを不透明度にする。
+    出力は RGBA（RGB は白、A がシルエット）。余白は呼び出し側で切る。
+    """
+    im = Image.open(png_path).convert("RGB")
+    w, h = im.size
+    corners = [im.getpixel(p) for p in ((2, 2), (w - 3, 2), (2, h - 3), (w - 3, h - 3))]
+    bg = tuple(sorted(c[i] for c in corners)[len(corners) // 2] for i in range(3))
+    px = im.load()
+    out = Image.new("RGBA", im.size, (255, 255, 255, 0))
+    op = out.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]
+            a = 0.0
+            n = 0
+            for c, c0 in zip((r, g, b), bg):
+                if c0 < 250:
+                    a += max(0.0, min(1.0, (c - c0) / (255 - c0)))
+                    n += 1
+            a = a / n if n else 0.0
+            a = 0.0 if a < 0.08 else min(1.0, (a - 0.08) / 0.84)  # 圧縮ノイズを落とす
+            if a:
+                op[x, y] = (255, 255, 255, int(a * 255))
+    return out
 
 
 def fit_text(draw: ImageDraw.ImageDraw, text: str, font_path: str, target_h: int, max_w: int):
@@ -177,11 +207,12 @@ def _compose(short: str, symbol: Path, fill: tuple[int, int, int], font_path: st
         title_bottom = max(title_bottom, my + sak.height)
 
     # シンボル（上段と試験名の間の中央）。余白を除いた見た目の幅が目標になるよう拡縮する
-    sw = int(SIZE * (SMALL_SYMBOL_W if small else SYMBOL_W))
+    is_image = symbol.suffix.lower() == '.png'
+    sw = int(SIZE * (SMALL_SYMBOL_W if small else (IMAGE_SYMBOL_W if is_image else SYMBOL_W)))
     top = (title_bottom if title_bottom else int(SIZE * 0.05)) + int(SIZE * 0.04)
     bottom = boxes[0].y0 - int(SIZE * 0.04)
     avail_h = bottom - top
-    raw = render_symbol(symbol, SIZE, fill)  # 大きく描いてから余白を切る
+    raw = render_symbol_image(symbol) if symbol.suffix.lower() == '.png' else render_symbol(symbol, SIZE, fill)  # 大きく描いてから余白を切る
     bb = raw.getbbox() or (0, 0, raw.width, raw.height)
     raw = raw.crop(bb)
     scale = min(sw / raw.width, (avail_h * 0.92) / raw.height)
@@ -216,7 +247,10 @@ def build_one(spec: dict, certs, font_path: str, out: Path) -> dict:
     if cid not in certs:
         raise KeyError(f"未知の資格ID: {cid}")
     fill = certs[cid]
-    symbol = SYMBOL_DIR / f"{spec['symbol']}.svg"
+    if spec.get("symbol_image"):
+        symbol = Path(spec["symbol_image"])  # 中央に差し込む画像（PNG）。絶対パスか、実行場所からの相対
+    else:
+        symbol = SYMBOL_DIR / f"{spec['symbol']}.svg"
     if not symbol.exists():
         raise FileNotFoundError(symbol)
     result = {}
