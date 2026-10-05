@@ -5,5 +5,5 @@
   {"id": "denken3", "short": "電験3", "symbol": "bolt"},
   {"id": "it_passport", "short": "ITパス", "symbol": "chip"},
   {"id": "sme_consultant", "short": "診断士", "symbol": "bars"},
-  {"id": "gen_ai_passport", "short": "AIパス", "symbol": "sparkle"}
+  {"id": "gen_ai_passport", "short": "AIパス", "symbol": "passport_ai"}
 ]
