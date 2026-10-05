@@ -41,11 +41,23 @@ cases = [
     case('タイトルが空のフィードバックは作れない', 'create', 'feedback/f1', 'u1', 'DENY', {**good_fb, 'title': ''}),
     case('ステータスを open 以外にできない', 'create', 'feedback/f1', 'u1', 'DENY', {**good_fb, 'status': 'closed'}),
     case('フィードバックは更新できない', 'update', 'feedback/f1', 'u1', 'DENY', good_fb),
+    # 漢字マスター検定（exams/kanji_kentei/ 配下に旧 kanken のルールを入れ子にしたもの）
+    case('漢検: 本人は自分のプロフィールを書ける', 'create', 'exams/kanji_kentei/users/u1/profiles/p1', 'u1', 'ALLOW', {'x': 1}),
+    case('漢検: 他人のプロフィールは書けない', 'create', 'exams/kanji_kentei/users/u1/profiles/p1', 'u2', 'DENY', {'x': 1}),
+    case('漢検: ランキングは本人の複合IDだけ書ける', 'create', 'exams/kanji_kentei/rankings/u1_p1', 'u1', 'ALLOW', {'x': 1}),
+    case('漢検: 他人の複合IDのランキングは書けない', 'create', 'exams/kanji_kentei/rankings/u1_p1', 'u2', 'DENY', {'x': 1}),
+    case('漢検: ランキングはログインすれば読める', 'get', 'exams/kanji_kentei/rankings/u1_p1', 'u2', 'ALLOW'),
+    case('漢検: 未ログインはランキングを読めない', 'get', 'exams/kanji_kentei/rankings/u1_p1', None, 'DENY'),
+    case('漢検: 問題マスターは書けない', 'create', 'exams/kanji_kentei/questions/q1', 'u1', 'DENY', {'x': 1}),
+    case('漢検: 問題マスターは読める', 'get', 'exams/kanji_kentei/questions/q1', 'u1', 'ALLOW'),
+    case('漢検: 対戦ルームは自分が作成者なら作れる', 'create', 'exams/kanji_kentei/battleRooms/r1', 'u1', 'ALLOW', {'creatorId': 'u1', 'participants': []}),
+    case('漢検: 他人を作成者にした対戦ルームは作れない', 'create', 'exams/kanji_kentei/battleRooms/r1', 'u2', 'DENY', {'creatorId': 'u1', 'participants': []}),
+    case('漢検: 旧パス(トップレベルusers)は使えない', 'create', 'users/u1', 'u1', 'DENY', {'x': 1}),
     case('上記以外のパスは読めない', 'get', 'secrets/s1', 'u1', 'DENY'),
     case('上記以外のパスは書けない', 'create', 'secrets/s1', 'u1', 'DENY', {'x': 1}),
 ]
 # フィードバックの更新・読み取りは「既存ドキュメント」が要るため、別枠で resource を付ける。
-cases[10]['resource'] = {'data': good_fb}
+cases[next(i for i, c in enumerate(cases) if c['name'] == 'フィードバックは更新できない')]['resource'] = {'data': good_fb}
 cases.append({
     'name': '自分のフィードバックは読める', 'expectation': 'ALLOW',
     'request': {'method': 'get', 'path': f'{DOC}/feedback/f1', 'auth': {'uid': 'u1', 'token': {}}},
