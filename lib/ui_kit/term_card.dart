@@ -53,7 +53,7 @@ class TermCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      padding: EdgeInsets.fromLTRB(20, 8, 20, 24 + MediaQuery.of(context).padding.bottom),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -159,6 +159,7 @@ Future<void> showTermCard(
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
+    useSafeArea: true, // 下部のナビゲーションバーに隠れないようにする
     showDragHandle: true,
     builder: (context) => ConstrainedBox(
       constraints: BoxConstraints(
