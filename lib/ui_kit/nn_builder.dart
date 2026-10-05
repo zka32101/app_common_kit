@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_controls.dart';
+
 /// ニューラルネット組み立て（画期的な機能2）のデータ点1件。
 class NnBuilderPointSpec {
   const NnBuilderPointSpec({required this.x, required this.y, required this.label});
@@ -87,7 +89,7 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
           onSelectionChanged: (s) => setState(() => _hiddenLayers = s.first),
         ),
         const SizedBox(height: 12),
-        _HyperParamSlider(
+        HyperParamSlider(
           label: 'ユニット数',
           value: _units.toDouble(),
           min: 2,
@@ -108,7 +110,7 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
           onSelectionChanged: (s) => setState(() => _activation = s.first),
         ),
         const SizedBox(height: 12),
-        _HyperParamSlider(
+        HyperParamSlider(
           label: '学習率',
           value: _learningRate,
           min: 0.1,
@@ -129,9 +131,9 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
         const SizedBox(height: 8),
         Row(
           children: [
-            _LegendMark(color: theme.colorScheme.primary, shape: BoxShape.circle, label: 'クラス0'),
+            LegendMark(color: theme.colorScheme.primary, shape: BoxShape.circle, label: 'クラス0'),
             const SizedBox(width: 16),
-            _LegendMark(color: theme.colorScheme.error, shape: BoxShape.rectangle, label: 'クラス1'),
+            LegendMark(color: theme.colorScheme.error, shape: BoxShape.rectangle, label: 'クラス1'),
           ],
         ),
         const SizedBox(height: 16),
@@ -150,67 +152,6 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
         ),
         const SizedBox(height: 8),
         Text(_hint, style: theme.textTheme.bodySmall),
-      ],
-    );
-  }
-}
-
-class _HyperParamSlider extends StatelessWidget {
-  const _HyperParamSlider({
-    required this.label,
-    required this.value,
-    required this.min,
-    required this.max,
-    required this.divisions,
-    required this.onChanged,
-    this.valueLabel,
-  });
-
-  final String label;
-  final double value;
-  final double min;
-  final double max;
-  final int divisions;
-  final String? valueLabel;
-  final ValueChanged<double> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = valueLabel ?? value.round().toString();
-    return Row(
-      children: [
-        SizedBox(width: 64, child: Text(label, style: Theme.of(context).textTheme.bodySmall)),
-        Expanded(
-          child: Slider(
-            value: value,
-            min: min,
-            max: max,
-            divisions: divisions,
-            label: text,
-            onChanged: onChanged,
-          ),
-        ),
-        SizedBox(width: 40, child: Text(text, textAlign: TextAlign.end)),
-      ],
-    );
-  }
-}
-
-class _LegendMark extends StatelessWidget {
-  const _LegendMark({required this.color, required this.shape, required this.label});
-
-  final Color color;
-  final BoxShape shape;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: shape)),
-        const SizedBox(width: 6),
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }
