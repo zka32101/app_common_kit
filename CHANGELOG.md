@@ -47,6 +47,9 @@
 - `showMockRecordDialog`: 模擬試験で合格点を超えたときの「学習の記録カード」（保守版 v0.4.3 と同じ内容を main にも取り込み）。コインも衣装も付けない
 - `MasteryInput.fromCounts()`／`MasteryInput.fromLogs()`: 件数・回答ログから習得度の入力を作る共通計算（保守版 v0.4.2 と同じ内容を main にも取り込み）
 
+### 修正
+- `ReadinessProgressCard`: 進捗バーの色を明示（保守版 v0.4.4 と同じ内容を main にも取り込み）。0% でもバー全体が塗られて見える問題の修正
+
 ## [0.4.1] - 2026-10-04（保守版・ブランチ `release/0.4`）
 
 v0.4.0 に「準備完了までの進み具合」（`ReadinessProgress`／`ReadinessProgressCard`）だけを足した版。main の他の追加は含まない。v0.8.0 は `cloud_firestore` 5系以上を要求し、4系の漢字マスター検定が使えないため、両アプリ（バイク免許コレ・漢字マスター検定）は v0.4.1 を使う。v0.8.0 に上げる場合は、先にアプリ側の Firebase を5系へ上げること。また v0.8.0 の `adGateProvider` はバイク免許コレ自前の同名プロバイダと衝突する（import で `hide` が要る）。
