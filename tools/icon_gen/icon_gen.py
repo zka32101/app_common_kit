@@ -41,6 +41,8 @@ TITLE = "うかラボ"
 
 # レイアウト（アイコン幅=100 に対する割合。共通デザイン仕様 v0.4 §5）
 TITLE_H = 0.15  # 「うかラボ」の高さ
+MARK_SCALE = 1.25  # 桜の大きさ（文字の高さに対する倍率）
+MARK_GAP = 0.025  # 桜とタイトルの間（SIZE比）
 SYMBOL_W = 0.40  # シンボルの幅
 NAME_H = 0.19  # 試験名の高さ
 SMALL_SYMBOL_W = 0.52  # 最小サイズ版のシンボル幅
@@ -148,17 +150,31 @@ def _compose(short: str, symbol: Path, fill: tuple[int, int, int], font_path: st
     d.text((nx, ny), short, font=nf, fill=white)
     boxes.append(Box("name", nx + nb[0], ny + nb[1], nx + nb[2], ny + nb[3]))
 
-    # 上段「うかラボ」（最小サイズ版では省略）
+    # 上段「うかラボ」（最小サイズ版では省略）。左に合格の桜（シリーズ共通のマーク）を添える
     title_bottom = 0
     if not small:
-        tf, tb = fit_text(d, TITLE, font_path, int(SIZE * TITLE_H), max_w)
+        mark_h = int(SIZE * TITLE_H * MARK_SCALE)
+        mark_gap = int(SIZE * MARK_GAP)
+        tf, tb = fit_text(d, TITLE, font_path, int(SIZE * TITLE_H), max_w - mark_h - mark_gap)
         tw, th = tb[2] - tb[0], tb[3] - tb[1]
+        group_w = mark_h + mark_gap + tw
+        gx = (SIZE - group_w) // 2  # 桜＋タイトルをまとめて中央に置く
         ty0 = int(SIZE * 0.07)
-        tx = (SIZE - tw) // 2 - tb[0]
+        tx = gx + mark_h + mark_gap - tb[0]
         ty = ty0 - tb[1]
         d.text((tx, ty), TITLE, font=tf, fill=white)
         boxes.append(Box("title", tx + tb[0], ty + tb[1], tx + tb[2], ty + tb[3]))
         title_bottom = ty + tb[3]
+        # 桜は文字の縦中央にそろえる
+        sak = render_symbol(SYMBOL_DIR / "sakura.svg", SIZE, fill)
+        sb = sak.getbbox() or (0, 0, sak.width, sak.height)
+        sak = sak.crop(sb)
+        k = mark_h / max(sak.width, sak.height)
+        sak = sak.resize((max(1, int(sak.width * k)), max(1, int(sak.height * k))), Image.LANCZOS)
+        my = ty + tb[1] + (th - sak.height) // 2
+        canvas.alpha_composite(sak, (gx, my))
+        boxes.append(Box("mark", gx, my, gx + sak.width, my + sak.height))
+        title_bottom = max(title_bottom, my + sak.height)
 
     # シンボル（上段と試験名の間の中央）。余白を除いた見た目の幅が目標になるよう拡縮する
     sw = int(SIZE * (SMALL_SYMBOL_W if small else SYMBOL_W))

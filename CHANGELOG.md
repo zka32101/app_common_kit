@@ -44,6 +44,9 @@
 ## [Unreleased]
 
 ### 追加
+- アプリアイコン: 「うかラボ」の左に、合格の象徴「桜」を添えた（`tools/icon_gen`、`symbols/sakura.svg`）。桜とタイトルをまとめて中央に置く。最小サイズ版（上段なし）には入れない
+
+### 追加
 - `showMockRecordDialog`: 模擬試験で合格点を超えたときの「学習の記録カード」（保守版 v0.4.3 と同じ内容を main にも取り込み）。コインも衣装も付けない
 - `MasteryInput.fromCounts()`／`MasteryInput.fromLogs()`: 件数・回答ログから習得度の入力を作る共通計算（保守版 v0.4.2 と同じ内容を main にも取り込み）
 
