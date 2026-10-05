@@ -41,6 +41,14 @@ class _AttentionVizWidgetState extends State<AttentionVizWidget> {
   int _query = 0;
 
   @override
+  void didUpdateWidget(AttentionVizWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_query >= widget.scenario.tokens.length) {
+      _query = 0;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = widget.scenario.tokens;
