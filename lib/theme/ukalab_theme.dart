@@ -38,8 +38,14 @@ class UkalabTheme {
       brightness: brightness,
       primary: p.fill,
       onPrimary: p.onFill,
+      // コンテナ色（薄い面）。指定しないと Flutter が濃い色から補い、既定の灰色の文字が
+      // 沈んで読めなくなる（評価指標ラボのチップ）。on*Container は必ず面とセットで決める。
+      primaryContainer: p.primaryContainer,
+      onPrimaryContainer: p.onPrimaryContainer,
       secondary: p.brand,
       onSecondary: brightness == Brightness.dark ? UkalabPalette.onFillDark : Colors.white,
+      secondaryContainer: p.secondaryContainer,
+      onSecondaryContainer: p.onSecondaryContainer,
       error: p.error,
       onError: brightness == Brightness.dark ? UkalabPalette.onFillDark : Colors.white,
       surface: p.surface,
