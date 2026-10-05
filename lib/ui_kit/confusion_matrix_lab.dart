@@ -213,7 +213,10 @@ class _StatChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Chip(
-      label: Text('$label ${(value * 100).toStringAsFixed(1)}%'),
+      label: Text(
+        '$label ${(value * 100).toStringAsFixed(1)}%',
+        style: TextStyle(color: theme.colorScheme.onSecondaryContainer),
+      ),
       backgroundColor: theme.colorScheme.secondaryContainer,
     );
   }

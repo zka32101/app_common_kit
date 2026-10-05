@@ -77,6 +77,10 @@ class UkalabPalette {
     required this.warning,
     required this.fill,
     required this.onFill,
+    required this.primaryContainer,
+    required this.onPrimaryContainer,
+    required this.secondaryContainer,
+    required this.onSecondaryContainer,
   });
 
   final Brightness brightness;
@@ -96,6 +100,15 @@ class UkalabPalette {
 
   /// [fill] の上の文字色（ライト: 白、ダーク: #10151C）。
   final Color onFill;
+
+  /// 分野色の薄い面（選択中の項目・強調カードの背景）。上の文字は [onPrimaryContainer]。
+  /// 面は surface に分野色を重ねて作り、文字は textPrimary（どちらも AA を満たす）。
+  final Color primaryContainer;
+  final Color onPrimaryContainer;
+
+  /// ブランド色の薄い面（チップ・タグの背景）。上の文字は [onSecondaryContainer]。
+  final Color secondaryContainer;
+  final Color onSecondaryContainer;
 
   /// ダークの塗り面の文字色（白は約2.4:1で成立しないため）。
   static const Color onFillDark = Color(0xFF10151C);
@@ -133,6 +146,11 @@ class UkalabPalette {
         warning: const Color(0xFFF0A04B),
         fill: fill,
         onFill: onFillDark,
+        primaryContainer: Color.alphaBlend(fill.withValues(alpha: 0.30), const Color(0xFF1B2633)),
+        onPrimaryContainer: const Color(0xFFE8EDF3),
+        secondaryContainer: Color.alphaBlend(
+            const Color(0xFF4FD1CB).withValues(alpha: 0.28), const Color(0xFF1B2633)),
+        onSecondaryContainer: const Color(0xFFE8EDF3),
       );
     }
     return UkalabPalette(
@@ -147,6 +165,11 @@ class UkalabPalette {
       warning: field == UkalabField.biz ? const Color(0xFF8A6100) : const Color(0xFFA35600),
       fill: fill,
       onFill: const Color(0xFFFFFFFF),
+      primaryContainer: Color.alphaBlend(fill.withValues(alpha: 0.14), const Color(0xFFFFFFFF)),
+      onPrimaryContainer: const Color(0xFF1B2430),
+      secondaryContainer: Color.alphaBlend(
+          const Color(0xFF0B7370).withValues(alpha: 0.14), const Color(0xFFFFFFFF)),
+      onSecondaryContainer: const Color(0xFF1B2430),
     );
   }
 }

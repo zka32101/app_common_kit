@@ -37,6 +37,21 @@ void main() {
         test('分野色の塗りの上の文字が AA', () {
           expect(contrastRatio(p.fill, p.onFill), greaterThanOrEqualTo(aaText));
         });
+
+        test('コンテナ（薄い面）の上の文字が AA（評価指標ラボのチップが読めない不具合の再発防止）', () {
+          expect(contrastRatio(p.primaryContainer, p.onPrimaryContainer), greaterThanOrEqualTo(aaText),
+              reason: 'primaryContainer');
+          expect(contrastRatio(p.secondaryContainer, p.onSecondaryContainer), greaterThanOrEqualTo(aaText),
+              reason: 'secondaryContainer');
+        });
+
+        test('ThemeData の colorScheme にコンテナ色が反映される（Flutter の補完に任せない）', () {
+          final scheme = UkalabTheme.build(field: field, brightness: b).colorScheme;
+          expect(scheme.primaryContainer, p.primaryContainer);
+          expect(scheme.onPrimaryContainer, p.onPrimaryContainer);
+          expect(scheme.secondaryContainer, p.secondaryContainer);
+          expect(scheme.onSecondaryContainer, p.onSecondaryContainer);
+        });
       });
     }
   }
@@ -47,6 +62,12 @@ void main() {
         test('${cert.label} / ${b.name}: 塗りの上の文字が AA', () {
           final p = UkalabPalette.resolve(field: cert.field, cert: cert, brightness: b);
           expect(contrastRatio(p.fill, p.onFill), greaterThanOrEqualTo(aaText));
+        });
+
+        test('${cert.label} / ${b.name}: コンテナの上の文字が AA', () {
+          final p = UkalabPalette.resolve(field: cert.field, cert: cert, brightness: b);
+          expect(contrastRatio(p.primaryContainer, p.onPrimaryContainer), greaterThanOrEqualTo(aaText));
+          expect(contrastRatio(p.secondaryContainer, p.onSecondaryContainer), greaterThanOrEqualTo(aaText));
         });
       }
     }
