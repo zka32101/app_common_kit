@@ -147,14 +147,18 @@ class _StoryChapterStep extends StatelessWidget {
         if (selected == null) ...[
           Text('どう判断しますか?', style: theme.textTheme.labelMedium),
           const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final c in chapter.choices)
-                ChoiceChip(label: Text(c.text), selected: false, onSelected: (_) => onSelect(c)),
-            ],
-          ),
+          // 選択肢は長い文になるため、横いっぱいに広げて折り返す（チップだと1行で切れる）。
+          for (final c in chapter.choices) ...[
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+              onPressed: () => onSelect(c),
+              child: Text(c.text, textAlign: TextAlign.left),
+            ),
+            const SizedBox(height: 8),
+          ],
         ] else ...[
           Card(
             margin: EdgeInsets.zero,
