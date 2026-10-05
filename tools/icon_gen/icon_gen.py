@@ -47,7 +47,7 @@ SYMBOL_W = 0.40  # シンボルの幅
 IMAGE_SYMBOL_W = 0.66  # 中央に差し込む画像（横長の絵）の幅。シンボルより広く取る
 NAME_H = 0.19  # 試験名の高さ
 SMALL_SYMBOL_W = 0.52  # 最小サイズ版のシンボル幅
-ADAPTIVE_SAFE = 0.66  # adaptive 前景を収める中央の割合
+ADAPTIVE_SAFE = 0.56  # adaptive 前景を収める中央の割合（円形マスクでも上段・下段の文字が欠けない値。0.66 だと円形で欠ける）
 
 FONT_CANDIDATES = [
     "C:/Windows/Fonts/YuGothB.ttc",
