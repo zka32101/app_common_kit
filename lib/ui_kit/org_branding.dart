@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// 起動中の読み込み画面（[Scaffold] の body など）の一番下に置く。
 /// 画像はキットに同梱（`assets/branding/yourwish_logo.png`）。
 class OrgBrandingFooter extends StatelessWidget {
-  const OrgBrandingFooter({super.key, this.logoHeight = 40});
+  const OrgBrandingFooter({super.key, this.logoHeight = 72});
 
   final double logoHeight;
 
