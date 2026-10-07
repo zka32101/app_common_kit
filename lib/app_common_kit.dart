@@ -38,6 +38,8 @@ export 'mascot/mascot_logic.dart';
 export 'mascot/mascot_lines.dart';
 export 'mascot/standard_character.dart';
 export 'mascot/mascot_widget.dart';
+export 'mascot/ukalab_characters.dart';
+export 'mascot/character_selection.dart';
 export 'outfit/outfit_models.dart';
 export 'outfit/outfit_service.dart';
 export 'outfit/share_card.dart';
