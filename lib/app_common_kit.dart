@@ -18,6 +18,8 @@ export 'ads/google_ads_backend.dart';
 export 'models/feedback_limits.dart';
 export 'theme/ukalab_palette.dart';
 export 'theme/ukalab_theme.dart';
+export 'theme/theme_mode_store.dart';
+export 'progress/streak_store.dart';
 export 'ui_kit/org_branding.dart';
 export 'ui_kit/choice_tile.dart';
 export 'ui_kit/question_card.dart';
