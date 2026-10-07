@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-ProviderContainer _container({int mockPasses = 0}) {
+ProviderContainer _container() {
   final coin = CoinService(
     store: InMemoryCoinStore(),
     shop: OutfitCatalog.shopItems([UkalabCert.bikeLicense]),
