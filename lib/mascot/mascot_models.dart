@@ -17,6 +17,18 @@ enum MascotStage {
 /// 表情。責める・落ち込む表情は作らない。
 enum MascotExpression { normal, joy }
 
+/// 場面別のポーズ（画像パックのみ）。標準キャラ（コード描画）には無い。
+enum MascotScene {
+  /// 試験日の前日: 応援のポーズ
+  eve,
+
+  /// 久しぶりに開いた: おかえりのポーズ
+  welcomeBack,
+
+  /// 連続して学習している: 炎のポーズ
+  streak,
+}
+
 /// 試験日が近いときの装い（日程連動。無料）。
 enum ExamPhase {
   /// 試験日を設定していない／まだ遠い
@@ -53,6 +65,12 @@ typedef MascotOutfitImageBuilder = ImageProvider? Function(
   MascotStage stage,
 );
 
+/// 場面別のポーズ画像を返す関数。null なら通常の画像（[MascotImageBuilder]）に戻す。
+typedef MascotSceneImageBuilder = ImageProvider? Function(
+  MascotScene scene,
+  MascotStage stage,
+);
+
 /// キャラクターパック（データ）。ロジックは共通で、見た目とセリフの口調だけが違う。
 ///
 /// 標準キャラ（フラスコの助手）は [CharacterPack.standard] で、コード描画のため画像不要。
@@ -64,6 +82,7 @@ class CharacterPack {
     required this.tone,
     this.imageBuilder,
     this.outfitImageBuilder,
+    this.sceneImageBuilder,
     this.fieldAccent = const {},
     this.signature,
   });
@@ -77,6 +96,9 @@ class CharacterPack {
 
   /// 衣装を着た姿の画像。null または結果が null のときは通常の画像を使う。
   final MascotOutfitImageBuilder? outfitImageBuilder;
+
+  /// 場面別のポーズ画像。null または結果が null のときは通常の画像を使う。
+  final MascotSceneImageBuilder? sceneImageBuilder;
 
   /// 分野ごとの差し色。なければ分野色（テーマ）を使う。
   final Map<UkalabField, Color> fieldAccent;
