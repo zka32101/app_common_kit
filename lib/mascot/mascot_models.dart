@@ -17,7 +17,7 @@ enum MascotStage {
 /// 表情。責める・落ち込む表情は作らない。
 enum MascotExpression { normal, joy }
 
-/// 場面別のポーズ（画像パックのみ）。標準キャラ（コード描画）には無い。
+/// 場面別・案内役のポーズ（画像パックのみ）。標準キャラ（コード描画）には無い。
 enum MascotScene {
   /// 試験日の前日: 応援のポーズ
   eve,
@@ -27,6 +27,18 @@ enum MascotScene {
 
   /// 連続して学習している: 炎のポーズ
   streak,
+
+  /// 案内役: 指さし（レベルに関係なく Lv1 の絵）
+  guidePoint,
+
+  /// 案内役: 考える（電球）
+  guideThink,
+
+  /// 案内役: 白紙の本を見せて教える
+  guideTeach;
+
+  /// 案内役のポーズか（学習の進み具合に関係なく使える）。
+  bool get isGuide => index >= MascotScene.guidePoint.index;
 }
 
 /// 試験日が近いときの装い（日程連動。無料）。
