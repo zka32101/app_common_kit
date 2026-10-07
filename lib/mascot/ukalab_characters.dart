@@ -7,14 +7,21 @@ import 'mascot_models.dart';
 /// うかラボ共通の推し（AI画像の4体）。標準キャラ「うか」は [CharacterPack.standard]。
 ///
 /// 画像は本パッケージの `assets/mascot/<id>/`。衣装は `outfits/<資格id>_<normal|pass|exam>.webp`。
-/// 衣装の画像があるのは、いまは漢字検定・バイク免許・G検定のみ（ない資格は私服のまま）。
+/// 衣装の画像があるのは、いまは漢字検定・バイク免許・G検定・簿記3級・危険物乙4・生成AIパスポート（ない資格は私服のまま）。
 class UkalabCharacters {
   const UkalabCharacters._();
 
   static const String package = 'app_common_kit';
 
   /// 衣装画像のある資格。
-  static const Set<String> costumedCerts = {'kanji_kentei', 'bike_license', 'g_kentei'};
+  static const Set<String> costumedCerts = {
+    'kanji_kentei',
+    'bike_license',
+    'g_kentei',
+    'boki3',
+    'hazmat4',
+    'gen_ai_passport',
+  };
 
   static const kai = CharacterPack(
     id: 'kai',
