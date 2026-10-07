@@ -7,6 +7,7 @@ import 'mascot_models.dart';
 /// うかラボ共通の推し（AI画像の4体）。標準キャラ「うか」は [CharacterPack.standard]。
 ///
 /// 画像は本パッケージの `assets/mascot/<id>/`。衣装は `outfits/<資格id>_<normal|pass|exam>.webp`。
+/// 場面別ポーズは `scenes/<id>_lv1_<eve|back|streak>.webp`（Lv1 のみ）。
 /// 衣装の画像があるのは、いまは漢字検定・バイク免許・G検定・簿記3級・危険物乙4・生成AIパスポート（ない資格は私服のまま）。
 class UkalabCharacters {
   const UkalabCharacters._();
@@ -29,6 +30,7 @@ class UkalabCharacters {
     tone: MascotTone.gentle,
     imageBuilder: _kaiImage,
     outfitImageBuilder: _kaiOutfit,
+    sceneImageBuilder: _kaiScene,
   );
   static const mio = CharacterPack(
     id: 'mio',
@@ -36,6 +38,7 @@ class UkalabCharacters {
     tone: MascotTone.cheerful,
     imageBuilder: _mioImage,
     outfitImageBuilder: _mioOutfit,
+    sceneImageBuilder: _mioScene,
   );
   static const moka = CharacterPack(
     id: 'moka',
@@ -43,6 +46,7 @@ class UkalabCharacters {
     tone: MascotTone.relaxed,
     imageBuilder: _mokaImage,
     outfitImageBuilder: _mokaOutfit,
+    sceneImageBuilder: _mokaScene,
   );
   static const mike = CharacterPack(
     id: 'mike',
@@ -50,6 +54,7 @@ class UkalabCharacters {
     tone: MascotTone.cool,
     imageBuilder: _mikeImage,
     outfitImageBuilder: _mikeOutfit,
+    sceneImageBuilder: _mikeScene,
   );
 
   /// 選べる全員（標準キャラ＋画像4体）。
@@ -102,12 +107,34 @@ class UkalabCharacters {
     return AssetImage('assets/mascot/$id/outfits/$f.webp', package: package);
   }
 
+  /// 場面別ポーズの画像ファイル名（拡張子なし）。
+  static String sceneFile(String id, MascotScene scene) {
+    switch (scene) {
+      case MascotScene.eve:
+        return '${id}_lv1_eve';
+      case MascotScene.welcomeBack:
+        return '${id}_lv1_back';
+      case MascotScene.streak:
+        return '${id}_lv1_streak';
+    }
+  }
+
+  /// 場面別ポーズの画像。いまは Lv1（私服）だけ。Lv2 以上は null（通常の画像を使う）。
+  static ImageProvider? sceneImage(String id, MascotScene scene, MascotStage stage) {
+    if (stage != MascotStage.lv1) return null;
+    return AssetImage('assets/mascot/$id/scenes/${sceneFile(id, scene)}.webp', package: package);
+  }
+
   static ImageProvider? _kaiImage(MascotStage s, MascotExpression e) => levelImage('kai', s, e);
   static ImageProvider? _mioImage(MascotStage s, MascotExpression e) => levelImage('mio', s, e);
   static ImageProvider? _mokaImage(MascotStage s, MascotExpression e) => levelImage('moka', s, e);
   static ImageProvider? _mikeImage(MascotStage s, MascotExpression e) => levelImage('mike', s, e);
   static ImageProvider? _kaiOutfit(Outfit o, MascotStage s) => outfitImage('kai', o, s);
+  static ImageProvider? _kaiScene(MascotScene sc, MascotStage s) => sceneImage('kai', sc, s);
   static ImageProvider? _mioOutfit(Outfit o, MascotStage s) => outfitImage('mio', o, s);
+  static ImageProvider? _mioScene(MascotScene sc, MascotStage s) => sceneImage('mio', sc, s);
   static ImageProvider? _mokaOutfit(Outfit o, MascotStage s) => outfitImage('moka', o, s);
+  static ImageProvider? _mokaScene(MascotScene sc, MascotStage s) => sceneImage('moka', sc, s);
   static ImageProvider? _mikeOutfit(Outfit o, MascotStage s) => outfitImage('mike', o, s);
+  static ImageProvider? _mikeScene(MascotScene sc, MascotStage s) => sceneImage('mike', sc, s);
 }

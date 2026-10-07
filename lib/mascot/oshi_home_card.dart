@@ -116,6 +116,19 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
     return MascotSituation.greeting;
   }
 
+  MascotScene? _scene(MascotSituation s) {
+    switch (s) {
+      case MascotSituation.examEve:
+        return MascotScene.eve;
+      case MascotSituation.welcomeBack:
+        return MascotScene.welcomeBack;
+      case MascotSituation.streak:
+        return MascotScene.streak;
+      default:
+        return null;
+    }
+  }
+
   void _onMenu(Object value) {
     if (value is MascotDisplay) {
       _setDisplay(value);
@@ -202,6 +215,7 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
       pack: pack,
       stage: widget.stage,
       outfit: outfit,
+      scene: _scene(situation),
       expression: day.expression,
       examPhase: phase,
       display: _display,

@@ -2,6 +2,18 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.12.0] - 2026-10-07
+
+推しの場面別ポーズ（前日の応援・おかえり・連続学習）を追加。
+
+### 追加
+- `MascotScene`（eve / welcomeBack / streak）・`CharacterPack.sceneImageBuilder`・`UkalabCharacters.sceneImage`。画像は `assets/mascot/<id>/scenes/<id>_lv1_<eve|back|streak>.webp`（4体×3枚、約0.7MB）
+- `MascotWidget(scene: ...)`: 画像パックで衣装を着ていないときに場面別ポーズを出す（衣装が優先）
+- `UkalabOshiCard` は、試験前日・久しぶり（おかえり）・連続学習（3日以上）のひとことと同時に、場面別ポーズを自動で出す
+
+### 注意
+- 場面別ポーズは Lv1（私服）だけ。Lv2 以上は null を返し、従来の通常画像のまま（Lv2〜5 の場面画像は今後追加）
+
 ## [0.11.0] - 2026-10-07
 
 推しカードの完成品をキットに追加（アプリごとの重複コードを不要にする）。
