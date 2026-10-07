@@ -28,12 +28,15 @@ enum UkalabRoom {
 
 /// 部屋の画像と、資格→部屋の対応。
 ///
-/// 画像は本パッケージの `assets/mascot/rooms/room_<name>.webp`（1120×736）。
+/// 画像は本パッケージの `assets/mascot/rooms/room_<name>.webp`（横長 1120×736）と `roomv_<name>.webp`（縦長 736×1120）。
 class UkalabRooms {
   const UkalabRooms._();
 
-  /// 画像の縦横比（幅/高さ）。
+  /// 横長の画像の縦横比（幅/高さ）。
   static const double aspectRatio = 1120 / 736;
+
+  /// 縦長の画像の縦横比（幅/高さ。壁紙向け）。
+  static const double portraitAspectRatio = 736 / 1120;
 
   static UkalabRoom forCert(UkalabCert cert) {
     switch (cert) {
@@ -59,11 +62,11 @@ class UkalabRooms {
     }
   }
 
-  /// 画像ファイル名（拡張子なし）。
-  static String file(UkalabRoom room) => 'room_${room.name}';
+  /// 画像ファイル名（拡張子なし）。横長は `room_<name>`、縦長は `roomv_<name>`。
+  static String file(UkalabRoom room, {bool portrait = false}) => '${portrait ? 'roomv' : 'room'}_${room.name}';
 
-  static ImageProvider image(UkalabRoom room) =>
-      AssetImage('assets/mascot/rooms/${file(room)}.webp', package: UkalabCharacters.package);
+  static ImageProvider image(UkalabRoom room, {bool portrait = false}) =>
+      AssetImage('assets/mascot/rooms/${file(room, portrait: portrait)}.webp', package: UkalabCharacters.package);
 }
 
 /// 推しの部屋: 背景の上に、選んだ推し（衣装・場面ポーズ込み）を立たせた絵。
@@ -81,6 +84,7 @@ class UkalabOshiRoom extends StatelessWidget {
     this.scene,
     this.line,
     this.characterHeight = 0.88,
+    this.portrait = false,
   });
 
   /// 資格から部屋を決める。
@@ -94,6 +98,7 @@ class UkalabOshiRoom extends StatelessWidget {
     MascotScene? scene,
     String? line,
     double characterHeight = 0.88,
+    bool portrait = false,
   }) : this(
           key: key,
           pack: pack,
@@ -104,6 +109,7 @@ class UkalabOshiRoom extends StatelessWidget {
           scene: scene,
           line: line,
           characterHeight: characterHeight,
+          portrait: portrait,
         );
 
   final CharacterPack pack;
@@ -119,17 +125,20 @@ class UkalabOshiRoom extends StatelessWidget {
   /// 部屋の高さに対する推しの高さ（0〜1）。
   final double characterHeight;
 
+  /// true なら縦長の背景（壁紙向け）。
+  final bool portrait;
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: UkalabRooms.aspectRatio,
+      aspectRatio: portrait ? UkalabRooms.portraitAspectRatio : UkalabRooms.aspectRatio,
       child: LayoutBuilder(
         builder: (context, c) {
           final h = c.maxHeight * characterHeight;
           return Stack(
             fit: StackFit.expand,
             children: [
-              Image(image: UkalabRooms.image(room), fit: BoxFit.cover, excludeFromSemantics: true),
+              Image(image: UkalabRooms.image(room, portrait: portrait), fit: BoxFit.cover, excludeFromSemantics: true),
               Align(
                 alignment: const Alignment(0, 0.92),
                 child: MascotWidget(

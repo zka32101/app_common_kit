@@ -2,6 +2,21 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.14.0] - 2026-10-07
+
+縦長の部屋の背景・部屋の小物・場面ポーズの Lv2〜5 を追加。
+
+### 追加
+- `UkalabOshiRoom(portrait: true)`: 縦長の背景（壁紙向け・736×1120）。`UkalabRooms.image(room, portrait: true)`・`UkalabRooms.portraitAspectRatio`。画像は `assets/mascot/rooms/roomv_<name>.webp`（7枚・約0.35MB）
+- `UkalabProp` / `UkalabProps.image(prop)`: 部屋の小物12種（本棚・黒板・トロフィー・鉢植え・ランプ・地球儀・時計・フラスコ棚・工具箱・そろばん・額縁・バッジ盤）。透過の画像 `assets/mascot/props/prop_<name>.webp`（約0.4MB）。置き方（いつ何を出すか）はアプリ側で決める
+
+### 変更
+- 場面別ポーズ（前日・おかえり・連続）が Lv1〜5 のそれぞれの姿で出る（Lv2=名札・Lv3=かばん+ピン・Lv4=腕章・Lv5=卒業帽+ケープ）。これまで Lv2 以上は通常画像に戻っていた。`UkalabCharacters.sceneFile(id, scene, [stage])` の引数追加（既定は Lv1 で互換）
+- 画像は `assets/mascot/<id>/scenes/<id>_lv<2-5>_<eve|back|streak>.webp`（48枚・約1.7MB・460×700）
+
+### 注意
+- アプリサイズは約 +2.5MB（場面 1.7・背景 0.35・小物 0.4）
+
 ## [0.13.0] - 2026-10-07
 
 推しの部屋（分野別の背景）と、案内役ポーズを追加。
