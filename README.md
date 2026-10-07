@@ -588,3 +588,19 @@ StoryModeWidget(
 - 章を1つずつ進み、各章で選択肢を選ぶと、推奨の判断かどうかとその理由（解説）を表示する。最後の章まで進むと、章ごとの判断を振り返る
 - 色だけに頼らず、推奨の判断には✓アイコン、そうでない判断には△アイコンを付ける
 - 途中保存の仕組みは持たない（現状は短い章数の体験を想定）。長い章数のシナリオ（簿記3級の会社経営モードなど）向けの途中保存は、必要になった時点で追加する
+
+## 表示モード・連続学習日数の永続化（v0.10.0）
+
+各アプリが独自に実装しがちな、`SharedPreferences` だけで完結する軽量な永続化を2つ追加（元は
+`ukalab-boki3`（簿記3級アプリ）が個別実装していたもので、共通基盤に既にあった `StreakBadge` と
+気づかず重複実装していたため、ここに吸収した）。
+
+- `lib/theme/theme_mode_store.dart`：`appThemeMode`（`ValueNotifier<ThemeMode>`）・
+  `loadSavedThemeMode()`・`setThemeMode(mode)`。`MaterialApp` の `themeMode` にリッスンさせるだけで、
+  設定画面からライト/ダーク/端末設定に従うを切り替えられる。
+- `lib/progress/streak_store.dart`：`recordStudyToday({now})`・`loadCurrentStreak({now})`。
+  演習などを1件記録するたびに呼ぶと、前日から続けていれば+1、2日以上空けば1から数え直す連続学習日数を
+  `SharedPreferences` に保存する。表示は既存の `StreakBadge`（`ui_kit/streak_badge.dart`）と組み合わせる。
+
+どちらも保存キーをパッケージ非依存の固定文字列にしており、アプリごとに個別の名前空間指定は不要
+（各アプリはOS側で独立したストレージサンドボックスを持つため、キーの衝突は起きない）。
