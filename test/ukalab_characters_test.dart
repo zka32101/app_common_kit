@@ -23,6 +23,19 @@ void main() {
     }
   });
 
+
+  test('場面別ポーズ: Lv1は全キャラ×3場面の画像があり、Lv2以上はnull（通常画像に戻る）', () {
+    for (final p in UkalabCharacters.imagePacks) {
+      for (final sc in MascotScene.values) {
+        final f = UkalabCharacters.sceneFile(p.id, sc);
+        expect(File('assets/mascot/${p.id}/scenes/$f.webp').existsSync(), true, reason: f);
+        expect(p.sceneImageBuilder!(sc, MascotStage.lv1), isNotNull);
+        expect(p.sceneImageBuilder!(sc, MascotStage.lv2), isNull);
+      }
+    }
+    expect(CharacterPack.standard.sceneImageBuilder, isNull);
+  });
+
   test('衣装画像: 3資格×種別の画像が全キャラにあり、ない資格はnull', () {
     for (final p in UkalabCharacters.imagePacks) {
       for (final o in OutfitCatalog.all) {
