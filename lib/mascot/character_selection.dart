@@ -91,6 +91,9 @@ class _Face extends StatelessWidget {
     return CircleAvatar(
       radius: 24,
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+      // 標準キャラ（画像なし）のアイコンが、アプリのテーマによっては背景と同色で見えなくなるため、
+      // 前景色を明示する（バイク免許で一行目のアイコンが空白になっていた）。
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
       backgroundImage: icon,
       child: icon == null ? const Icon(Icons.science_outlined) : null,
     );
