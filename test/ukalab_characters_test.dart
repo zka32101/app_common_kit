@@ -24,13 +24,15 @@ void main() {
   });
 
 
-  test('場面別ポーズ: Lv1は全キャラ×3場面の画像があり、Lv2以上はnull（通常画像に戻る）', () {
+  test('場面別ポーズ: 全キャラ×6種の画像があり、前日・おかえり・連続はLv2以上でnull（通常画像に戻る）。案内役は常に出る', () {
     for (final p in UkalabCharacters.imagePacks) {
       for (final sc in MascotScene.values) {
         final f = UkalabCharacters.sceneFile(p.id, sc);
-        expect(File('assets/mascot/${p.id}/scenes/$f.webp').existsSync(), true, reason: f);
+        final dir = sc.isGuide ? 'guide' : 'scenes';
+        expect(File('assets/mascot/${p.id}/$dir/$f.webp').existsSync(), true, reason: f);
         expect(p.sceneImageBuilder!(sc, MascotStage.lv1), isNotNull);
-        expect(p.sceneImageBuilder!(sc, MascotStage.lv2), isNull);
+        // 案内役はレベルに関係なく出る。前日・おかえり・連続は Lv1 だけ
+        expect(p.sceneImageBuilder!(sc, MascotStage.lv3), sc.isGuide ? isNotNull : isNull);
       }
     }
     expect(CharacterPack.standard.sceneImageBuilder, isNull);
