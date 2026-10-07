@@ -2,6 +2,13 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.4.5] - 2026-10-07（保守版・ブランチ `release/0.4`）
+
+v0.9.0 の「推し4体」だけを 0.4 系に取り込んだ版（`cloud_firestore` 4系のアプリ=漢検などが使うため）。
+
+### 追加
+- `UkalabCharacters`（kai/mio/moka/mike の `CharacterPack`・衣装画像）、`CharacterPack.outfitImageBuilder`、`selectedCharacterPackProvider`（`ukalab.mascot.selected`）、`CharacterSelectScreen`。画像は `assets/mascot/`（約5MB）
+
 ## [0.4.4] - 2026-10-04（保守版・ブランチ `release/0.4`）
 
 ### 修正
