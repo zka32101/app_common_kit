@@ -1,6 +1,6 @@
 name: app_common_kit
 description: "Petit Works Apps 全体で使う共通パッケージ（フィードバック機能など）。小学コレシリーズに限らない全アプリが対象。"
-version: 0.8.0
+version: 0.9.0
 publish_to: 'none'
 
 environment:
@@ -25,3 +25,11 @@ dev_dependencies:
 flutter:
   assets:
     - assets/branding/yourwish_logo.png
+    - assets/mascot/kai/
+    - assets/mascot/kai/outfits/
+    - assets/mascot/mio/
+    - assets/mascot/mio/outfits/
+    - assets/mascot/moka/
+    - assets/mascot/moka/outfits/
+    - assets/mascot/mike/
+    - assets/mascot/mike/outfits/

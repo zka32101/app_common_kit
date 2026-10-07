@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../outfit/outfit_models.dart';
 import '../theme/ukalab_palette.dart';
 
 /// 成長段階（習得度で決まる。Lv1〜5）。
@@ -46,6 +47,12 @@ typedef MascotImageBuilder = ImageProvider? Function(
   MascotExpression expression,
 );
 
+/// 衣装を着た姿の画像を返す関数。null なら通常の画像（[MascotImageBuilder]）に戻す。
+typedef MascotOutfitImageBuilder = ImageProvider? Function(
+  Outfit outfit,
+  MascotStage stage,
+);
+
 /// キャラクターパック（データ）。ロジックは共通で、見た目とセリフの口調だけが違う。
 ///
 /// 標準キャラ（フラスコの助手）は [CharacterPack.standard] で、コード描画のため画像不要。
@@ -56,6 +63,7 @@ class CharacterPack {
     required this.name,
     required this.tone,
     this.imageBuilder,
+    this.outfitImageBuilder,
     this.fieldAccent = const {},
     this.signature,
   });
@@ -66,6 +74,9 @@ class CharacterPack {
 
   /// 段階×表情の画像。null ならコード描画（標準キャラ）。
   final MascotImageBuilder? imageBuilder;
+
+  /// 衣装を着た姿の画像。null または結果が null のときは通常の画像を使う。
+  final MascotOutfitImageBuilder? outfitImageBuilder;
 
   /// 分野ごとの差し色。なければ分野色（テーマ）を使う。
   final Map<UkalabField, Color> fieldAccent;
