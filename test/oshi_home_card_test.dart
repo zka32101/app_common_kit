@@ -77,7 +77,7 @@ void main() {
     expect(back.any((l) => find.text(l).evaluate().isNotEmpty), true);
   });
 
-  testWidgets('画像の推しは、前日・おかえり・連続のとき場面別ポーズの画像になる', (tester) async {
+  testWidgets('画像の推しは、前日・おかえり・連続のとき（Lv問わず）場面別ポーズの画像になる', (tester) async {
     SharedPreferences.setMockInitialValues({'ukalab.mascot.selected': 'kai'});
     final now = DateTime(2026, 10, 10, 9);
     Future<ImageProvider?> imageFor(UkalabOshiCard card) async {
@@ -103,9 +103,12 @@ void main() {
       cert: UkalabCert.boki3, stage: MascotStage.lv1, appId: 's4', now: now));
     expect((plain as AssetImage).assetName, contains('kai_lv1_normal.webp'));
 
-    // Lv2 では場面画像がなく、通常の画像のまま
+    // Lv2 以上でもそのレベルの姿の場面画像になる
     final lv2 = await imageFor(UkalabOshiCard(
       cert: UkalabCert.boki3, stage: MascotStage.lv2, appId: 's5', daysSinceLastStudy: 5, now: now));
-    expect((lv2 as AssetImage).assetName, contains('kai_lv2_normal.webp'));
+    expect((lv2 as AssetImage).assetName, contains('kai_lv2_back.webp'));
+    final lv5 = await imageFor(UkalabOshiCard(
+      cert: UkalabCert.boki3, stage: MascotStage.lv5, appId: 's6', streakDays: 5, now: now));
+    expect((lv5 as AssetImage).assetName, contains('kai_lv5_streak.webp'));
   });
 }

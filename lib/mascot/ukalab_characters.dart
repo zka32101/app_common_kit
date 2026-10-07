@@ -7,7 +7,7 @@ import 'mascot_models.dart';
 /// うかラボ共通の推し（AI画像の4体）。標準キャラ「うか」は [CharacterPack.standard]。
 ///
 /// 画像は本パッケージの `assets/mascot/<id>/`。衣装は `outfits/<資格id>_<normal|pass|exam>.webp`。
-/// 場面別ポーズは `scenes/<id>_lv1_<eve|back|streak>.webp`（Lv1 のみ）、案内役ポーズは `guide/<id>_guide_<point|think|teach>.webp`。
+/// 場面別ポーズは `scenes/<id>_lv<1-5>_<eve|back|streak>.webp`、案内役ポーズは `guide/<id>_guide_<point|think|teach>.webp`。
 /// 衣装の画像があるのは、いまは漢字検定・バイク免許・G検定・簿記3級・危険物乙4・生成AIパスポート（ない資格は私服のまま）。
 class UkalabCharacters {
   const UkalabCharacters._();
@@ -107,15 +107,15 @@ class UkalabCharacters {
     return AssetImage('assets/mascot/$id/outfits/$f.webp', package: package);
   }
 
-  /// 場面別ポーズの画像ファイル名（拡張子なし）。
-  static String sceneFile(String id, MascotScene scene) {
+  /// 場面別ポーズの画像ファイル名（拡張子なし）。前日・おかえり・連続は Lv ごとの絵（[stage]）、案内役は Lv1 の絵。
+  static String sceneFile(String id, MascotScene scene, [MascotStage stage = MascotStage.lv1]) {
     switch (scene) {
       case MascotScene.eve:
-        return '${id}_lv1_eve';
+        return '${id}_lv${stage.level}_eve';
       case MascotScene.welcomeBack:
-        return '${id}_lv1_back';
+        return '${id}_lv${stage.level}_back';
       case MascotScene.streak:
-        return '${id}_lv1_streak';
+        return '${id}_lv${stage.level}_streak';
       case MascotScene.guidePoint:
         return '${id}_guide_point';
       case MascotScene.guideThink:
@@ -125,14 +125,13 @@ class UkalabCharacters {
     }
   }
 
-  /// 場面別ポーズの画像。前日・おかえり・連続は Lv1（私服）だけで、Lv2 以上は null（通常の画像を使う）。
+  /// 場面別ポーズの画像。前日・おかえり・連続は Lv1〜5 のそれぞれの姿（名札・かばん・腕章・卒業帽など）で返す。
   /// 案内役ポーズ（guide*）はレベルに関係なく Lv1 の絵を返す。
   static ImageProvider? sceneImage(String id, MascotScene scene, MascotStage stage) {
     if (scene.isGuide) {
       return AssetImage('assets/mascot/$id/guide/${sceneFile(id, scene)}.webp', package: package);
     }
-    if (stage != MascotStage.lv1) return null;
-    return AssetImage('assets/mascot/$id/scenes/${sceneFile(id, scene)}.webp', package: package);
+    return AssetImage('assets/mascot/$id/scenes/${sceneFile(id, scene, stage)}.webp', package: package);
   }
 
   static ImageProvider? _kaiImage(MascotStage s, MascotExpression e) => levelImage('kai', s, e);
