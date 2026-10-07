@@ -20,6 +20,7 @@ class MascotWidget extends StatefulWidget {
     this.expression = MascotExpression.normal,
     this.examPhase = ExamPhase.none,
     this.outfit,
+    this.scene,
     this.display = MascotDisplay.normal,
     this.size = 160,
     this.animate = true,
@@ -34,6 +35,9 @@ class MascotWidget extends StatefulWidget {
 
   /// 着ている衣装。
   final Outfit? outfit;
+
+  /// 場面別のポーズ。画像パックで、衣装を着ていないときだけ使う（衣装が優先）。
+  final MascotScene? scene;
   final MascotDisplay display;
   final double size;
 
@@ -77,9 +81,11 @@ class _MascotWidgetState extends State<MascotWidget> with SingleTickerProviderSt
     final size = widget.display == MascotDisplay.small ? widget.size * 0.6 : widget.size;
     final accent = theme.colorScheme.primary;
     final outfit = widget.outfit;
+    final scene = widget.scene;
     final image = (outfit == null
             ? null
             : widget.pack.outfitImageBuilder?.call(outfit, widget.stage)) ??
+        (scene == null ? null : widget.pack.sceneImageBuilder?.call(scene, widget.stage)) ??
         widget.pack.imageBuilder?.call(widget.stage, widget.expression);
 
     Widget art;
