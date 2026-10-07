@@ -2,6 +2,19 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.13.0] - 2026-10-07
+
+推しの部屋（分野別の背景）と、案内役ポーズを追加。
+
+### 追加
+- `UkalabOshiRoom` / `UkalabOshiRoom.forCert`: 部屋の背景の上に選んだ推し（衣装・場面ポーズ込み）を立たせた絵。壁紙・合格祝いカードの元になる（保存は `RepaintBoundary` + `toImage`）
+- `UkalabRoom`（general / it / ai / accounting / safety / language / transport）と `UkalabRooms.forCert(cert)`・`UkalabRooms.image(room)`。画像は `assets/mascot/rooms/room_<name>.webp`（1120×736・7枚・約0.4MB）
+- `MascotScene.guidePoint / guideThink / guideTeach`: 案内役のポーズ（指さし／考える／白紙の本を見せる）。`MascotWidget(scene: ...)` で使う。レベルに関係なく出る（Lv1 の絵）。画像は `assets/mascot/<id>/guide/`（4体×3枚・約0.6MB）。`MascotScene.isGuide` で判別
+
+### 注意
+- 前日・おかえり・連続の場面ポーズは従来どおり Lv1 のみ。案内役だけレベルに関係なく出る
+- アプリサイズは約 +1MB
+
 ## [0.12.0] - 2026-10-07
 
 推しの場面別ポーズ（前日の応援・おかえり・連続学習）を追加。
