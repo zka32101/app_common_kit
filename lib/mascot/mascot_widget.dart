@@ -76,7 +76,11 @@ class _MascotWidgetState extends State<MascotWidget> with SingleTickerProviderSt
     final theme = Theme.of(context);
     final size = widget.display == MascotDisplay.small ? widget.size * 0.6 : widget.size;
     final accent = theme.colorScheme.primary;
-    final image = widget.pack.imageBuilder?.call(widget.stage, widget.expression);
+    final outfit = widget.outfit;
+    final image = (outfit == null
+            ? null
+            : widget.pack.outfitImageBuilder?.call(outfit, widget.stage)) ??
+        widget.pack.imageBuilder?.call(widget.stage, widget.expression);
 
     Widget art;
     if (image != null) {

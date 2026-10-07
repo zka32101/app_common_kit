@@ -2,6 +2,19 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.9.0] - 2026-10-07
+
+推し（AI画像の4体）を共通キットに追加。
+
+### 追加
+- `UkalabCharacters`（kai/mio/moka/mike の `CharacterPack`・Lv画像・顔アイコン・衣装画像）。画像は `assets/mascot/`（約5MB。漢字検定・バイク免許・G検定の衣装つき）
+- `CharacterPack.outfitImageBuilder`（衣装を着た姿の画像。`MascotWidget` が `outfit` 指定時に使う）
+- `selectedCharacterPackProvider`（選んだ推しを `ukalab.mascot.selected` に端末内保存）と `CharacterSelectScreen`（選択画面）
+
+### 使い方
+- アプリは `ref.watch(selectedCharacterPackProvider)` の値を `MascotWidget`／`WardrobeScreen` の `pack` に渡す。選択画面は設定から `CharacterSelectScreen` を開く
+- 衣装画像がない資格は私服の画像のまま
+
 ## [0.4.0] - 2026-10-03
 
 ※ 0.3.0（用語カード）・0.3.1（本文差し替え）はタグ未作成のまま main に入っているため、タグ `v0.4.0` にそれらも含まれる。
