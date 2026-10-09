@@ -61,6 +61,7 @@ dependencies:
 `pubspec.yaml` の `version` を上げた変更が `main` に入ると、`vX.Y.Z` のタグが**自動で付く**（`.github/workflows/release-tag.yml`）。手順は、PR で `version` と `CHANGELOG.md` を更新してマージするだけ。
 
 - 既にあるタグは動かさない（タグは不変）。`version` が `X.Y.Z` 以外（`+N` 付きなど）だとジョブが失敗する
+- 複数の PR が同じ番号を取らないよう、PR の CI（`version-check`、`tools/check_version.sh`）が次を検査する: CHANGELOG に同じバージョンの見出しが無い／CHANGELOG の先頭が `pubspec.yaml` の `version` と一致する／`lib/` を変える PR は、まだタグのない `version` にしている（ほかの PR が先に同じ番号でマージされたら、`main` を取り込んで番号を上げ直す）
 - 付け忘れ・過去分は、手動の `create-tag.yml`（Actions の Run workflow。タグ名とコミット SHA を入力）か、`tools/release_tag.sh [--dry-run] [コミット]` で付ける
 
 ## 多言語化（日本語・英語）
