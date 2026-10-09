@@ -155,18 +155,34 @@ class _OutfitTile extends StatelessWidget {
     } else {
       trailing = const Icon(Icons.lock_outline);
     }
+    // ListTile の trailing は、ボタンが行の幅を使い切るとレイアウトが成り立たなくなる
+    // （英語の長いボタン文言＋文字200%＋幅の狭い端末で起きる）。右側の幅に上限を付けた Row にする。
     return Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
-        title: Text(outfit.name),
-        subtitle: Text(
-          wearing
-              ? strings.wardrobeWearing
-              : available
-                  ? strings.wardrobeCanWear
-                  : outfitLockedReason(availability, price: outfit.price, strings: strings),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(outfit.name, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 4),
+                  Text(
+                    wearing
+                        ? strings.wardrobeWearing
+                        : available
+                            ? strings.wardrobeCanWear
+                            : outfitLockedReason(availability, price: outfit.price, strings: strings),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 140), child: trailing),
+          ],
         ),
-        trailing: trailing,
       ),
     );
   }
