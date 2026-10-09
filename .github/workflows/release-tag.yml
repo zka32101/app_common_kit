@@ -1,0 +1,24 @@
+name: Release Tag
+
+# main の pubspec.yaml の version が上がったら、vX.Y.Z のタグを自動で付ける。
+# 既にあるタグは動かさない（タグは不変）。手動で付ける場合は create-tag.yml を使う。
+on:
+  push:
+    branches: [main]
+    paths: [pubspec.yaml]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag the version in pubspec.yaml
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          tools/release_tag.sh "$GITHUB_SHA"
