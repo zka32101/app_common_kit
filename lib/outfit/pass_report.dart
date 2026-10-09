@@ -166,6 +166,7 @@ class _PassShareDialogState extends State<_PassShareDialog> {
               key: _key,
               child: PassShareCard(
                 pack: widget.pack,
+                strings: s,
                 data: ShareCardData(
                   certLabel: widget.cert.label,
                   date: widget.date,
