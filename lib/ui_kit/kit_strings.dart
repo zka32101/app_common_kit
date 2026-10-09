@@ -72,6 +72,10 @@ class KitStrings {
     required this.passAskTitle,
     required this.passCoin,
     required this.passOutfit,
+    required this.feedbackTitleRequired,
+    required this.feedbackDetailRequired,
+    required this.feedbackTitleTooLong,
+    required this.feedbackDetailTooLong,
   });
 
   final String coinTotal;
@@ -141,6 +145,10 @@ class KitStrings {
   final String Function(String cert) passAskTitle;
   final String Function(int amount) passCoin;
   final String Function(String name) passOutfit;
+  final String feedbackTitleRequired;
+  final String feedbackDetailRequired;
+  final String Function(int max) feedbackTitleTooLong;
+  final String Function(int max) feedbackDetailTooLong;
 
   static const ja = KitStrings(
     coinTotal: '合計',
@@ -220,6 +228,10 @@ class KitStrings {
     passAskTitle: _jaPassAskTitle,
     passCoin: _jaPassCoin,
     passOutfit: _jaPassOutfit,
+    feedbackTitleRequired: 'タイトルを入力してください',
+    feedbackDetailRequired: '詳細を入力してください',
+    feedbackTitleTooLong: _jaTitleTooLong,
+    feedbackDetailTooLong: _jaDetailTooLong,
   );
 
   static const en = KitStrings(
@@ -303,6 +315,10 @@ class KitStrings {
     passAskTitle: _enPassAskTitle,
     passCoin: _enPassCoin,
     passOutfit: _enPassOutfit,
+    feedbackTitleRequired: 'Please enter a title',
+    feedbackDetailRequired: 'Please enter the details',
+    feedbackTitleTooLong: _enTitleTooLong,
+    feedbackDetailTooLong: _enDetailTooLong,
   );
 
   /// 言語コードから選ぶ。未対応の言語は日本語。
@@ -339,6 +355,11 @@ String _jaWardrobePrice(int p) => '${p}コイン';
 String _enWardrobePrice(int p) => '$p coins';
 String _jaLockedNotPurchased(int p) => '${p}コインで購入できます';
 String _enLockedNotPurchased(int p) => 'Buy for $p coins';
+
+String _jaTitleTooLong(int m) => 'タイトルは$m文字以内で入力してください';
+String _enTitleTooLong(int m) => 'Title must be $m characters or fewer';
+String _jaDetailTooLong(int m) => '詳細は$m文字以内で入力してください';
+String _enDetailTooLong(int m) => 'Details must be $m characters or fewer';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///

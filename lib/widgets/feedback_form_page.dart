@@ -134,7 +134,8 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
                 hintText: strings.feedbackSubjectHint,
                 border: const OutlineInputBorder(),
               ),
-              validator: FeedbackLimits.standard.validateTitle,
+              validator: (v) =>
+                  FeedbackLimits.standard.validateTitle(v, KitStrings.of(context)),
             ),
             const SizedBox(height: 20),
             Text(strings.feedbackDetail, style: labelStyle),
@@ -148,7 +149,8 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
                 hintText: strings.feedbackDetailHint,
                 border: const OutlineInputBorder(),
               ),
-              validator: FeedbackLimits.standard.validateDescription,
+              validator: (v) => FeedbackLimits.standard
+                  .validateDescription(v, KitStrings.of(context)),
             ),
             const SizedBox(height: 24),
             SizedBox(
