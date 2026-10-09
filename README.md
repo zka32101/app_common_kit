@@ -324,6 +324,35 @@ await ref.read(coinProvider.notifier).syncWith(remote, minInterval: const Durati
 - 2台で同時に購入すると、統合後の残高が一時的にマイナスになりうる（購入は残高以内でしか記録しないが、オフラインの2台は互いを知らないため）。マイナスは次の獲得で戻る。必要ならアプリ側で表示を 0 に丸める
 - Firestore 以外に置くなら `CoinRemote`（`readLedger`/`writeLedger`）を実装して渡す
 
+### 学習の引き継ぎ（機種変更）
+
+学習履歴・コイン・衣装を、共通アカウント（匿名 → Google/Apple リンクでも uid は変わらない）のサーバーへ保存し、新しい端末へ復元する。復元は**統合**で、端末内のデータを消さず、何度実行しても二重にならない。部品ごとに処理し、1つの失敗で他を止めない（例外は出さない）。
+
+```dart
+final transfer = LearningTransfer(
+  remote: FirebaseTransferRemote(uid: user.uid, examId: UkalabCert.gKentei.id),
+  sources: [
+    CoinTransferSource(coinService),       // コイン台帳（id が同じ行は一度だけ）
+    OutfitTransferSource(outfitService),   // 合格・準備完了・着ている衣装
+    FunctionTransferSource(                // 学習履歴などは、アプリが中身を渡す
+      partId: 'progress',
+      onExport: () async => [for (final r in await store.loadRecords()) r.toJson()],
+      onImport: (remote) async { /* remote(List) を端末内の記録へ統合。冪等にする */ },
+    ),
+  ],
+);
+
+await transfer.backup();                  // 旧端末: 起動時・学習後などに保存
+final result = await transfer.restore();  // 新端末: ログイン直後に復元
+// result.status: success / partial / failed。result.failed は後でやり直せる
+// result.nothingToRestore: バックアップが一度も無い（新規利用者）
+```
+
+- 保存先は `users/{uid}/exams/{examId}/transfer/{partId}`（部品ごとに1ドキュメント）。共通ルールに含まれるため、**ルールの変更は不要**
+- 1部品は Firestore の1MB上限まで。学習履歴が大きいアプリは、部品を分けるか、期間で切り分けて渡す
+- `partId` は一意にする（英数字とアンダースコア）。Firestore 以外に置くなら `TransferRemote`（`readPart`/`writePart`）を実装して渡す
+- 学習履歴（`yourwish_kentei` の `ProgressRecord`）の統合は、`qid` と `at` が同じ記録を重複させない形でアプリ側が実装する
+
 
 ## 推し（v0.2）
 
