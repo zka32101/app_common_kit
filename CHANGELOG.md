@@ -2,6 +2,24 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.20.0] - 2026-10-09
+
+学習の引き継ぎ（機種変更で学習履歴・衣装・コインを復元）。追加のみで、既存 API に破壊的変更はない。
+
+### 追加
+- `LearningTransfer`（`backup()` / `restore()`）: 部品ごとに保存・復元する。復元は統合で、端末内を消さず、冪等。
+  1つの部品の失敗で他を止めず、例外は出さない（`TransferResult`: `success` / `partial` / `failed`、
+  `failed`・`missing`・`nothingToRestore`）
+- `TransferSource`（部品の型）・`FunctionTransferSource`（関数で作る。学習履歴などアプリ側のデータ用）・
+  `CoinTransferSource`（コイン台帳）・`OutfitTransferSource`（合格・準備完了・着ている衣装）
+- `TransferRemote`・`InMemoryTransferRemote`・`FirebaseTransferRemote(uid:, examId:)`:
+  保存先は `users/{uid}/exams/{examId}/transfer/{partId}`（共通ルールに含まれ、ルール変更は不要）
+- `OutfitService.toStateJson()` / `mergeState()`: 解放状態の書き出しと統合（合格・準備完了は足し合わせ、
+  着ている衣装は端末内を優先）
+
+### 注意
+- 1部品は Firestore の1MB上限まで。学習履歴が大きいアプリは、部品を分けるか期間で切り分ける
+
 ## [0.19.0] - 2026-10-09
 
 コイン同期をアプリに組み込める形にした。

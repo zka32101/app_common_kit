@@ -96,11 +96,23 @@ class OutfitService {
     _equipped = m?['equipped'] as String?;
   }
 
-  Future<void> _save() => store.write({
+  /// 端末移行・アカウント同期用に、解放状態を JSON で書き出す。
+  Map<String, dynamic> toStateJson() => {
         'passed': _passed.toList()..sort(),
         'ready': _ready.toList()..sort(),
         if (_equipped != null) 'equipped': _equipped,
-      });
+      };
+
+  /// 別端末・サーバーの解放状態を統合する（端末移行・アカウント同期）。合格・準備完了は
+  /// 足し合わせ、着ている衣装は端末内で決まっていればそちらを優先する。何度呼んでも同じ。
+  Future<void> mergeState(Map<String, dynamic> remote) async {
+    _passed.addAll(List<String>.from((remote['passed'] as List?) ?? const []));
+    _ready.addAll(List<String>.from((remote['ready'] as List?) ?? const []));
+    _equipped ??= remote['equipped'] as String?;
+    await _save();
+  }
+
+  Future<void> _save() => store.write(toStateJson());
 
   /// 合格報告で「合格」を選んだとき。初めてなら true（記念衣装が解放される）。
   Future<bool> reportPassed(UkalabCert cert) async {

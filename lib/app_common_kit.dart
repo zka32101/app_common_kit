@@ -43,6 +43,8 @@ export 'coin/coin_service.dart';
 export 'coin/coin_sync.dart';
 export 'coin/firebase_coin_remote.dart';
 export 'coin/coin_provider.dart';
+export 'transfer/learning_transfer.dart';
+export 'transfer/firebase_transfer_remote.dart';
 export 'coin/shop.dart';
 export 'mascot/mascot_models.dart';
 export 'mascot/mascot_logic.dart';
