@@ -10,6 +10,7 @@ import '../outfit/outfit_provider.dart';
 import '../outfit/pass_report.dart';
 import '../outfit/wardrobe_screen.dart';
 import '../theme/ukalab_palette.dart';
+import '../ui_kit/kit_strings.dart';
 import '../ui_kit/streak_badge.dart';
 import 'character_selection.dart';
 import 'mascot_lines.dart';
@@ -135,6 +136,8 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
       return;
     }
     final pack = ref.read(selectedCharacterPackProvider);
+    // 積まれる画面・ダイアログは Scope の外になりうるので、このカードの文言を渡す。
+    final strings = KitStrings.of(context);
     final now = widget.now ?? DateTime.now();
     final phase = MascotDayState(examDate: widget.examDate).examPhase(now);
     switch (value as _Action) {
@@ -142,7 +145,8 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
         Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const CharacterSelectScreen()));
       case _Action.wardrobe:
         Navigator.of(context).push(MaterialPageRoute<void>(
-          builder: (_) => WardrobeScreen(cert: widget.cert, examPhase: phase, stage: widget.stage, pack: pack),
+          builder: (_) =>
+              WardrobeScreen(cert: widget.cert, examPhase: phase, stage: widget.stage, pack: pack, strings: strings),
         ));
       case _Action.passReport:
         showPassReportDialog(
@@ -152,6 +156,7 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
           stage: widget.stage,
           pack: pack,
           onShare: widget.onShare,
+          strings: strings,
         );
     }
   }
@@ -186,26 +191,27 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
         : lines.pick(situation, seed: _seed);
     final small = _display == MascotDisplay.small;
 
+    final s = KitStrings.of(context);
     final menu = PopupMenuButton<Object>(
-      tooltip: '推しのメニュー',
+      tooltip: s.oshiMenuTooltip,
       icon: const Icon(Icons.more_vert),
       onSelected: _onMenu,
-      itemBuilder: (_) => const [
-        PopupMenuItem(value: _Action.choose, child: Text('推しを選ぶ')),
-        PopupMenuItem(value: _Action.wardrobe, child: Text('着替え・ショップ')),
-        PopupMenuItem(value: _Action.passReport, child: Text('試験の結果を報告')),
-        PopupMenuDivider(),
-        PopupMenuItem(value: MascotDisplay.normal, child: Text('通常')),
-        PopupMenuItem(value: MascotDisplay.small, child: Text('小さく表示')),
-        PopupMenuItem(value: MascotDisplay.hidden, child: Text('表示しない')),
+      itemBuilder: (_) => [
+        PopupMenuItem(value: _Action.choose, child: Text(s.oshiChoose)),
+        PopupMenuItem(value: _Action.wardrobe, child: Text(s.wardrobeTitle)),
+        PopupMenuItem(value: _Action.passReport, child: Text(s.oshiPassReport)),
+        const PopupMenuDivider(),
+        PopupMenuItem(value: MascotDisplay.normal, child: Text(s.oshiDisplayNormal)),
+        PopupMenuItem(value: MascotDisplay.small, child: Text(s.oshiDisplaySmall)),
+        PopupMenuItem(value: MascotDisplay.hidden, child: Text(s.oshiDisplayHidden)),
       ],
     );
 
     if (_display == MascotDisplay.hidden) {
       return Card(
         child: ListTile(
-          title: Text(balance == null ? '推し' : '学習コイン $balance', style: theme.textTheme.labelLarge),
-          subtitle: const Text('推しは非表示です'),
+          title: Text(balance == null ? s.oshiName : s.coinBalance(balance), style: theme.textTheme.labelLarge),
+          subtitle: Text(s.oshiHiddenNote),
           trailing: menu,
         ),
       );
@@ -226,12 +232,12 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
     final info = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('${pack.isBuiltIn ? 'あなたの推し' : pack.name}  Lv${widget.stage.level}', style: theme.textTheme.titleSmall),
+        Text('${pack.isBuiltIn ? s.oshiYours : pack.name}  Lv${widget.stage.level}', style: theme.textTheme.titleSmall),
         const SizedBox(height: 4),
-        Text(small ? line : '推しをタップすると、ひとこと話します', style: theme.textTheme.bodySmall),
+        Text(small ? line : s.oshiTapHint, style: theme.textTheme.bodySmall),
         if (balance != null) ...[
           const SizedBox(height: 4),
-          Text('学習コイン $balance', style: theme.textTheme.labelMedium),
+          Text(s.coinBalance(balance), style: theme.textTheme.labelMedium),
         ],
         const SizedBox(height: 4),
         StreakBadge(days: widget.streakDays),

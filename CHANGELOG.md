@@ -2,6 +2,15 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.18.0] - 2026-10-09
+
+多言語化の対象を拡大。
+
+### 追加
+- `WardrobeScreen`・`OshiHomeCard`・`outfitLockedReason` が `KitStrings` に対応（`WardrobeScreen(strings:)`・`outfitLockedReason(strings:)`）。`OshiHomeCard` から開く着替え画面・合格報告には、カードの文言を引き継ぐ
+- `WardrobeScreen.title` は null 許容に変更（渡せば従来どおり優先）
+- 衣装名・マスコットのセリフ・推し選択画面は日本語のまま（次回以降）
+
 ## [0.17.0] - 2026-10-09
 
 多言語化の対象を拡大。
