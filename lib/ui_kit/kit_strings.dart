@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 @immutable
 class KitStrings {
   const KitStrings({
+    required this.languageCode,
     required this.coinTotal,
     required this.coinBreakdownTitle,
     required this.coinEventLabels,
@@ -72,8 +73,16 @@ class KitStrings {
     required this.passAskTitle,
     required this.passCoin,
     required this.passOutfit,
+    required this.characterNames,
+    required this.characterRoles,
+    required this.feedbackTitleRequired,
+    required this.feedbackDetailRequired,
+    required this.feedbackTitleTooLong,
+    required this.feedbackDetailTooLong,
   });
 
+  /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
+  final String languageCode;
   final String coinTotal;
   final String coinBreakdownTitle;
 
@@ -141,8 +150,18 @@ class KitStrings {
   final String Function(String cert) passAskTitle;
   final String Function(int amount) passCoin;
   final String Function(String name) passOutfit;
+  /// `CharacterPack.id` → 表示名。無い id はパックの name を使う。
+  final Map<String, String> characterNames;
+
+  /// `CharacterPack.id` → 役割の説明。
+  final Map<String, String> characterRoles;
+  final String feedbackTitleRequired;
+  final String feedbackDetailRequired;
+  final String Function(int max) feedbackTitleTooLong;
+  final String Function(int max) feedbackDetailTooLong;
 
   static const ja = KitStrings(
+    languageCode: 'ja',
     coinTotal: '合計',
     coinBreakdownTitle: '今回貯まった学習コイン',
     coinEventLabels: {
@@ -220,9 +239,22 @@ class KitStrings {
     passAskTitle: _jaPassAskTitle,
     passCoin: _jaPassCoin,
     passOutfit: _jaPassOutfit,
+    characterNames: {},
+    characterRoles: {
+      'standard': 'フラスコの助手',
+      'kai': '頼れる先輩',
+      'mio': '明るい後輩',
+      'moka': 'ゆるい相棒（犬）',
+      'mike': 'ていねいな解説役（猫）',
+    },
+    feedbackTitleRequired: 'タイトルを入力してください',
+    feedbackDetailRequired: '詳細を入力してください',
+    feedbackTitleTooLong: _jaTitleTooLong,
+    feedbackDetailTooLong: _jaDetailTooLong,
   );
 
   static const en = KitStrings(
+    languageCode: 'en',
     coinTotal: 'Total',
     coinBreakdownTitle: 'Study coins earned this time',
     coinEventLabels: {
@@ -303,6 +335,24 @@ class KitStrings {
     passAskTitle: _enPassAskTitle,
     passCoin: _enPassCoin,
     passOutfit: _enPassOutfit,
+    characterNames: {
+      'standard': 'Uka',
+      'kai': 'Kai',
+      'mio': 'Mio',
+      'moka': 'Moka',
+      'mike': 'Mike',
+    },
+    characterRoles: {
+      'standard': 'Flask assistant',
+      'kai': 'Reliable senior',
+      'mio': 'Cheerful junior',
+      'moka': 'Easygoing buddy (dog)',
+      'mike': 'Careful explainer (cat)',
+    },
+    feedbackTitleRequired: 'Please enter a title',
+    feedbackDetailRequired: 'Please enter the details',
+    feedbackTitleTooLong: _enTitleTooLong,
+    feedbackDetailTooLong: _enDetailTooLong,
   );
 
   /// 言語コードから選ぶ。未対応の言語は日本語。
@@ -339,6 +389,11 @@ String _jaWardrobePrice(int p) => '${p}コイン';
 String _enWardrobePrice(int p) => '$p coins';
 String _jaLockedNotPurchased(int p) => '${p}コインで購入できます';
 String _enLockedNotPurchased(int p) => 'Buy for $p coins';
+
+String _jaTitleTooLong(int m) => 'タイトルは$m文字以内で入力してください';
+String _enTitleTooLong(int m) => 'Title must be $m characters or fewer';
+String _jaDetailTooLong(int m) => '詳細は$m文字以内で入力してください';
+String _enDetailTooLong(int m) => 'Details must be $m characters or fewer';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///
