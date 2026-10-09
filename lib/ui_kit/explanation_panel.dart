@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
+import 'kit_strings.dart';
+
 /// 解説パネル。本文は17sp・行間1.6。出典があれば末尾に添える。
 class ExplanationPanel extends StatelessWidget {
   const ExplanationPanel({
     super.key,
     required this.body,
-    this.title = '解説',
+    this.title,
     this.sourceRef,
     this.checkedAt,
     this.bodyWidget,
   });
 
-  final String title;
+  /// null なら [KitStrings] の既定（解説）。
+  final String? title;
   final String body;
 
   /// 出典（条文・公式資料）。
@@ -27,6 +30,7 @@ class ExplanationPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final strings = KitStrings.of(context);
     final src = sourceRef;
     return Card(
       child: Padding(
@@ -34,7 +38,7 @@ class ExplanationPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: theme.textTheme.titleSmall),
+            Text(title ?? strings.explanationTitle, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             DefaultTextStyle.merge(
               style: theme.textTheme.bodyLarge,
@@ -43,7 +47,7 @@ class ExplanationPanel extends StatelessWidget {
             if (src != null && src.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text(
-                checkedAt == null ? '出典: $src' : '出典: $src（$checkedAt 確認）',
+                checkedAt == null ? strings.sourceNote(src) : strings.sourceNoteChecked(src, checkedAt!),
                 style: theme.textTheme.bodySmall,
               ),
             ],

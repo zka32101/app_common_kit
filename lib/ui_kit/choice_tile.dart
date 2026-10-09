@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'kit_strings.dart';
+
 /// 選択肢の状態。色だけに頼らず、✓／✕のアイコンと文言も出す。
 enum ChoiceState {
   /// まだ選ばれていない
@@ -23,8 +25,8 @@ class ChoiceTile extends StatelessWidget {
     required this.text,
     required this.state,
     this.onTap,
-    this.correctText = '正解',
-    this.incorrectText = '不正解',
+    this.correctText,
+    this.incorrectText,
   });
 
   /// 「ア」「A」「1」など。
@@ -32,13 +34,15 @@ class ChoiceTile extends StatelessWidget {
   final String text;
   final ChoiceState state;
   final VoidCallback? onTap;
-  final String correctText;
-  final String incorrectText;
+  /// null なら [KitStrings] の既定（正解／不正解）。
+  final String? correctText;
+  final String? incorrectText;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final strings = KitStrings.of(context);
     final dark = theme.brightness == Brightness.dark;
     final success = dark ? const Color(0xFF5BD17F) : const Color(0xFF1E8E3E);
 
@@ -65,19 +69,19 @@ class ChoiceTile extends StatelessWidget {
         bg = success.withValues(alpha: 0.12);
         icon = Icons.check_circle;
         iconColor = success;
-        mark = correctText;
+        mark = correctText ?? strings.correctLabel;
       case ChoiceState.incorrect:
         border = scheme.error;
         bg = scheme.error.withValues(alpha: 0.12);
         icon = Icons.cancel;
         iconColor = scheme.error;
-        mark = incorrectText;
+        mark = incorrectText ?? strings.incorrectLabel;
     }
 
     return Semantics(
       button: onTap != null,
       selected: state == ChoiceState.selected,
-      label: '$label。$text${mark == null ? '' : '。$mark'}',
+      label: '$label${strings.sentenceSeparator}$text${mark == null ? '' : '${strings.sentenceSeparator}$mark'}',
       excludeSemantics: true,
       child: Material(
         color: bg ?? scheme.surface,

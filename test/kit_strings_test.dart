@@ -103,4 +103,45 @@ void main() {
     expect(KitStrings.en.passCoin(30), 'Study coins +30');
     expect(KitStrings.ja.passOutfit('帽子'), '「帽子」を着られるようになりました');
   });
+
+  testWidgets('選択肢・解説・読み上げ・下部タブが ja/en で切り替わる', (tester) async {
+    Widget body() => Column(children: [
+          ChoiceTile(label: 'A', text: 'x', state: ChoiceState.correct),
+          ChoiceTile(label: 'B', text: 'y', state: ChoiceState.incorrect),
+          const ExplanationPanel(body: 'b', sourceRef: 'Act 1', checkedAt: '2026-10-09'),
+          ReadAloudButton(onPressed: () {}),
+        ]);
+    await tester.pumpWidget(_wrap(body()));
+    expect(find.text('正解'), findsOneWidget);
+    expect(find.text('不正解'), findsOneWidget);
+    expect(find.text('解説'), findsOneWidget);
+    expect(find.text('出典: Act 1（2026-10-09 確認）'), findsOneWidget);
+    expect(find.byTooltip('読み上げ'), findsOneWidget);
+
+    await tester.pumpWidget(_wrap(body(), strings: KitStrings.en));
+    expect(find.text('Correct'), findsOneWidget);
+    expect(find.text('Incorrect'), findsOneWidget);
+    expect(find.text('Explanation'), findsOneWidget);
+    expect(find.text('Source: Act 1 (checked 2026-10-09)'), findsOneWidget);
+    expect(find.byTooltip('Read aloud'), findsOneWidget);
+  });
+
+  testWidgets('UkalabShell の下部タブ。labels を渡せば優先', (tester) async {
+    final pages = [for (var i = 0; i < 5; i++) Text('p$i')];
+    await tester.pumpWidget(MaterialApp(
+      home: KitStringsScope(strings: KitStrings.en, child: UkalabShell(pages: pages)),
+    ));
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Settings'), findsOneWidget);
+    await tester.pumpWidget(MaterialApp(home: UkalabShell(pages: pages)));
+    expect(find.text('ホーム'), findsOneWidget);
+    await tester.pumpWidget(MaterialApp(
+      home: KitStringsScope(
+        strings: KitStrings.en,
+        child: UkalabShell(pages: pages, labels: const ['a', 'b', 'c', 'd', 'e']),
+      ),
+    ));
+    expect(find.text('a'), findsOneWidget);
+    expect(find.text('Home'), findsNothing);
+  });
 }
