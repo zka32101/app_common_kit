@@ -75,6 +75,32 @@ KitStringsScope(strings: KitStrings.forLocale(Locale('en')), child: app)
 
 対応済み: 画面に出るウィジェットはほぼすべて（結果・コイン・フィードバック・合格報告・着替え・推し・マスコットのセリフ・ラボ系・選択肢・解説・下部タブ・片手モードの読み上げボタンなど）。共有カード（ブランド名・日付表記を含む。`PassShareCard(strings:)`）も対応。未対応（日本語のまま）: 衣装名・資格名などカタログのデータ。
 
+### 言語を足す（中国語・韓国語など）
+
+文言は3つの束に分かれている。どれも `copyWith` で一部だけ差し替えられるので、英語を土台に訳していくのが早い（項目を足したときの訳し忘れは、土台の英語のまま出る）。
+
+| 束 | 内容 |
+|---|---|
+| `KitStrings` | 画面の文言（結果・コイン・フィードバック・着替え・共有カードなど） |
+| `LabStrings` | ラボ系ウィジェット（機械学習ラボ・用語マップ・ストーリーなど） |
+| 推しのセリフ | `Map<MascotTone, MascotLines>`（口調ごとのセリフ集） |
+
+```dart
+final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计' /* … */);
+final zhLabs = LabStrings.en.copyWith(progressDefault: '进度' /* … */);
+
+KitStringsScope(
+  strings: KitStrings.forLocale(locale, supported: {'zh': zh}), // 無い言語は ja（en は英語）
+  labs: zhLabs,                                                  // 省略時は ja/en の既定
+  mascotLines: {MascotTone.gentle: MascotLines({ /* … */ })},    // 省略時は ja/en の既定
+  child: app,
+)
+```
+
+- `languageCode` は必ず自分の言語にする（`en` 以外の言語で `labs` / `mascotLines` を渡さないと、それらは日本語になる）
+- 推しのセリフは [`findForbiddenExpressions`](lib/mascot/mascot_lines.dart) の検査（責めない・煽らない）を、アプリ側のテストでも通すこと
+
+## 構成
 
 ```
 lib/

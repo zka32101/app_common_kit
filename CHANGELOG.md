@@ -10,6 +10,17 @@
 - `PurchaseSection`: 設定タブの「購入」欄（広告非表示・プレミアムの購入と復元）。`entitlementServiceProvider` / `entitlementStateProvider` を使う。見出しの大きさは `titleStyle` で渡す
 - `ExamDateTile`: 受験日の入力欄（日付ピッカーと解除）。状態は持たず、保存は `onChanged` を受けたアプリ側
 
+## [0.24.0] - 2026-10-09
+
+ja/en 以外の言語を、アプリ側から足せるようにした。追加のみ（既定の表示は変わらない）。
+
+### 追加
+- `KitStrings.copyWith`・`LabStrings.copyWith`: 一部の文言だけ差し替えた複製（ほかの言語の土台にも使える）
+- `KitStrings.forLocale(locale, supported: {...})`: アプリが用意した言語を選べる（無い言語は従来どおり。en は英語、他は日本語）
+- `KitStringsScope(labs:, mascotLines:)`: ラボ系の文言と推しのセリフも差し込める。省略時は従来どおり言語に応じた ja/en
+- `MascotLines.forTone(custom:)`
+- README に「言語を足す」手順を追加（あわせて、欠けていた「構成」の見出しを戻した）
+
 ## [0.23.0] - 2026-10-09
 
 共有カードの多言語化（ja/en）。追加のみ。
