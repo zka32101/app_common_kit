@@ -38,12 +38,17 @@ const T = {
   const page = await browser.newPage({
     // 言語を明示する。headless shell は言語情報が空で、Flutter が起動時に落ちるため。
     locale: 'ja-JP',
-    viewport: { width: 420, height: 1000 },
+    viewport: { width: 420, height: 1400 },
   });
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
 
-  const text = async () => (await page.locator('flt-semantics').allInnerTexts()).join('\n');
+  // 文字は innerText と aria-label の両方から拾う（タブやボタンの名前は aria-label にだけ入る）。
+  const text = async () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('flt-semantics')]
+        .map(e => `${e.innerText || ''}\n${e.getAttribute('aria-label') || ''}`)
+        .join('\n'));
   const waitText = async (s, timeout = 8000) => {
     const end = Date.now() + timeout;
     while (Date.now() < end) {
@@ -57,6 +62,8 @@ const T = {
     await page.waitForTimeout(700);
   };
   const back = async () => click('button', 'Back');
+  // 失敗の原因を追えるよう、画面の文字を出す。
+  const dump = async (label) => console.log(`--- ${label} の画面の文字 ---\n${(await text()).slice(0, 1500)}\n---`);
 
   await page.goto('http://localhost:8099/');
   await page.waitForSelector('flt-semantics-placeholder', { state: 'attached', timeout: 60000 });
@@ -94,6 +101,38 @@ const T = {
     check(`[${lang}] 片手モードで「${t.correct}」`, await waitText(t.correct));
     await page.screenshot({ path: `${shots}/${lang}-handsfree.png` });
     await back();
+
+    // 設定タブ相当（購入欄・受験日）。文言は日本語固定なので、状態を持つ操作は ja のときだけ行う。
+    if (lang === 'ja') {
+      await click('button', 'Open settings');
+      const hasOffer = (await waitText('広告非表示')) && (await waitText('¥480'));
+      check('[ja] 購入欄に商品と価格', hasOffer);
+      if (!hasOffer) await dump('購入欄');
+      check('[ja] 購入を復元ボタン', await waitText('購入を復元'));
+      check('[ja] 受験日は未設定', await waitText('未設定'));
+      await page.screenshot({ path: `${shots}/ja-settings-before.png` });
+
+      await click('button', '¥480');
+      const bought = await waitText('広告非表示を購入済みです');
+      check('[ja] 購入すると購入済み表示', bought);
+      if (!bought) await dump('購入後');
+
+      // 受験日: ピッカーを開いて今日の日付のまま決定 → 日付が出る。解除で未設定に戻る。
+      const today = await page.evaluate(() => {
+        const d = new Date();
+        return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+      });
+      await click('button', '受験日');
+      await dump('受験日ピッカー');
+      await click('button', 'OK');
+      const hasDate = await waitText(today);
+      check(`[ja] 受験日に今日（${today}）が入る`, hasDate);
+      if (!hasDate) await dump('受験日決定後');
+      await page.screenshot({ path: `${shots}/ja-settings-after.png` });
+      await click('button', '受験日を解除');
+      check('[ja] 受験日を解除すると未設定に戻る', await waitText('未設定'));
+      await back();
+    }
 
     // 推しカードのメニュー → 着替え・ショップ（カードの文言が積んだ画面に引き継がれる）
     await click('button', t.menuButton);
