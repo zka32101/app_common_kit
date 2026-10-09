@@ -40,7 +40,7 @@ KitStringsScope(strings: KitStrings.forLocale(Locale('en')), child: app)
 
 **`MaterialApp.builder` など Navigator より上に置く**と、積まれた画面（`FeedbackFormPage` など）やダイアログにも届く（`home` の内側に置くと届かない）。画面・ダイアログは `strings:` を直接渡してもよい。
 
-対応済み: `CoinBreakdownCard`・`coinEventLabel`・`ErrorState`・`StreakBadge`・`ResultSummary`・`FeedbackFormPage`・`showPassReportDialog`・`WardrobeScreen`・`OshiHomeCard`（入力の検証メッセージ `FeedbackLimits` は日本語のまま）。他のウィジェットは順次対応（未対応は引数で差し替える従来どおり）。
+対応済み: 画面に出るウィジェットはほぼすべて（結果・コイン・フィードバック・合格報告・着替え・推し・マスコットのセリフ・ラボ系・選択肢・解説・下部タブ・片手モードの読み上げボタンなど）。未対応（日本語のまま）: 共有カード画像の文言（「うかラボ」・日付表記）、衣装名・資格名などカタログのデータ。
 
 
 ```

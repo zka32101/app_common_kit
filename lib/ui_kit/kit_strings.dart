@@ -79,6 +79,18 @@ class KitStrings {
     required this.feedbackDetailRequired,
     required this.feedbackTitleTooLong,
     required this.feedbackDetailTooLong,
+    required this.correctLabel,
+    required this.incorrectLabel,
+    required this.sentenceSeparator,
+    required this.explanationTitle,
+    required this.tabLabels,
+    required this.readAloud,
+    required this.mockRecordTitle,
+    required this.mockRecordNote,
+    required this.mockRecordMessage,
+    required this.sourceNote,
+    required this.sourceNoteChecked,
+    required this.mockRecordCert,
   });
 
   /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
@@ -159,6 +171,18 @@ class KitStrings {
   final String feedbackDetailRequired;
   final String Function(int max) feedbackTitleTooLong;
   final String Function(int max) feedbackDetailTooLong;
+  final String correctLabel;
+  final String incorrectLabel;
+  final String sentenceSeparator;
+  final String explanationTitle;
+  final List<String> tabLabels;
+  final String readAloud;
+  final String mockRecordTitle;
+  final String mockRecordNote;
+  final String mockRecordMessage;
+  final String Function(String src) sourceNote;
+  final String Function(String src, String checkedAt) sourceNoteChecked;
+  final String Function(String cert) mockRecordCert;
 
   static const ja = KitStrings(
     languageCode: 'ja',
@@ -251,6 +275,18 @@ class KitStrings {
     feedbackDetailRequired: '詳細を入力してください',
     feedbackTitleTooLong: _jaTitleTooLong,
     feedbackDetailTooLong: _jaDetailTooLong,
+    correctLabel: '正解',
+    incorrectLabel: '不正解',
+    sentenceSeparator: '。',
+    explanationTitle: '解説',
+    tabLabels: ['ホーム', '学ぶ', '模擬', '記録', '設定'],
+    readAloud: '読み上げ',
+    mockRecordTitle: '学習の記録カード',
+    mockRecordNote: '模擬試験の記録です。本番の合格ではありません。名前などの個人情報は入りません。',
+    mockRecordMessage: '合格点を超えました！',
+    sourceNote: _jaSourceNote,
+    sourceNoteChecked: _jaSourceNoteChecked,
+    mockRecordCert: _jaMockRecordCert,
   );
 
   static const en = KitStrings(
@@ -353,6 +389,18 @@ class KitStrings {
     feedbackDetailRequired: 'Please enter the details',
     feedbackTitleTooLong: _enTitleTooLong,
     feedbackDetailTooLong: _enDetailTooLong,
+    correctLabel: 'Correct',
+    incorrectLabel: 'Incorrect',
+    sentenceSeparator: '. ',
+    explanationTitle: 'Explanation',
+    tabLabels: ['Home', 'Learn', 'Mock', 'Records', 'Settings'],
+    readAloud: 'Read aloud',
+    mockRecordTitle: 'Study record card',
+    mockRecordNote: 'This is a mock exam record, not an actual pass. It contains no personal information such as your name.',
+    mockRecordMessage: 'You beat the passing score!',
+    sourceNote: _enSourceNote,
+    sourceNoteChecked: _enSourceNoteChecked,
+    mockRecordCert: _enMockRecordCert,
   );
 
   /// 言語コードから選ぶ。未対応の言語は日本語。
@@ -394,6 +442,13 @@ String _jaTitleTooLong(int m) => 'タイトルは$m文字以内で入力して�
 String _enTitleTooLong(int m) => 'Title must be $m characters or fewer';
 String _jaDetailTooLong(int m) => '詳細は$m文字以内で入力してください';
 String _enDetailTooLong(int m) => 'Details must be $m characters or fewer';
+
+String _jaSourceNote(String s) => '出典: $s';
+String _enSourceNote(String s) => 'Source: $s';
+String _jaSourceNoteChecked(String s, String d) => '出典: $s（$d 確認）';
+String _enSourceNoteChecked(String s, String d) => 'Source: $s (checked $d)';
+String _jaMockRecordCert(String c) => '$c 模擬試験';
+String _enMockRecordCert(String c) => '$c mock exam';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///
