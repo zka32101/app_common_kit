@@ -39,6 +39,7 @@ export 'ui_kit/tappable_term_text.dart';
 export 'coin/coin_rules.dart';
 export 'coin/coin_ledger.dart';
 export 'coin/coin_service.dart';
+export 'coin/coin_sync.dart';
 export 'coin/coin_provider.dart';
 export 'coin/shop.dart';
 export 'mascot/mascot_models.dart';
