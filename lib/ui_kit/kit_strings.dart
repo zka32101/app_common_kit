@@ -1,5 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+import '../mascot/mascot_lines.dart';
+import '../mascot/mascot_models.dart';
+import 'lab_strings.dart';
+
 /// キット内蔵ウィジェットの既定文言（日本語・英語）。
 ///
 /// 既定は日本語。端末の言語には自動で従わず、アプリが [KitStringsScope] で明示したときだけ切り替わる
@@ -189,6 +193,186 @@ class KitStrings {
   final String shareCardBrand;
   final String shareCardPassed;
   final String Function(DateTime date) shareDate;
+
+  /// 一部の文言だけ差し替えた複製を返す（ほかの言語の土台にも使える）。
+  KitStrings copyWith({
+    String? languageCode,
+    String? coinTotal,
+    String? coinBreakdownTitle,
+    Map<String, String>? coinEventLabels,
+    String? errorMessage,
+    String? retry,
+    String? streakZero,
+    String Function(int days)? streakDays,
+    String Function(int days)? streakSemantics,
+    String? accuracy,
+    String Function(int correct, int total)? correctOfTotal,
+    String? passLineReached,
+    String? passLineNotYet,
+    String Function(int percent)? passLine,
+    String? again,
+    String? close,
+    String? feedbackTitle,
+    String? feedbackType,
+    String? feedbackBug,
+    String? feedbackFeature,
+    String? feedbackOther,
+    String? feedbackSubject,
+    String? feedbackSubjectHint,
+    String? feedbackDetail,
+    String? feedbackDetailHint,
+    String? feedbackSubmit,
+    String? feedbackSent,
+    String? feedbackFailed,
+    String? passAskBody,
+    String? passNotYet,
+    String? passNotPassed,
+    String? passPassed,
+    String? passEncourageTitle,
+    String? passEncourageBody,
+    String? passCongrats,
+    String? passPrivacy,
+    String? passShare,
+    String? wardrobeTitle,
+    String? wardrobeNote,
+    String? wardrobeInsufficient,
+    String? wardrobeAlreadyOwned,
+    String? wardrobeUnknown,
+    String? wardrobeCannotWear,
+    String? wardrobeWear,
+    String? wardrobeWearing,
+    String? wardrobeCanWear,
+    String? lockedNotPassed,
+    String? lockedNoExamDate,
+    String? lockedNotReady,
+    String? oshiMenuTooltip,
+    String? oshiChoose,
+    String? oshiPassReport,
+    String? oshiDisplayNormal,
+    String? oshiDisplaySmall,
+    String? oshiDisplayHidden,
+    String? oshiName,
+    String? oshiHiddenNote,
+    String? oshiYours,
+    String? oshiTapHint,
+    String Function(int balance)? coinBalance,
+    String Function(String name)? wardrobePurchased,
+    String Function(int price)? wardrobePrice,
+    String Function(int price)? lockedNotPurchased,
+    String Function(String cert)? passAskTitle,
+    String Function(int amount)? passCoin,
+    String Function(String name)? passOutfit,
+    Map<String, String>? characterNames,
+    Map<String, String>? characterRoles,
+    String? feedbackTitleRequired,
+    String? feedbackDetailRequired,
+    String Function(int max)? feedbackTitleTooLong,
+    String Function(int max)? feedbackDetailTooLong,
+    String? correctLabel,
+    String? incorrectLabel,
+    String? sentenceSeparator,
+    String? explanationTitle,
+    List<String>? tabLabels,
+    String? readAloud,
+    String? mockRecordTitle,
+    String? mockRecordNote,
+    String? mockRecordMessage,
+    String Function(String src)? sourceNote,
+    String Function(String src, String checkedAt)? sourceNoteChecked,
+    String Function(String cert)? mockRecordCert,
+    String? shareCardBrand,
+    String? shareCardPassed,
+    String Function(DateTime date)? shareDate,
+  }) =>
+      KitStrings(
+      languageCode: languageCode ?? this.languageCode,
+      coinTotal: coinTotal ?? this.coinTotal,
+      coinBreakdownTitle: coinBreakdownTitle ?? this.coinBreakdownTitle,
+      coinEventLabels: coinEventLabels ?? this.coinEventLabels,
+      errorMessage: errorMessage ?? this.errorMessage,
+      retry: retry ?? this.retry,
+      streakZero: streakZero ?? this.streakZero,
+      streakDays: streakDays ?? this.streakDays,
+      streakSemantics: streakSemantics ?? this.streakSemantics,
+      accuracy: accuracy ?? this.accuracy,
+      correctOfTotal: correctOfTotal ?? this.correctOfTotal,
+      passLineReached: passLineReached ?? this.passLineReached,
+      passLineNotYet: passLineNotYet ?? this.passLineNotYet,
+      passLine: passLine ?? this.passLine,
+      again: again ?? this.again,
+      close: close ?? this.close,
+      feedbackTitle: feedbackTitle ?? this.feedbackTitle,
+      feedbackType: feedbackType ?? this.feedbackType,
+      feedbackBug: feedbackBug ?? this.feedbackBug,
+      feedbackFeature: feedbackFeature ?? this.feedbackFeature,
+      feedbackOther: feedbackOther ?? this.feedbackOther,
+      feedbackSubject: feedbackSubject ?? this.feedbackSubject,
+      feedbackSubjectHint: feedbackSubjectHint ?? this.feedbackSubjectHint,
+      feedbackDetail: feedbackDetail ?? this.feedbackDetail,
+      feedbackDetailHint: feedbackDetailHint ?? this.feedbackDetailHint,
+      feedbackSubmit: feedbackSubmit ?? this.feedbackSubmit,
+      feedbackSent: feedbackSent ?? this.feedbackSent,
+      feedbackFailed: feedbackFailed ?? this.feedbackFailed,
+      passAskBody: passAskBody ?? this.passAskBody,
+      passNotYet: passNotYet ?? this.passNotYet,
+      passNotPassed: passNotPassed ?? this.passNotPassed,
+      passPassed: passPassed ?? this.passPassed,
+      passEncourageTitle: passEncourageTitle ?? this.passEncourageTitle,
+      passEncourageBody: passEncourageBody ?? this.passEncourageBody,
+      passCongrats: passCongrats ?? this.passCongrats,
+      passPrivacy: passPrivacy ?? this.passPrivacy,
+      passShare: passShare ?? this.passShare,
+      wardrobeTitle: wardrobeTitle ?? this.wardrobeTitle,
+      wardrobeNote: wardrobeNote ?? this.wardrobeNote,
+      wardrobeInsufficient: wardrobeInsufficient ?? this.wardrobeInsufficient,
+      wardrobeAlreadyOwned: wardrobeAlreadyOwned ?? this.wardrobeAlreadyOwned,
+      wardrobeUnknown: wardrobeUnknown ?? this.wardrobeUnknown,
+      wardrobeCannotWear: wardrobeCannotWear ?? this.wardrobeCannotWear,
+      wardrobeWear: wardrobeWear ?? this.wardrobeWear,
+      wardrobeWearing: wardrobeWearing ?? this.wardrobeWearing,
+      wardrobeCanWear: wardrobeCanWear ?? this.wardrobeCanWear,
+      lockedNotPassed: lockedNotPassed ?? this.lockedNotPassed,
+      lockedNoExamDate: lockedNoExamDate ?? this.lockedNoExamDate,
+      lockedNotReady: lockedNotReady ?? this.lockedNotReady,
+      oshiMenuTooltip: oshiMenuTooltip ?? this.oshiMenuTooltip,
+      oshiChoose: oshiChoose ?? this.oshiChoose,
+      oshiPassReport: oshiPassReport ?? this.oshiPassReport,
+      oshiDisplayNormal: oshiDisplayNormal ?? this.oshiDisplayNormal,
+      oshiDisplaySmall: oshiDisplaySmall ?? this.oshiDisplaySmall,
+      oshiDisplayHidden: oshiDisplayHidden ?? this.oshiDisplayHidden,
+      oshiName: oshiName ?? this.oshiName,
+      oshiHiddenNote: oshiHiddenNote ?? this.oshiHiddenNote,
+      oshiYours: oshiYours ?? this.oshiYours,
+      oshiTapHint: oshiTapHint ?? this.oshiTapHint,
+      coinBalance: coinBalance ?? this.coinBalance,
+      wardrobePurchased: wardrobePurchased ?? this.wardrobePurchased,
+      wardrobePrice: wardrobePrice ?? this.wardrobePrice,
+      lockedNotPurchased: lockedNotPurchased ?? this.lockedNotPurchased,
+      passAskTitle: passAskTitle ?? this.passAskTitle,
+      passCoin: passCoin ?? this.passCoin,
+      passOutfit: passOutfit ?? this.passOutfit,
+      characterNames: characterNames ?? this.characterNames,
+      characterRoles: characterRoles ?? this.characterRoles,
+      feedbackTitleRequired: feedbackTitleRequired ?? this.feedbackTitleRequired,
+      feedbackDetailRequired: feedbackDetailRequired ?? this.feedbackDetailRequired,
+      feedbackTitleTooLong: feedbackTitleTooLong ?? this.feedbackTitleTooLong,
+      feedbackDetailTooLong: feedbackDetailTooLong ?? this.feedbackDetailTooLong,
+      correctLabel: correctLabel ?? this.correctLabel,
+      incorrectLabel: incorrectLabel ?? this.incorrectLabel,
+      sentenceSeparator: sentenceSeparator ?? this.sentenceSeparator,
+      explanationTitle: explanationTitle ?? this.explanationTitle,
+      tabLabels: tabLabels ?? this.tabLabels,
+      readAloud: readAloud ?? this.readAloud,
+      mockRecordTitle: mockRecordTitle ?? this.mockRecordTitle,
+      mockRecordNote: mockRecordNote ?? this.mockRecordNote,
+      mockRecordMessage: mockRecordMessage ?? this.mockRecordMessage,
+      sourceNote: sourceNote ?? this.sourceNote,
+      sourceNoteChecked: sourceNoteChecked ?? this.sourceNoteChecked,
+      mockRecordCert: mockRecordCert ?? this.mockRecordCert,
+      shareCardBrand: shareCardBrand ?? this.shareCardBrand,
+      shareCardPassed: shareCardPassed ?? this.shareCardPassed,
+      shareDate: shareDate ?? this.shareDate,
+      );
 
   static const ja = KitStrings(
     languageCode: 'ja',
@@ -416,8 +600,18 @@ class KitStrings {
   );
 
   /// 言語コードから選ぶ。未対応の言語は日本語。
-  static KitStrings forLocale(Locale locale) =>
-      locale.languageCode == 'en' ? en : ja;
+  /// 言語コードから選ぶ。アプリが用意した言語は [supported]（言語コード → 文言）で渡す。
+  /// どちらにも無い言語は日本語。
+  ///
+  /// ```dart
+  /// final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计', /* … */);
+  /// KitStrings.forLocale(locale, supported: {'zh': zh});
+  /// ```
+  static KitStrings forLocale(
+    Locale locale, {
+    Map<String, KitStrings> supported = const {},
+  }) =>
+      supported[locale.languageCode] ?? (locale.languageCode == 'en' ? en : ja);
 
   /// 最も近い [KitStringsScope] の文言。無ければ日本語。
   static KitStrings of(BuildContext context) =>
@@ -471,15 +665,46 @@ String _enShareDate(DateTime d) => '${_enShortMonths[d.month - 1]} ${d.day}, ${d
 /// ```dart
 /// KitStringsScope(strings: KitStrings.forLocale(locale), child: ...)
 /// ```
+///
+/// ja/en 以外の言語を足すときは、文言の3つの束を渡す。渡さなかった束は、
+/// [KitStrings.languageCode] が `en` なら英語、それ以外は日本語になる。
+///
+/// ```dart
+/// KitStringsScope(
+///   strings: zh,          // KitStrings（画面の文言）
+///   labs: zhLabs,         // LabStrings（ラボ系ウィジェットの文言）
+///   mascotLines: zhLines, // 推しのセリフ（口調 → セリフ集）
+///   child: ...,
+/// )
+/// ```
 class KitStringsScope extends InheritedWidget {
   const KitStringsScope({
     super.key,
     required this.strings,
+    this.labs,
+    this.mascotLines,
     required super.child,
   });
 
   final KitStrings strings;
 
+  /// ラボ系ウィジェットの文言。null なら [LabStrings.ja]／[LabStrings.en]。
+  final LabStrings? labs;
+
+  /// 推しのセリフ。null、または口調が無ければ、既定のセリフ集。
+  final Map<MascotTone, MascotLines>? mascotLines;
+
+  /// 最も近い [KitStringsScope] の [labs]。無ければ null。
+  static LabStrings? labsOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<KitStringsScope>()?.labs;
+
+  /// 最も近い [KitStringsScope] の [mascotLines]。無ければ null。
+  static Map<MascotTone, MascotLines>? mascotLinesOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<KitStringsScope>()?.mascotLines;
+
   @override
-  bool updateShouldNotify(KitStringsScope old) => strings != old.strings;
+  bool updateShouldNotify(KitStringsScope old) =>
+      strings != old.strings ||
+      labs != old.labs ||
+      mascotLines != old.mascotLines;
 }

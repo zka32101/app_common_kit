@@ -37,8 +37,14 @@ class MascotLines {
   /// 口調に合ったセリフ。用意のない口調は標準（やさしい）に戻す。
   ///
   /// [lang] は `'en'` で英語、それ以外は日本語。
-  static MascotLines forTone(MascotTone tone, {String lang = 'ja'}) =>
-      lang == 'en' ? (_byToneEn[tone] ?? gentleEn) : (_byTone[tone] ?? gentle);
+  /// [custom]（アプリが用意した言語のセリフ）に口調があれば、それを優先する。
+  static MascotLines forTone(
+    MascotTone tone, {
+    String lang = 'ja',
+    Map<MascotTone, MascotLines>? custom,
+  }) =>
+      custom?[tone] ??
+      (lang == 'en' ? (_byToneEn[tone] ?? gentleEn) : (_byTone[tone] ?? gentle));
 
   static const gentle = MascotLines({
     MascotSituation.greeting: ['こんにちは。今日も少しずつ進めましょう', 'ようこそ。ゆっくりで大丈夫です'],
