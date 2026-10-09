@@ -43,7 +43,12 @@ const T = {
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
 
-  const text = async () => (await page.locator('flt-semantics').allInnerTexts()).join('\n');
+  // 文字は innerText と aria-label の両方から拾う（タブやボタンの名前は aria-label にだけ入る）。
+  const text = async () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('flt-semantics')]
+        .map(e => `${e.innerText || ''}\n${e.getAttribute('aria-label') || ''}`)
+        .join('\n'));
   const waitText = async (s, timeout = 8000) => {
     const end = Date.now() + timeout;
     while (Date.now() < end) {
