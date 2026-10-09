@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 @immutable
 class KitStrings {
   const KitStrings({
+    required this.languageCode,
     required this.coinTotal,
     required this.coinBreakdownTitle,
     required this.coinEventLabels,
@@ -80,6 +81,8 @@ class KitStrings {
     required this.feedbackDetailTooLong,
   });
 
+  /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
+  final String languageCode;
   final String coinTotal;
   final String coinBreakdownTitle;
 
@@ -158,6 +161,7 @@ class KitStrings {
   final String Function(int max) feedbackDetailTooLong;
 
   static const ja = KitStrings(
+    languageCode: 'ja',
     coinTotal: '合計',
     coinBreakdownTitle: '今回貯まった学習コイン',
     coinEventLabels: {
@@ -250,6 +254,7 @@ class KitStrings {
   );
 
   static const en = KitStrings(
+    languageCode: 'en',
     coinTotal: 'Total',
     coinBreakdownTitle: 'Study coins earned this time',
     coinEventLabels: {
