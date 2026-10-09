@@ -6,6 +6,16 @@ on:
     branches: [main]
 
 jobs:
+  version-check:
+    # バージョンの二重使用を防ぐ（tools/check_version.sh）。PR のときだけ。
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git fetch origin main --tags
+      - run: tools/check_version.sh origin/main
   test:
     runs-on: ubuntu-latest
     steps:
