@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 学習曲線の1点。yourwish_kentei の `LearningCurvePoint` と同じ構造を持つ、
 /// UI 層の軽量な写し。アプリ側がデータモデルから詰め替えて渡す
 /// （`BoundarySliderWidget` と同じ構成）。
@@ -102,15 +104,15 @@ class _FailureGalleryWidgetState extends State<FailureGalleryWidget> {
         const SizedBox(height: 8),
         Row(
           children: [
-            _LegendDot(color: theme.colorScheme.primary, label: '訓練誤差'),
+            _LegendDot(color: theme.colorScheme.primary, label: LabStrings.of(context).trainError),
             const SizedBox(width: 16),
-            _LegendDot(color: theme.colorScheme.error, label: '検証誤差'),
+            _LegendDot(color: theme.colorScheme.error, label: LabStrings.of(context).validationError),
           ],
         ),
         const SizedBox(height: 12),
         switch (_step) {
           _FailureStep.symptom => _ChoiceStep(
-              prompt: 'この学習曲線の症状は?',
+              prompt: LabStrings.of(context).symptomPrompt,
               options: widget.symptomOptions,
               wrongOptionId: _wrongSymptomId,
               onSelect: _selectSymptom,
@@ -119,12 +121,12 @@ class _FailureGalleryWidgetState extends State<FailureGalleryWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '症状: ${widget.symptomOptions.firstWhere((o) => o.isCorrect).text}',
+                  LabStrings.of(context).symptomIs(widget.symptomOptions.firstWhere((o) => o.isCorrect).text),
                   style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
                 ),
                 const SizedBox(height: 8),
                 _ChoiceStep(
-                  prompt: 'この症状への処方は?',
+                  prompt: LabStrings.of(context).treatmentPrompt,
                   options: widget.treatmentOptions,
                   wrongOptionId: _wrongTreatmentId,
                   onSelect: _selectTreatment,
@@ -140,7 +142,7 @@ class _FailureGalleryWidgetState extends State<FailureGalleryWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'わかった!',
+                      LabStrings.of(context).gotIt,
                       style: theme.textTheme.labelLarge
                           ?.copyWith(color: theme.colorScheme.primary),
                     ),
@@ -192,7 +194,7 @@ class _ChoiceStep extends StatelessWidget {
         if (wrongOptionId != null) ...[
           const SizedBox(height: 8),
           Text(
-            'んー、違うかも。もう一度選んでみて。',
+            LabStrings.of(context).wrongTryAgain,
             style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
           ),
         ],

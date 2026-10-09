@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 import 'failure_gallery.dart' show FailureChoiceSpec;
 
 /// 評価指標ラボ（画期的な機能3）の1場面。
@@ -107,19 +109,19 @@ class _ConfusionMatrixLabWidgetState extends State<ConfusionMatrixLabWidget> {
       children: [
         Text(s.title, style: theme.textTheme.titleMedium),
         const SizedBox(height: 12),
-        _CellSlider(label: 'TP（真陽性）', value: _tp, max: _maxCell, onChanged: (v) => setState(() => _tp = v)),
-        _CellSlider(label: 'FP（偽陽性）', value: _fp, max: _maxCell, onChanged: (v) => setState(() => _fp = v)),
-        _CellSlider(label: 'FN（偽陰性）', value: _fn, max: _maxCell, onChanged: (v) => setState(() => _fn = v)),
-        _CellSlider(label: 'TN（真陰性）', value: _tn, max: _maxCell, onChanged: (v) => setState(() => _tn = v)),
+        _CellSlider(label: LabStrings.of(context).cmTp, value: _tp, max: _maxCell, onChanged: (v) => setState(() => _tp = v)),
+        _CellSlider(label: LabStrings.of(context).cmFp, value: _fp, max: _maxCell, onChanged: (v) => setState(() => _fp = v)),
+        _CellSlider(label: LabStrings.of(context).cmFn, value: _fn, max: _maxCell, onChanged: (v) => setState(() => _fn = v)),
+        _CellSlider(label: LabStrings.of(context).cmTn, value: _tn, max: _maxCell, onChanged: (v) => setState(() => _tn = v)),
         const SizedBox(height: 12),
         Wrap(
           spacing: 12,
           runSpacing: 8,
           children: [
-            _StatChip(label: '正解率', value: _accuracy),
-            _StatChip(label: '適合率', value: _precision),
-            _StatChip(label: '再現率', value: _recall),
-            _StatChip(label: 'F値', value: _f1),
+            _StatChip(label: LabStrings.of(context).cmAccuracy, value: _accuracy),
+            _StatChip(label: LabStrings.of(context).cmPrecision, value: _precision),
+            _StatChip(label: LabStrings.of(context).cmRecall, value: _recall),
+            _StatChip(label: LabStrings.of(context).cmF1, value: _f1),
           ],
         ),
         const SizedBox(height: 16),
@@ -141,7 +143,7 @@ class _ConfusionMatrixLabWidgetState extends State<ConfusionMatrixLabWidget> {
           if (_wrongOptionId != null) ...[
             const SizedBox(height: 8),
             Text(
-              'んー、違うかも。もう一度選んでみて。',
+              LabStrings.of(context).wrongTryAgain,
               style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
             ),
           ],
@@ -155,7 +157,7 @@ class _ConfusionMatrixLabWidgetState extends State<ConfusionMatrixLabWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'わかった!',
+                    LabStrings.of(context).gotIt,
                     style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
                   ),
                   const SizedBox(height: 8),

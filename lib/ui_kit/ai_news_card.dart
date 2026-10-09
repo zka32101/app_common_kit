@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 今月のAI動向（画期的な機能10、決定41）の1件。
 class AiNewsItemSpec {
   const AiNewsItemSpec({
@@ -47,10 +49,10 @@ class AiNewsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('今月のAI動向', style: theme.textTheme.titleMedium),
+            Text(LabStrings.of(context).aiNewsTitle, style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              '${asOf.year}年${asOf.month}月時点',
+              LabStrings.of(context).aiNewsAsOf(asOf.year, asOf.month),
               style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
             ),
             const SizedBox(height: 12),
@@ -98,7 +100,7 @@ class _AiNewsRow extends StatelessWidget {
             ),
             if (item.isExamRelevant)
               Chip(
-                label: const Text('試験に出そう'),
+                label: Text(LabStrings.of(context).aiNewsExamLikely),
                 labelStyle: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.error),
                 visualDensity: VisualDensity.compact,
                 padding: EdgeInsets.zero,

@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 進捗リング。中央に割合（%）を出す。色だけでなく数字でも伝える。
 class ProgressRing extends StatelessWidget {
   const ProgressRing({
@@ -26,7 +28,7 @@ class ProgressRing extends StatelessWidget {
     final v = value.isNaN ? 0.0 : value.clamp(0.0, 1.0);
     final percent = (v * 100).round();
     return Semantics(
-      label: '${label ?? '進捗'} $percent%',
+      label: '${label ?? LabStrings.of(context).progressDefault} $percent%',
       excludeSemantics: true,
       child: SizedBox(
         width: size,
