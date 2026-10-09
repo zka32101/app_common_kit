@@ -13,8 +13,16 @@ Future<void> main() async {
   await coin.grant(CoinEvent.passReport(UkalabCert.bikeLicense.id)); // 衣装を買える残高
   final outfit = OutfitService(store: InMemoryOutfitStore());
   await outfit.load();
+  // 購入欄の確認用。実際の課金は使わず、購入するとすぐ反映されるモック。
+  final entitlement = FakeEntitlementService(
+    availableOffers: const [
+      EntitlementOffer(id: 'noads', productId: 'ex_noads', title: '広告非表示', priceString: '¥480'),
+    ],
+    grantOnPurchase: const {'ex_noads': EntitlementState(hasNoAds: true)},
+  );
   runApp(ProviderScope(
     overrides: [
+      entitlementServiceProvider.overrideWithValue(entitlement),
       coinServiceProvider.overrideWithValue(coin),
       outfitServiceProvider.overrideWithValue(outfit),
     ],
@@ -125,6 +133,11 @@ class _NavButtons extends StatelessWidget {
             onPressed: () => _push(context, const _HandsFreeDemo()),
             child: const Text('Open hands-free'),
           ),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: () => _push(context, const _SettingsDemo()),
+            child: const Text('Open settings'),
+          ),
         ],
       );
 }
@@ -160,6 +173,34 @@ class _HandsFreeDemoState extends State<_HandsFreeDemo> {
                 state: _state(i),
                 onTap: _picked == null ? () => setState(() => _picked = i) : null,
               ),
+          ],
+        ),
+      );
+}
+
+/// 設定タブ相当。購入欄（PurchaseSection）と受験日の入力欄（ExamDateTile）の確認用。
+class _SettingsDemo extends StatefulWidget {
+  const _SettingsDemo();
+
+  @override
+  State<_SettingsDemo> createState() => _SettingsDemoState();
+}
+
+class _SettingsDemoState extends State<_SettingsDemo> {
+  DateTime? _examDate;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('settings')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const PurchaseSection(),
+            const Divider(height: 32),
+            ExamDateTile(
+              date: _examDate,
+              onChanged: (d) => setState(() => _examDate = d),
+            ),
           ],
         ),
       );

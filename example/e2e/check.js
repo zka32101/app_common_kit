@@ -95,6 +95,31 @@ const T = {
     await page.screenshot({ path: `${shots}/${lang}-handsfree.png` });
     await back();
 
+    // 設定タブ相当（購入欄・受験日）。文言は日本語固定なので、状態を持つ操作は ja のときだけ行う。
+    if (lang === 'ja') {
+      await click('button', 'Open settings');
+      check('[ja] 購入欄に商品と価格', (await waitText('広告非表示')) && (await waitText('¥480')));
+      check('[ja] 購入を復元ボタン', await waitText('購入を復元'));
+      check('[ja] 受験日は未設定', await waitText('未設定'));
+      await page.screenshot({ path: `${shots}/ja-settings-before.png` });
+
+      await click('button', '¥480');
+      check('[ja] 購入すると購入済み表示', await waitText('広告非表示を購入済みです'));
+
+      // 受験日: ピッカーを開いて今日の日付のまま決定 → 日付が出る。解除で未設定に戻る。
+      const today = await page.evaluate(() => {
+        const d = new Date();
+        return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+      });
+      await click('button', '受験日');
+      await click('button', 'OK');
+      check(`[ja] 受験日に今日（${today}）が入る`, await waitText(today));
+      await page.screenshot({ path: `${shots}/ja-settings-after.png` });
+      await click('button', '受験日を解除');
+      check('[ja] 受験日を解除すると未設定に戻る', await waitText('未設定'));
+      await back();
+    }
+
     // 推しカードのメニュー → 着替え・ショップ（カードの文言が積んだ画面に引き継がれる）
     await click('button', t.menuButton);
     for (const s of t.menuItems) {
