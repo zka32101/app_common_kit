@@ -25,6 +25,7 @@ Future<void> main() async {
       entitlementServiceProvider.overrideWithValue(entitlement),
       coinServiceProvider.overrideWithValue(coin),
       outfitServiceProvider.overrideWithValue(outfit),
+      handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
     ],
     child: const ExampleApp(),
   ));
@@ -102,7 +103,7 @@ class _ExampleAppState extends State<ExampleApp> {
             ),
             const SizedBox(height: 16),
             // 積んだ画面（Navigator の上の Scope から文言が届くかの確認）。
-            const _NavButtons(),
+            _NavButtons(en: _en, onLanguage: (code) => setState(() => _en = code == 'en')),
           ],
         ),
       ),
@@ -111,7 +112,10 @@ class _ExampleAppState extends State<ExampleApp> {
 }
 
 class _NavButtons extends StatelessWidget {
-  const _NavButtons();
+  const _NavButtons({required this.en, required this.onLanguage});
+
+  final bool en;
+  final ValueChanged<String> onLanguage;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -135,7 +139,7 @@ class _NavButtons extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           FilledButton(
-            onPressed: () => _push(context, const _SettingsDemo()),
+            onPressed: () => _push(context, _SettingsDemo(en: en, onLanguage: onLanguage)),
             child: const Text('Open settings'),
           ),
         ],
@@ -178,9 +182,13 @@ class _HandsFreeDemoState extends State<_HandsFreeDemo> {
       );
 }
 
-/// 設定タブ相当。購入欄（PurchaseSection）と受験日の入力欄（ExamDateTile）の確認用。
+/// 設定タブ相当。共通の設定画面（[SettingsScreen]）に、状態（受験日・言語）を持たせて置く。
+/// 状態の保存は、本番ではアプリ側（ここではメモリ上）。
 class _SettingsDemo extends StatefulWidget {
-  const _SettingsDemo();
+  const _SettingsDemo({required this.en, required this.onLanguage});
+
+  final bool en;
+  final ValueChanged<String> onLanguage;
 
   @override
   State<_SettingsDemo> createState() => _SettingsDemoState();
@@ -188,20 +196,20 @@ class _SettingsDemo extends StatefulWidget {
 
 class _SettingsDemoState extends State<_SettingsDemo> {
   DateTime? _examDate;
+  late String _lang = widget.en ? 'en' : 'ja';
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('settings')),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            const PurchaseSection(),
-            const Divider(height: 32),
-            ExamDateTile(
-              date: _examDate,
-              onChanged: (d) => setState(() => _examDate = d),
-            ),
-          ],
-        ),
+  Widget build(BuildContext context) => SettingsScreen(
+        appName: 'example',
+        appVersion: '0.0.1',
+        disclaimer: 'This is an example app.',
+        examDate: _examDate,
+        onExamDateChanged: (d) => setState(() => _examDate = d),
+        languages: const [SettingsLanguage('ja', '日本語'), SettingsLanguage('en', 'English')],
+        languageCode: _lang,
+        onLanguageChanged: (c) {
+          setState(() => _lang = c);
+          widget.onLanguage(c);
+        },
       );
 }

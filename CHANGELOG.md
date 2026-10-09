@@ -2,6 +2,21 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.26.0] - 2026-10-09
+
+共通の設定画面を追加。追加のみ（既定の表示は変わらない）。
+
+### 追加
+- `SettingsScreen`: 設定タブの完成品。受験日（`ExamDateTile`）・購入（`PurchaseSection`）・表示モード・言語・片手・ながら学習・ご意見／不具合報告（`FeedbackFormPage`）・学習の引き継ぎ・このアプリについて（バージョンと免責）。項目は引数で出し分け、アプリ固有の項目は `extraSections`（`SettingsSection`）で足す
+- `SettingsLanguage`（言語の選択肢）
+- 設定画面の文言（`KitStrings` に 25 項目＋`aboutVersion`）
+
+### 変更
+- `PurchaseSection`・`ExamDateTile` の文言を `KitStrings` 対応にした（日本語の既定は従来と同じ。英語に切り替えられる）
+
+### 注意
+- `SettingsScreen` の購入欄は `entitlementServiceProvider`、片手・ながら学習の欄は `handsFreeStoreProvider` の override が要る。使わないなら `showPurchase: false` / `showHandsFree: false`
+
 ## [0.25.1] - 2026-10-09
 
 アクセシビリティの自動検査を追加し、見つかった不具合を直した。

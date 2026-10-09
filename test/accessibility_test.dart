@@ -47,6 +47,16 @@ final _catalog = <String, Widget Function()>{
   'FeedbackFormPage': () => const FeedbackFormPage(appName: 'test'),
   'WardrobeScreen': () => const WardrobeScreen(cert: UkalabCert.bikeLicense),
   'UkalabOshiCard': () => _body(const UkalabOshiCard(cert: UkalabCert.bikeLicense, stage: MascotStage.lv1, appId: 'a11y')),
+  'SettingsScreen': () => SettingsScreen(
+        appName: 'test',
+        appVersion: '1.0.0',
+        examDate: DateTime(2026, 11, 22),
+        onExamDateChanged: (_) {},
+        onTransfer: () {},
+        languages: const [SettingsLanguage('ja', '日本語'), SettingsLanguage('en', 'English')],
+        languageCode: 'ja',
+        onLanguageChanged: (_) {},
+      ),
   'UkalabShell': () => UkalabShell(pages: [for (var i = 0; i < 5; i++) Center(child: Text('page $i'))]),
 };
 
@@ -71,6 +81,7 @@ Widget _app(Widget page, {required KitStrings strings, required double scale, re
       entitlementServiceProvider.overrideWithValue(service),
       coinServiceProvider.overrideWithValue(coin),
       outfitServiceProvider.overrideWithValue(outfit),
+      handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
     ],
     child: MaterialApp(
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo, brightness: brightness),
