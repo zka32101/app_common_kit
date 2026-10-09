@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 最短ルートプランナー（型④、決定76・77）が選んだ1科目の、UI層の軽量な写し。
 ///
-/// yourwish_kentei の `RouteTask` と同じ構造を持つ。アプリ側がデータモデルから
+/// ukalab_core の `RouteTask` と同じ構造を持つ。アプリ側がデータモデルから
 /// 詰め替えて渡す（`BoundarySliderWidget` と同じ構成）。
 class RouteTaskSpec {
   const RouteTaskSpec({

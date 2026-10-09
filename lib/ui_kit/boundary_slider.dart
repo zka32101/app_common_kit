@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 境界線スライダー（型①、決定76・77）の二値条件1つ。
 ///
-/// yourwish_kentei の `BoundaryCondition` と同じ構造を持つ、UI 層の軽量な
+/// ukalab_core の `BoundaryCondition` と同じ構造を持つ、UI 層の軽量な
 /// 写し。アプリ側がデータモデルから詰め替えて渡す（TermCard と同じ構成）。
 class BoundaryConditionSpec {
   const BoundaryConditionSpec({
