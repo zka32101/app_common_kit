@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'lab_strings.dart';
 
-/// 学習曲線の1点。yourwish_kentei の `LearningCurvePoint` と同じ構造を持つ、
+/// 学習曲線の1点。ukalab_core の `LearningCurvePoint` と同じ構造を持つ、
 /// UI 層の軽量な写し。アプリ側がデータモデルから詰め替えて渡す
 /// （`BoundarySliderWidget` と同じ構成）。
 class LearningCurvePointSpec {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'lab_strings.dart';
 
 /// 予測→実行（型②、決定76）: 先に答えを予測してから、計算結果とのズレを見て
-/// 学ぶウィジェット。yourwish_kentei の `PredictRunScenario` には依存せず、
+/// 学ぶウィジェット。ukalab_core の `PredictRunScenario` には依存せず、
 /// 呼び出し側が `compute()` の結果を詰め替えて渡す（`BoundarySliderWidget`
 /// と同じ構成）。
 ///

@@ -263,7 +263,7 @@ UkalabShell(pages: [home, learn, mock, record, settings]); // ホーム／学ぶ
 
 ### 用語カード（v0.3、決定50「専門用語の解説（全アプリ共通）」）
 
-問題文・解説文中の専門用語に下線をつけ、タップでボトムシートに用語カードを開く。データ（`Term`・配信前検証）は `yourwish_kentei` 側。
+問題文・解説文中の専門用語に下線をつけ、タップでボトムシートに用語カードを開く。データ（`Term`・配信前検証）は `ukalab_core` 側。
 
 ```dart
 TappableTermText(
@@ -351,7 +351,7 @@ final result = await transfer.restore();  // 新端末: ログイン直後に復
 - 保存先は `users/{uid}/exams/{examId}/transfer/{partId}`（部品ごとに1ドキュメント）。共通ルールに含まれるため、**ルールの変更は不要**
 - 1部品は Firestore の1MB上限まで。学習履歴が大きいアプリは、部品を分けるか、期間で切り分けて渡す
 - `partId` は一意にする（英数字とアンダースコア）。Firestore 以外に置くなら `TransferRemote`（`readPart`/`writePart`）を実装して渡す
-- 学習履歴（`yourwish_kentei` の `ProgressRecord`）の統合は、`qid` と `at` が同じ記録を重複させない形でアプリ側が実装する
+- 学習履歴（`ukalab_core` の `ProgressRecord`）の統合は、`qid` と `at` が同じ記録を重複させない形でアプリ側が実装する
 
 
 ## 片手・ながら学習モード
@@ -470,7 +470,7 @@ TermMapWidget(
       TermMapNodeSpec(
         termId: t.termId,
         label: t.term,
-        era: t.era, // yourwish_kentei の Term.era。null なら用語マップ側のみ
+        era: t.era, // ukalab_core の Term.era。null なら用語マップ側のみ
         relatedTermIds: t.relatedTermIds,
         mastery: masteryOf(t.termId), // アプリ側が学習ログから判定
       ),

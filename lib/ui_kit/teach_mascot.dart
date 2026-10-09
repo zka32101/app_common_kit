@@ -4,7 +4,7 @@ import 'lab_strings.dart';
 
 /// 推しの答案を添削（型③、決定76・77）の選択肢1つ。
 ///
-/// yourwish_kentei の `MisconceptionOption` と同じ構造を持つ、UI 層の軽量な
+/// ukalab_core の `MisconceptionOption` と同じ構造を持つ、UI 層の軽量な
 /// 写し。アプリ側がデータモデルから詰め替えて渡す（`BoundarySliderWidget` と
 /// 同じ構成）。
 class MisconceptionChoiceSpec {
