@@ -1,7 +1,11 @@
 const { chromium } = require('playwright');
 (async () => {
-  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
-  const page = await browser.newPage({ viewport: { width: 420, height: 1000 } });
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox'] });
+  const page = await browser.newPage({
+    // 言語を明示する。headless shell は言語情報が空で、Flutter が起動時に落ちるため。
+    locale: 'ja-JP',
+    viewport: { width: 420, height: 1000 },
+  });
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
   await page.goto('http://localhost:8099/');
