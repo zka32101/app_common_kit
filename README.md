@@ -289,7 +289,7 @@ await coin.purchase('hat'); // purchased / insufficient / alreadyOwned / unknown
 
 - 重複防止: 同じ問題・同じ段階・同じ資格は二度付与されない。1日の上限（新しい問題30コイン、復習20コイン、自己ベスト3回）あり
 - 残高は台帳の合計。購入は残高以内でしか記録しないので負にならない
-- 端末移行・同期: `CoinLedger.toJson()` を共通アカウントに保存し、`CoinService.mergeLedger` で統合（何度統合しても同じ）。**サーバー側の保存は未実装**（アプリ側の Firestore などに置く）
+- 端末移行・同期: `CoinLedger.toJson()` を共通アカウントに保存し、`CoinService.mergeLedger` で統合（何度統合しても同じ）。サーバー側の保存は `CoinRemote` をアプリ側（Firestore など）が実装し、`CoinSync(service:, remote:).sync()` で統合・書き戻す
 - 数値は暫定（学習コイン仕様 §2）。`CoinRules` を作り直して調整
 - 網羅率や正答率の**到達判定**は呼び出し側（学習ログ）が行い、到達したらイベントを渡す
 
