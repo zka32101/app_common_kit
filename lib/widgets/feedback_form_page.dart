@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/feedback_limits.dart';
 import '../models/feedback_model.dart';
 import '../providers/feedback_provider.dart';
+import '../ui_kit/kit_strings.dart';
 
 /// 全アプリ共通の「バグ報告・改善要望」フォーム画面。
 ///
@@ -26,11 +27,16 @@ class FeedbackFormPage extends ConsumerStatefulWidget {
   final String appVersion;
   final String? userId;
 
+  /// 文言。null なら最も近い `KitStringsScope`（無ければ日本語）。
+  /// 画面は Navigator の上に積まれるため、Scope は `MaterialApp.builder` など Navigator より上に置くか、ここで渡す。
+  final KitStrings? strings;
+
   const FeedbackFormPage({
     super.key,
     required this.appName,
     this.appVersion = '',
     this.userId,
+    this.strings,
   });
 
   @override
@@ -53,7 +59,9 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    await ref.read(feedbackProvider.notifier).submitFeedback(
+    await ref
+        .read(feedbackProvider.notifier)
+        .submitFeedback(
           type: _type,
           title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
@@ -63,43 +71,53 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
         );
 
     if (!mounted) return;
+    final strings = widget.strings ?? KitStrings.of(context);
     final result = ref.read(feedbackProvider);
 
     if (result.status == FeedbackSubmitStatus.success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('送信しました。ありがとうございます！')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(strings.feedbackSent)));
       Navigator.of(context).pop();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('送信に失敗しました。時間をおいて再度お試しください。')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(strings.feedbackFailed)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final strings = widget.strings ?? KitStrings.of(context);
     final submitState = ref.watch(feedbackProvider);
     final isSubmitting = submitState.status == FeedbackSubmitStatus.submitting;
-    final labelStyle = Theme.of(context)
-        .textTheme
-        .labelLarge
-        ?.copyWith(fontWeight: FontWeight.bold);
+    final labelStyle = Theme.of(
+      context,
+    ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('ご意見・不具合報告')),
+      appBar: AppBar(title: Text(strings.feedbackTitle)),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text('種別', style: labelStyle),
+            Text(strings.feedbackType, style: labelStyle),
             const SizedBox(height: 8),
             SegmentedButton<FeedbackType>(
-              segments: const [
-                ButtonSegment(value: FeedbackType.bug, label: Text('不具合報告')),
-                ButtonSegment(value: FeedbackType.feature, label: Text('改善要望')),
-                ButtonSegment(value: FeedbackType.other, label: Text('その他')),
+              segments: [
+                ButtonSegment(
+                  value: FeedbackType.bug,
+                  label: Text(strings.feedbackBug),
+                ),
+                ButtonSegment(
+                  value: FeedbackType.feature,
+                  label: Text(strings.feedbackFeature),
+                ),
+                ButtonSegment(
+                  value: FeedbackType.other,
+                  label: Text(strings.feedbackOther),
+                ),
               ],
               selected: {_type},
               onSelectionChanged: isSubmitting
@@ -107,28 +125,28 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
                   : (selection) => setState(() => _type = selection.first),
             ),
             const SizedBox(height: 20),
-            Text('タイトル', style: labelStyle),
+            Text(strings.feedbackSubject, style: labelStyle),
             const SizedBox(height: 8),
             TextFormField(
               controller: _titleController,
               enabled: !isSubmitting,
-              decoration: const InputDecoration(
-                hintText: '例：〇〇画面でボタンが反応しない',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: strings.feedbackSubjectHint,
+                border: const OutlineInputBorder(),
               ),
               validator: FeedbackLimits.standard.validateTitle,
             ),
             const SizedBox(height: 20),
-            Text('詳細', style: labelStyle),
+            Text(strings.feedbackDetail, style: labelStyle),
             const SizedBox(height: 8),
             TextFormField(
               controller: _descriptionController,
               enabled: !isSubmitting,
               minLines: 5,
               maxLines: 10,
-              decoration: const InputDecoration(
-                hintText: 'できるだけ詳しく状況を教えてください',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: strings.feedbackDetailHint,
+                border: const OutlineInputBorder(),
               ),
               validator: FeedbackLimits.standard.validateDescription,
             ),
@@ -141,9 +159,12 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
-                    : const Text('送信する'),
+                    : Text(strings.feedbackSubmit),
               ),
             ),
           ],

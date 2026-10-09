@@ -2,6 +2,14 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.17.0] - 2026-10-09
+
+多言語化の対象を拡大。
+
+### 追加
+- `FeedbackFormPage`・`showPassReportDialog` が `KitStrings` に対応（`strings:` 引数でも指定可）。文言を `KitStrings` に追加
+- 注意: `KitStringsScope` は `MaterialApp.builder` など Navigator より上に置く（`home` の内側だと積まれた画面・ダイアログに届かない）
+
 ## [0.16.0] - 2026-10-09
 
 多言語化の土台（日本語・英語）を追加。
