@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'kit_strings.dart';
+
 /// 連続学習日数。罰を感じさせない表現（0日でも責めない）。
 class StreakBadge extends StatelessWidget {
-  const StreakBadge({super.key, required this.days, this.zeroText = '今日から始めよう'});
+  const StreakBadge({super.key, required this.days, this.zeroText});
 
   final int days;
-  final String zeroText;
+  /// null なら [KitStrings] の既定文言。
+  final String? zeroText;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final text = days <= 0 ? zeroText : '$days日連続';
+    final strings = KitStrings.of(context);
+    final zero = zeroText ?? strings.streakZero;
+    final text = days <= 0 ? zero : strings.streakDays(days);
     return Semantics(
-      label: days <= 0 ? zeroText : '連続学習 $days日',
+      label: days <= 0 ? zero : strings.streakSemantics(days),
       excludeSemantics: true,
       child: Container(
         constraints: const BoxConstraints(minHeight: 32),
