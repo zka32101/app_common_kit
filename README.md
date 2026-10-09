@@ -12,12 +12,38 @@ Petit Works apps 全体で使う共通ユーティリティパッケージです
 | `cross_promo_kit` | 全アプリ横断のクロスプロモーション専用 | `firebase_remote_config` + `url_launcher` のみ |
 | `app_common_kit`（本リポジトリ） | 全アプリ横断の共通基盤 | 機能ごとに最小限（下記参照） |
 
+## 全アプリ共通のものと、うかラボ専用のもの
+
+本パッケージは全アプリ向けですが、**推し・衣装・テーマ（資格ごとの色）は、うかラボの資格一覧（`UkalabCert`）とブランドを前提**にしています。うかラボ以外のアプリは、下の「全アプリ共通」だけを使ってください（使わない機能は読み込んでも動きません）。
+
+| 区分 | 機能 | 場所 |
+|---|---|---|
+| **全アプリ共通** | フィードバック（バグ報告・改善要望）、Issue 自動化 | `models/`・`providers/`・`widgets/`・`functions/` |
+| | 権利管理（`noads`・`premium`）、広告ゲート | `entitlement/`・`ads/` |
+| | 全国平均点・偏差値の匿名集計 | `stats/` |
+| | 学習コイン（台帳・購入・共通アカウントでの同期） | `coin/` |
+| | 片手・ながら学習モード | `hands_free/`・`ui_kit/hands_free.dart` |
+| | 表示モード・連続学習日数の永続化 | `theme/theme_mode_store.dart`・`progress/` |
+| | 多言語化の仕組み（`KitStrings`） | `ui_kit/kit_strings.dart` |
+| | 共通UI部品、用語カード、学習体験の部品（ラボ・ストーリー・用語マップなど） | `ui_kit/` |
+| | 学習の引き継ぎ（機種変更）の枠組み | `transfer/` |
+| **うかラボ専用** | テーマ（資格ごとの色） | `theme/ukalab_palette.dart`・`theme/ukalab_theme.dart` |
+| | 推し（キャラクター・部屋・小物・セリフ・ホームのカード） | `mascot/` |
+| | 衣装・着替え・合格報告・学習の記録カード・共有カード・準備完了 | `outfit/` |
+
+注意:
+
+- 共通側にあるが、うかラボ専用の部分に依存しているもの: 学習の引き継ぎの `OutfitTransferSource`（`transfer/learning_transfer.dart`）、準備完了の進捗カード `ReadinessProgressCard`（`ui_kit/readiness_progress.dart`）。うかラボ以外のアプリがこのファイルを読み込むと、衣装の型も一緒に読み込まれます（動作には影響しません）
+- 名前だけうかラボのもの（動作は汎用）: 下部タブ `UkalabShell`、保存キー `ukalab_coin_ledger_$appId` など（変えると端末内のデータが読めなくなるため、そのまま）、共有カードのブランド名（`KitStrings` の `shareCardBrand`）
+- 専用部分を別のパッケージ（`ukalab_core`）へ移す案は、未定です
+
 ## 設計方針
 
 - `cross_promo_kit` と同じく、依存は機能ごとに最小限に絞ります。
 - 例外として権利管理は `purchases_flutter`、広告ゲートは `google_mobile_ads` に依存します（広めのレンジ指定）。
-- Firebase（`cloud_firestore` / `firebase_auth` 等）には直接依存しません。
-  実データの送受信は各アプリ側がコールバックとして注入する設計です
+- Firebase は `cloud_firestore` だけに依存します（全国平均点の匿名集計 `FirebaseExamStatsService` と、
+  コイン台帳の同期 `FirebaseCoinRemote`）。`firebase_auth` 等には依存せず、uid などは各アプリが渡します。
+  それ以外の実データの送受信は各アプリ側がコールバックとして注入する設計です
   （`shared_core` の「型・共通ロジックは shared_core、実データ/実処理はアプリ側」という
   パターンを踏襲）。
 - 各アプリの `pubspec.yaml` から git dependency として参照します。
