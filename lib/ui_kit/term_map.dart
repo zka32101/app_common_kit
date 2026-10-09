@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 用語の習得度（決定29の学習ログから計算してアプリ側が渡す）。色だけに頼らず
 /// アイコンでも区別する。
 enum TermMastery { none, weak, mastered }
@@ -66,10 +68,10 @@ class TermMapWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (byEra.isNotEmpty) ...[
-          Text('AIの歴史（系譜図）', style: theme.textTheme.titleMedium),
+          Text(LabStrings.of(context).termMapHistory, style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
           Text(
-            '時代区分は学習用の目安です。厳密な年代の区切りではありません。',
+            LabStrings.of(context).termMapEraNote,
             style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
           ),
           const SizedBox(height: 12),
@@ -95,7 +97,7 @@ class TermMapWidget extends StatelessWidget {
           const SizedBox(height: 24),
         ],
         if (mapNodes.isNotEmpty) ...[
-          Text('用語マップ（関連でつながる用語）', style: theme.textTheme.titleMedium),
+          Text(LabStrings.of(context).termMapTitle, style: theme.textTheme.titleMedium),
           const SizedBox(height: 12),
           _TermNetwork(nodes: mapNodes, onTap: onNodeTap),
         ],

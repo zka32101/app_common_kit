@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// ストーリー型の体験（決定38）の1章での選択肢1つ。
 class StoryChoiceSpec {
   const StoryChoiceSpec({
@@ -131,7 +133,7 @@ class _StoryChapterStep extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          '第${chapterIndex + 1}章 / 全$chapterCount章',
+          LabStrings.of(context).storyChapterOf(chapterIndex + 1, chapterCount),
           style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.primary),
         ),
         const SizedBox(height: 8),
@@ -145,7 +147,7 @@ class _StoryChapterStep extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         if (selected == null) ...[
-          Text('どう判断しますか?', style: theme.textTheme.labelMedium),
+          Text(LabStrings.of(context).storyHowJudge, style: theme.textTheme.labelMedium),
           const SizedBox(height: 8),
           // 選択肢は長い文になるため、横いっぱいに広げて折り返す（チップだと1行で切れる）。
           for (final c in chapter.choices) ...[
@@ -182,7 +184,7 @@ class _StoryChapterStep extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        selected!.isRecommended ? 'よい判断です' : '別の判断もありました',
+                        selected!.isRecommended ? LabStrings.of(context).storyGood : LabStrings.of(context).storyOther,
                         style: theme.textTheme.labelLarge?.copyWith(
                           color: selected!.isRecommended
                               ? theme.colorScheme.primary
@@ -200,7 +202,7 @@ class _StoryChapterStep extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton(
             onPressed: onNext,
-            child: Text(isLastChapter ? '結果を見る' : '次の章へ'),
+            child: Text(isLastChapter ? LabStrings.of(context).storySeeResult : LabStrings.of(context).storyNext),
           ),
         ],
       ],
@@ -223,7 +225,7 @@ class _StoryReview extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'これで最後の章です。$recommendedCount / ${chapters.length}章で良い判断ができました。',
+          LabStrings.of(context).storyEnd(recommendedCount, chapters.length),
           style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary),
         ),
         const SizedBox(height: 12),
@@ -239,7 +241,7 @@ class _StoryReview extends StatelessWidget {
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  '第${i + 1}章: ${history[i].text}',
+                  LabStrings.of(context).storyChapterLine(i + 1, history[i].text),
                   style: theme.textTheme.bodyMedium,
                 ),
               ),

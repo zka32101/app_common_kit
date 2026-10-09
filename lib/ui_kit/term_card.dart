@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 用語カードの「関連用語」1件。タップで該当の用語カードへ移動する。
 class RelatedTermRef {
   const RelatedTermRef({required this.termId, required this.label});
@@ -70,15 +72,15 @@ class TermCard extends StatelessWidget {
           if (diagram != null) ...[const SizedBox(height: 16), diagram!],
           if (analogy != null && analogy!.trim().isNotEmpty) ...[
             const SizedBox(height: 16),
-            _TermSection(label: 'たとえると', body: analogy!),
+            _TermSection(label: LabStrings.of(context).termAnalogy, body: analogy!),
           ],
           if (commonMistake != null && commonMistake!.trim().isNotEmpty) ...[
             const SizedBox(height: 16),
-            _TermSection(label: 'よくある間違い', body: commonMistake!),
+            _TermSection(label: LabStrings.of(context).termCommonMistake, body: commonMistake!),
           ],
           if (relatedTerms.isNotEmpty) ...[
             const SizedBox(height: 20),
-            Text('関連用語', style: theme.textTheme.labelLarge),
+            Text(LabStrings.of(context).termRelatedTerms, style: theme.textTheme.labelLarge),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -96,7 +98,7 @@ class TermCard extends StatelessWidget {
           ],
           if (relatedQuestions.isNotEmpty) ...[
             const SizedBox(height: 20),
-            Text('関連問題', style: theme.textTheme.labelLarge),
+            Text(LabStrings.of(context).termRelatedQuestions, style: theme.textTheme.labelLarge),
             const SizedBox(height: 8),
             for (final r in relatedQuestions)
               Padding(

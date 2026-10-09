@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'lab_controls.dart';
+import 'lab_strings.dart';
 
 /// ニューラルネット組み立て（画期的な機能2）のデータ点1件。
 class NnBuilderPointSpec {
@@ -48,17 +49,18 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
 
   static const _epochs = 400;
 
-  String get _hint {
-    if (_units <= 2) return 'ユニット数が少ないと、表現力が足りず複雑な境界を学習できません（未学習）。';
-    if (_units >= 7) return 'ユニット数が多いと、小さなデータに合わせすぎることがあります（過学習）。';
-    if (_learningRate >= 2.5) return '学習率が大きすぎると、誤差が振動して学習が安定しないことがあります。';
-    if (_learningRate <= 0.2) return '学習率が小さいと、決められたエポック数では十分に学習が進みません（未学習）。';
-    return 'ユニット数・学習率を変えて、学習曲線と決定境界がどう変わるか見てみましょう。';
+  String _hint(LabStrings l) {
+    if (_units <= 2) return l.nnFewUnitsHint;
+    if (_units >= 7) return l.nnManyUnitsHint;
+    if (_learningRate >= 2.5) return l.nnHighRateHint;
+    if (_learningRate <= 0.2) return l.nnLowRateHint;
+    return l.nnMidHint;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = LabStrings.of(context);
     final layerSizes = [
       2,
       for (var i = 0; i < _hiddenLayers; i++) _units,
@@ -78,19 +80,19 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
         const SizedBox(height: 4),
         Text(widget.description, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 12),
-        Text('隠れ層の数', style: theme.textTheme.labelMedium),
+        Text(l.nnHiddenLayers, style: theme.textTheme.labelMedium),
         const SizedBox(height: 4),
         SegmentedButton<int>(
-          segments: const [
-            ButtonSegment(value: 1, label: Text('1層')),
-            ButtonSegment(value: 2, label: Text('2層')),
+          segments: [
+            ButtonSegment(value: 1, label: Text(l.nnLayerCount(1))),
+            ButtonSegment(value: 2, label: Text(l.nnLayerCount(2))),
           ],
           selected: {_hiddenLayers},
           onSelectionChanged: (s) => setState(() => _hiddenLayers = s.first),
         ),
         const SizedBox(height: 12),
         HyperParamSlider(
-          label: 'ユニット数',
+          label: l.nnUnits,
           value: _units.toDouble(),
           min: 2,
           max: 8,
@@ -98,20 +100,20 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
           onChanged: (v) => setState(() => _units = v.round()),
         ),
         const SizedBox(height: 8),
-        Text('活性化関数', style: theme.textTheme.labelMedium),
+        Text(l.nnActivation, style: theme.textTheme.labelMedium),
         const SizedBox(height: 4),
         SegmentedButton<NnActivation>(
-          segments: const [
-            ButtonSegment(value: NnActivation.sigmoid, label: Text('シグモイド')),
-            ButtonSegment(value: NnActivation.relu, label: Text('ReLU')),
-            ButtonSegment(value: NnActivation.tanh, label: Text('tanh')),
+          segments: [
+            ButtonSegment(value: NnActivation.sigmoid, label: Text(l.nnSigmoid)),
+            const ButtonSegment(value: NnActivation.relu, label: Text('ReLU')),
+            const ButtonSegment(value: NnActivation.tanh, label: Text('tanh')),
           ],
           selected: {_activation},
           onSelectionChanged: (s) => setState(() => _activation = s.first),
         ),
         const SizedBox(height: 12),
         HyperParamSlider(
-          label: '学習率',
+          label: l.nnLearningRate,
           value: _learningRate,
           min: 0.1,
           max: 3.0,
@@ -120,7 +122,7 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
           onChanged: (v) => setState(() => _learningRate = v),
         ),
         const SizedBox(height: 16),
-        Text('決定境界', style: theme.textTheme.labelMedium),
+        Text(l.nnBoundary, style: theme.textTheme.labelMedium),
         const SizedBox(height: 8),
         AspectRatio(
           aspectRatio: 1,
@@ -131,13 +133,13 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
         const SizedBox(height: 8),
         Row(
           children: [
-            LegendMark(color: theme.colorScheme.primary, shape: BoxShape.circle, label: 'クラス0'),
+            LegendMark(color: theme.colorScheme.primary, shape: BoxShape.circle, label: l.class0),
             const SizedBox(width: 16),
-            LegendMark(color: theme.colorScheme.error, shape: BoxShape.rectangle, label: 'クラス1'),
+            LegendMark(color: theme.colorScheme.error, shape: BoxShape.rectangle, label: l.class1),
           ],
         ),
         const SizedBox(height: 16),
-        Text('学習曲線（訓練誤差）', style: theme.textTheme.labelMedium),
+        Text(l.nnLossCurve, style: theme.textTheme.labelMedium),
         const SizedBox(height: 8),
         SizedBox(
           height: 120,
@@ -146,12 +148,15 @@ class _NnBuilderWidgetState extends State<NnBuilderWidget> {
         ),
         const SizedBox(height: 4),
         Text(
-          '誤差: ${lossHistory.first.toStringAsFixed(3)} → ${lossHistory.last.toStringAsFixed(3)}'
-          '（$_epochsエポック）',
+          l.nnLossSummary(
+            lossHistory.first.toStringAsFixed(3),
+            lossHistory.last.toStringAsFixed(3),
+            _epochs,
+          ),
           style: theme.textTheme.bodySmall,
         ),
         const SizedBox(height: 8),
-        Text(_hint, style: theme.textTheme.bodySmall),
+        Text(_hint(l), style: theme.textTheme.bodySmall),
       ],
     );
   }

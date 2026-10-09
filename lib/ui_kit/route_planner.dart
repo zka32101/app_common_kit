@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 最短ルートプランナー（型④、決定76・77）が選んだ1科目の、UI層の軽量な写し。
 ///
 /// yourwish_kentei の `RouteTask` と同じ構造を持つ。アプリ側がデータモデルから
@@ -33,13 +35,13 @@ class RoutePlannerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     if (tasks.isEmpty) {
-      return Text('今はやることがありません。よくできました!', style: theme.textTheme.bodyMedium);
+      return Text(LabStrings.of(context).routeEmpty, style: theme.textTheme.bodyMedium);
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('今日やる${tasks.length}つ', style: theme.textTheme.titleMedium),
+        Text(LabStrings.of(context).routeToday(tasks.length), style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
         for (var i = 0; i < tasks.length; i++)
           Padding(
@@ -87,7 +89,7 @@ class _RouteTaskTile extends StatelessWidget {
                     Text(task.subjectName, style: theme.textTheme.bodyLarge),
                     if (warn)
                       Text(
-                        '足切りライン未達',
+                        LabStrings.of(context).routeBelowCutoff,
                         style: theme.textTheme.labelMedium
                             ?.copyWith(color: theme.colorScheme.error, fontWeight: FontWeight.w700),
                       ),
