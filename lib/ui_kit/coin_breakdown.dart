@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../coin/coin_rules.dart';
 import '../coin/coin_service.dart';
+import 'kit_strings.dart';
 
-/// 付与の種別ごとの表示名。
-String coinEventLabel(CoinEventType t) {
+/// 付与の種別ごとの表示名。[strings] を渡すとその言語で返す（既定は日本語）。
+String coinEventLabel(CoinEventType t, [KitStrings strings = KitStrings.ja]) =>
+    strings.coinEventLabels[t.name] ?? _jaLabel(t);
+
+String _jaLabel(CoinEventType t) {
   switch (t) {
     case CoinEventType.newQuestion:
       return '新しい問題';
@@ -34,15 +38,17 @@ String coinEventLabel(CoinEventType t) {
 /// 結果画面のコイン内訳。学習の成長で貯まったコインだけを、控えめに見せる。
 /// 付与がなければ何も出さない（責めない・煽らない）。
 class CoinBreakdownCard extends StatelessWidget {
-  const CoinBreakdownCard({super.key, required this.grants, this.title = '今回貯まった学習コイン'});
+  const CoinBreakdownCard({super.key, required this.grants, this.title});
 
   final List<CoinGrant> grants;
-  final String title;
+  /// null なら [KitStrings] の既定の見出し。
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
     if (grants.isEmpty) return const SizedBox.shrink();
     final theme = Theme.of(context);
+    final strings = KitStrings.of(context);
     final byType = <CoinEventType, (int, int)>{};
     for (final g in grants) {
       final cur = byType[g.event.type] ?? (0, 0);
@@ -56,7 +62,7 @@ class CoinBreakdownCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(title, style: theme.textTheme.titleSmall),
+            Text(title ?? strings.coinBreakdownTitle, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             for (final e in byType.entries)
               Padding(
@@ -65,7 +71,7 @@ class CoinBreakdownCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        e.value.$1 > 1 ? '${coinEventLabel(e.key)} ×${e.value.$1}' : coinEventLabel(e.key),
+                        e.value.$1 > 1 ? '${coinEventLabel(e.key, strings)} ×${e.value.$1}' : coinEventLabel(e.key, strings),
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
@@ -76,7 +82,7 @@ class CoinBreakdownCard extends StatelessWidget {
             const Divider(),
             Row(
               children: [
-                Expanded(child: Text('合計', style: theme.textTheme.titleSmall)),
+                Expanded(child: Text(strings.coinTotal, style: theme.textTheme.titleSmall)),
                 Text('+$total', style: theme.textTheme.titleSmall),
               ],
             ),

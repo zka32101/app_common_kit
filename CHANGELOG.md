@@ -2,6 +2,14 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.16.0] - 2026-10-09
+
+多言語化の土台（日本語・英語）を追加。
+
+### 追加
+- `KitStrings`（ja/en）・`KitStringsScope`: 囲んだ配下のキットの既定文言を切り替える。囲まなければ日本語のまま（互換）
+- 対応: `CoinBreakdownCard`・`coinEventLabel`・`ErrorState`・`StreakBadge`・`ResultSummary`（文言の引数は null 許容に変更。渡せば従来どおり優先）
+
 ## [0.15.0] - 2026-10-09
 
 コイン台帳の共通アカウント同期を追加。

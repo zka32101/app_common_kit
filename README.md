@@ -30,7 +30,16 @@ dependencies:
       ref: v0.1.0   # タグ固定。main は参照しない
 ```
 
-## 構成
+## 多言語化（日本語・英語）
+
+`KitStringsScope` で囲むと、キット内蔵ウィジェットの既定文言が切り替わる。囲まなければ日本語のまま（端末の言語には自動で従わない）。引数で渡した文言が常に優先。
+
+```dart
+KitStringsScope(strings: KitStrings.forLocale(Locale('en')), child: app)
+```
+
+対応済み: `CoinBreakdownCard`・`coinEventLabel`・`ErrorState`・`StreakBadge`・`ResultSummary`。他のウィジェットは順次対応（未対応は引数で差し替える従来どおり）。
+
 
 ```
 lib/
