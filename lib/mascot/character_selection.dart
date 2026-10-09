@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../ui_kit/kit_strings.dart';
 import 'mascot_models.dart';
 import 'ukalab_characters.dart';
 
@@ -40,20 +41,13 @@ final selectedCharacterPackProvider =
 class CharacterSelectScreen extends ConsumerWidget {
   const CharacterSelectScreen({super.key});
 
-  static const _roles = {
-    'standard': 'フラスコの助手',
-    'kai': '頼れる先輩',
-    'mio': '明るい後輩',
-    'moka': 'ゆるい相棒（犬）',
-    'mike': 'ていねいな解説役（猫）',
-  };
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedCharacterPackProvider);
     final theme = Theme.of(context);
+    final strings = KitStrings.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('推しを選ぶ')),
+      appBar: AppBar(title: Text(strings.oshiChoose)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -68,8 +62,8 @@ class CharacterSelectScreen extends ConsumerWidget {
               ),
               child: ListTile(
                 leading: _Face(pack: p),
-                title: Text(p.name),
-                subtitle: Text(_roles[p.id] ?? ''),
+                title: Text(strings.characterNames[p.id] ?? p.name),
+                subtitle: Text(strings.characterRoles[p.id] ?? ''),
                 trailing: selected.id == p.id ? const Icon(Icons.check_circle) : null,
                 onTap: () => ref.read(selectedCharacterPackProvider.notifier).select(p),
               ),

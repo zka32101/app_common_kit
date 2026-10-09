@@ -72,6 +72,8 @@ class KitStrings {
     required this.passAskTitle,
     required this.passCoin,
     required this.passOutfit,
+    required this.characterNames,
+    required this.characterRoles,
     required this.feedbackTitleRequired,
     required this.feedbackDetailRequired,
     required this.feedbackTitleTooLong,
@@ -145,6 +147,11 @@ class KitStrings {
   final String Function(String cert) passAskTitle;
   final String Function(int amount) passCoin;
   final String Function(String name) passOutfit;
+  /// `CharacterPack.id` → 表示名。無い id はパックの name を使う。
+  final Map<String, String> characterNames;
+
+  /// `CharacterPack.id` → 役割の説明。
+  final Map<String, String> characterRoles;
   final String feedbackTitleRequired;
   final String feedbackDetailRequired;
   final String Function(int max) feedbackTitleTooLong;
@@ -228,6 +235,14 @@ class KitStrings {
     passAskTitle: _jaPassAskTitle,
     passCoin: _jaPassCoin,
     passOutfit: _jaPassOutfit,
+    characterNames: {},
+    characterRoles: {
+      'standard': 'フラスコの助手',
+      'kai': '頼れる先輩',
+      'mio': '明るい後輩',
+      'moka': 'ゆるい相棒（犬）',
+      'mike': 'ていねいな解説役（猫）',
+    },
     feedbackTitleRequired: 'タイトルを入力してください',
     feedbackDetailRequired: '詳細を入力してください',
     feedbackTitleTooLong: _jaTitleTooLong,
@@ -315,6 +330,20 @@ class KitStrings {
     passAskTitle: _enPassAskTitle,
     passCoin: _enPassCoin,
     passOutfit: _enPassOutfit,
+    characterNames: {
+      'standard': 'Uka',
+      'kai': 'Kai',
+      'mio': 'Mio',
+      'moka': 'Moka',
+      'mike': 'Mike',
+    },
+    characterRoles: {
+      'standard': 'Flask assistant',
+      'kai': 'Reliable senior',
+      'mio': 'Cheerful junior',
+      'moka': 'Easygoing buddy (dog)',
+      'mike': 'Careful explainer (cat)',
+    },
     feedbackTitleRequired: 'Please enter a title',
     feedbackDetailRequired: 'Please enter the details',
     feedbackTitleTooLong: _enTitleTooLong,
