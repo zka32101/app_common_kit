@@ -6,23 +6,24 @@ import '../coin/shop.dart';
 import '../mascot/mascot_models.dart';
 import '../mascot/mascot_widget.dart';
 import '../theme/ukalab_palette.dart';
+import '../ui_kit/kit_strings.dart';
 import 'outfit_models.dart';
 import 'outfit_provider.dart';
 import 'outfit_service.dart';
 
 /// 着られない理由の文言。
-String outfitLockedReason(OutfitAvailability a, {int price = 0}) {
+String outfitLockedReason(OutfitAvailability a, {int price = 0, KitStrings strings = KitStrings.ja}) {
   switch (a) {
     case OutfitAvailability.available:
       return '';
     case OutfitAvailability.notPurchased:
-      return '$priceコインで購入できます';
+      return strings.lockedNotPurchased(price);
     case OutfitAvailability.notPassed:
-      return '合格したときに解放されます';
+      return strings.lockedNotPassed;
     case OutfitAvailability.noExamDate:
-      return '試験日を設定すると着られます';
+      return strings.lockedNoExamDate;
     case OutfitAvailability.notReady:
-      return '準備完了の目標を達成すると解放されます';
+      return strings.lockedNotReady;
   }
 }
 
@@ -38,14 +39,19 @@ class WardrobeScreen extends ConsumerWidget {
     this.examPhase = ExamPhase.none,
     this.stage = MascotStage.lv1,
     this.pack = CharacterPack.standard,
-    this.title = '着替え・ショップ',
+    this.title,
+    this.strings,
   });
 
   final UkalabCert cert;
   final ExamPhase examPhase;
   final MascotStage stage;
   final CharacterPack pack;
-  final String title;
+  /// null なら [KitStrings] の既定。
+  final String? title;
+
+  /// null なら最も近い `KitStringsScope`（無ければ日本語）。
+  final KitStrings? strings;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,15 +59,16 @@ class WardrobeScreen extends ConsumerWidget {
     final outfit = ref.watch(outfitProvider);
     final service = ref.read(outfitServiceProvider);
     final theme = Theme.of(context);
+    final s = strings ?? KitStrings.of(context);
 
     Future<void> buy(Outfit o) async {
       final r = await ref.read(coinProvider.notifier).purchase(o.id);
       if (!context.mounted) return;
       final msg = switch (r) {
-        PurchaseResult.purchased => '${o.name}を購入しました',
-        PurchaseResult.insufficient => 'コインが足りません。学習すると貯まります',
-        PurchaseResult.alreadyOwned => 'すでに持っています',
-        PurchaseResult.unknownItem => '購入できません',
+        PurchaseResult.purchased => s.wardrobePurchased(o.name),
+        PurchaseResult.insufficient => s.wardrobeInsufficient,
+        PurchaseResult.alreadyOwned => s.wardrobeAlreadyOwned,
+        PurchaseResult.unknownItem => s.wardrobeUnknown,
       };
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
@@ -70,12 +77,12 @@ class WardrobeScreen extends ConsumerWidget {
       final ok = await ref.read(outfitProvider.notifier).equip(o.id, examPhase: examPhase);
       if (!context.mounted) return;
       if (!ok) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('この衣装は今は着られません')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.wardrobeCannotWear)));
       }
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(title: Text(title ?? s.wardrobeTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -90,11 +97,11 @@ class WardrobeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Center(child: Text('学習コイン ${coin.balance}', style: theme.textTheme.titleMedium)),
+            Center(child: Text(s.coinBalance(coin.balance), style: theme.textTheme.titleMedium)),
             const SizedBox(height: 4),
             Center(
               child: Text(
-                'コインは学習で貯まります。衣装は見た目だけで、学習の内容には影響しません。',
+                s.wardrobeNote,
                 style: theme.textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
@@ -107,6 +114,7 @@ class WardrobeScreen extends ConsumerWidget {
                 wearing: outfit.equipped?.id == o.id,
                 onBuy: () => buy(o),
                 onWear: () => wear(o),
+                strings: s,
               ),
               const SizedBox(height: 8),
             ],
@@ -124,6 +132,7 @@ class _OutfitTile extends StatelessWidget {
     required this.wearing,
     required this.onBuy,
     required this.onWear,
+    required this.strings,
   });
 
   final Outfit outfit;
@@ -131,6 +140,7 @@ class _OutfitTile extends StatelessWidget {
   final bool wearing;
   final VoidCallback onBuy;
   final VoidCallback onWear;
+  final KitStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +149,9 @@ class _OutfitTile extends StatelessWidget {
     if (wearing) {
       trailing = const Icon(Icons.check_circle);
     } else if (available) {
-      trailing = OutlinedButton(onPressed: onWear, child: const Text('着る'));
+      trailing = OutlinedButton(onPressed: onWear, child: Text(strings.wardrobeWear));
     } else if (availability == OutfitAvailability.notPurchased) {
-      trailing = FilledButton(onPressed: onBuy, child: Text('${outfit.price}コイン'));
+      trailing = FilledButton(onPressed: onBuy, child: Text(strings.wardrobePrice(outfit.price)));
     } else {
       trailing = const Icon(Icons.lock_outline);
     }
@@ -151,10 +161,10 @@ class _OutfitTile extends StatelessWidget {
         title: Text(outfit.name),
         subtitle: Text(
           wearing
-              ? '着ています'
+              ? strings.wardrobeWearing
               : available
-                  ? '着られます'
-                  : outfitLockedReason(availability, price: outfit.price),
+                  ? strings.wardrobeCanWear
+                  : outfitLockedReason(availability, price: outfit.price, strings: strings),
         ),
         trailing: trailing,
       ),

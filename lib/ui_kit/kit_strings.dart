@@ -43,6 +43,32 @@ class KitStrings {
     required this.passCongrats,
     required this.passPrivacy,
     required this.passShare,
+    required this.wardrobeTitle,
+    required this.wardrobeNote,
+    required this.wardrobeInsufficient,
+    required this.wardrobeAlreadyOwned,
+    required this.wardrobeUnknown,
+    required this.wardrobeCannotWear,
+    required this.wardrobeWear,
+    required this.wardrobeWearing,
+    required this.wardrobeCanWear,
+    required this.lockedNotPassed,
+    required this.lockedNoExamDate,
+    required this.lockedNotReady,
+    required this.oshiMenuTooltip,
+    required this.oshiChoose,
+    required this.oshiPassReport,
+    required this.oshiDisplayNormal,
+    required this.oshiDisplaySmall,
+    required this.oshiDisplayHidden,
+    required this.oshiName,
+    required this.oshiHiddenNote,
+    required this.oshiYours,
+    required this.oshiTapHint,
+    required this.coinBalance,
+    required this.wardrobePurchased,
+    required this.wardrobePrice,
+    required this.lockedNotPurchased,
     required this.passAskTitle,
     required this.passCoin,
     required this.passOutfit,
@@ -86,6 +112,32 @@ class KitStrings {
   final String passCongrats;
   final String passPrivacy;
   final String passShare;
+  final String wardrobeTitle;
+  final String wardrobeNote;
+  final String wardrobeInsufficient;
+  final String wardrobeAlreadyOwned;
+  final String wardrobeUnknown;
+  final String wardrobeCannotWear;
+  final String wardrobeWear;
+  final String wardrobeWearing;
+  final String wardrobeCanWear;
+  final String lockedNotPassed;
+  final String lockedNoExamDate;
+  final String lockedNotReady;
+  final String oshiMenuTooltip;
+  final String oshiChoose;
+  final String oshiPassReport;
+  final String oshiDisplayNormal;
+  final String oshiDisplaySmall;
+  final String oshiDisplayHidden;
+  final String oshiName;
+  final String oshiHiddenNote;
+  final String oshiYours;
+  final String oshiTapHint;
+  final String Function(int balance) coinBalance;
+  final String Function(String name) wardrobePurchased;
+  final String Function(int price) wardrobePrice;
+  final String Function(int price) lockedNotPurchased;
   final String Function(String cert) passAskTitle;
   final String Function(int amount) passCoin;
   final String Function(String name) passOutfit;
@@ -139,6 +191,32 @@ class KitStrings {
     passCongrats: '合格おめでとうございます',
     passPrivacy: '共有するカードに、名前などの個人情報は入りません。',
     passShare: '共有する',
+    wardrobeTitle: '着替え・ショップ',
+    wardrobeNote: 'コインは学習で貯まります。衣装は見た目だけで、学習の内容には影響しません。',
+    wardrobeInsufficient: 'コインが足りません。学習すると貯まります',
+    wardrobeAlreadyOwned: 'すでに持っています',
+    wardrobeUnknown: '購入できません',
+    wardrobeCannotWear: 'この衣装は今は着られません',
+    wardrobeWear: '着る',
+    wardrobeWearing: '着ています',
+    wardrobeCanWear: '着られます',
+    lockedNotPassed: '合格したときに解放されます',
+    lockedNoExamDate: '試験日を設定すると着られます',
+    lockedNotReady: '準備完了の目標を達成すると解放されます',
+    oshiMenuTooltip: '推しのメニュー',
+    oshiChoose: '推しを選ぶ',
+    oshiPassReport: '試験の結果を報告',
+    oshiDisplayNormal: '通常',
+    oshiDisplaySmall: '小さく表示',
+    oshiDisplayHidden: '表示しない',
+    oshiName: '推し',
+    oshiHiddenNote: '推しは非表示です',
+    oshiYours: 'あなたの推し',
+    oshiTapHint: '推しをタップすると、ひとこと話します',
+    coinBalance: _jaCoinBalance,
+    wardrobePurchased: _jaWardrobePurchased,
+    wardrobePrice: _jaWardrobePrice,
+    lockedNotPurchased: _jaLockedNotPurchased,
     passAskTitle: _jaPassAskTitle,
     passCoin: _jaPassCoin,
     passOutfit: _jaPassOutfit,
@@ -196,6 +274,32 @@ class KitStrings {
     passPrivacy:
         'The shared card contains no personal information such as your name.',
     passShare: 'Share',
+    wardrobeTitle: 'Outfits & shop',
+    wardrobeNote: 'Coins are earned by studying. Outfits are cosmetic only and do not affect your study content.',
+    wardrobeInsufficient: 'Not enough coins. You earn them by studying',
+    wardrobeAlreadyOwned: 'You already own this',
+    wardrobeUnknown: 'This cannot be purchased',
+    wardrobeCannotWear: 'You cannot wear this outfit right now',
+    wardrobeWear: 'Wear',
+    wardrobeWearing: 'Wearing',
+    wardrobeCanWear: 'Available to wear',
+    lockedNotPassed: 'Unlocked when you pass',
+    lockedNoExamDate: 'Set your exam date to wear this',
+    lockedNotReady: 'Unlocked when you reach your readiness goal',
+    oshiMenuTooltip: 'Companion menu',
+    oshiChoose: 'Choose companion',
+    oshiPassReport: 'Report exam result',
+    oshiDisplayNormal: 'Normal',
+    oshiDisplaySmall: 'Show small',
+    oshiDisplayHidden: 'Hide',
+    oshiName: 'Companion',
+    oshiHiddenNote: 'Your companion is hidden',
+    oshiYours: 'Your companion',
+    oshiTapHint: 'Tap your companion to hear a word',
+    coinBalance: _enCoinBalance,
+    wardrobePurchased: _enWardrobePurchased,
+    wardrobePrice: _enWardrobePrice,
+    lockedNotPurchased: _enLockedNotPurchased,
     passAskTitle: _enPassAskTitle,
     passCoin: _enPassCoin,
     passOutfit: _enPassOutfit,
@@ -226,6 +330,15 @@ String _jaPassCoin(int a) => '学習コイン +$a';
 String _enPassCoin(int a) => 'Study coins +$a';
 String _jaPassOutfit(String n) => '「$n」を着られるようになりました';
 String _enPassOutfit(String n) => 'You can now wear "$n"';
+
+String _jaCoinBalance(int b) => '学習コイン $b';
+String _enCoinBalance(int b) => 'Study coins $b';
+String _jaWardrobePurchased(String n) => '${n}を購入しました';
+String _enWardrobePurchased(String n) => 'Purchased $n';
+String _jaWardrobePrice(int p) => '${p}コイン';
+String _enWardrobePrice(int p) => '$p coins';
+String _jaLockedNotPurchased(int p) => '${p}コインで購入できます';
+String _enLockedNotPurchased(int p) => 'Buy for $p coins';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///

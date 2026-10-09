@@ -102,6 +102,23 @@ void main() {
       return c;
     }
 
+    testWidgets('strings を渡すと英語で出る（既定は日本語）', (tester) async {
+      _bigScreen(tester);
+      final c = _container();
+      await tester.pumpWidget(UncontrolledProviderScope(
+        container: c,
+        child: const MaterialApp(
+          home: WardrobeScreen(cert: UkalabCert.bikeLicense, strings: KitStrings.en),
+        ),
+      ));
+      await tester.pump();
+      expect(find.text('Outfits & shop'), findsOneWidget);
+      expect(find.text('Unlocked when you pass'), findsOneWidget);
+      expect(find.text('合格したときに解放されます'), findsNothing);
+      expect(outfitLockedReason(OutfitAvailability.notPurchased, price: 300, strings: KitStrings.en), 'Buy for 300 coins');
+      expect(outfitLockedReason(OutfitAvailability.notPurchased, price: 300), '300コインで購入できます');
+    });
+
     testWidgets('コインが足りないと買えず、ロック理由が見える', (tester) async {
       await pump(tester);
       expect(find.text('合格したときに解放されます'), findsOneWidget);
