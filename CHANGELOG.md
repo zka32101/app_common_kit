@@ -2,6 +2,23 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.21.0] - 2026-10-09
+
+片手・ながら学習モード（大きなボタン・下部配置・端末標準の音声読み上げ）。追加のみで、既存 API に破壊的変更はない。
+
+### 追加
+- `HandsFreeSettings`（有効／問題を読む／解説を読む／読み上げの速さ 0.5〜1.5）・`HandsFreeStore`
+  （`InMemoryHandsFreeStore`・`SharedPreferencesHandsFreeStore(appId)`）・`handsFreeProvider`
+  （`HandsFreeNotifier`: `load`・`setEnabled` など）。壊れた保存データでも読めた項目だけを使う
+- `SpeechBackend`（音声合成の窓口。端末標準の読み上げをアプリが実装して渡す。キットは音声プラグインに依存しない）・
+  `FakeSpeechBackend`（テスト用）・`HandsFreeSpeaker`（設定に従って問題・解説を自動で読む。失敗しても例外を出さない）・
+  `questionReadAloudText`（問題文と選択肢を読み上げ用の文にする）
+- `HandsFreeChoiceTile`（高さ 72pt 以上の大きな選択肢ボタン）・`ReadAloudButton`・
+  `HandsFreeQuestionLayout`（問題文は上、選択肢は下に寄せる骨組み）
+
+### 注意
+- 数式・図の読み上げは対象外
+
 ## [0.20.0] - 2026-10-09
 
 学習の引き継ぎ（機種変更で学習履歴・衣装・コインを復元）。追加のみで、既存 API に破壊的変更はない。

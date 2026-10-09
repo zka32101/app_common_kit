@@ -354,6 +354,36 @@ final result = await transfer.restore();  // 新端末: ログイン直後に復
 - 学習履歴（`yourwish_kentei` の `ProgressRecord`）の統合は、`qid` と `at` が同じ記録を重複させない形でアプリ側が実装する
 
 
+## 片手・ながら学習モード
+
+通勤中などの片手操作と、耳で聞く学習のための共通部品。モードを有効にすると、画面は**大きなボタンを下部に並べ**、問題文・選択肢・解説を**端末標準の音声合成**で読み上げる。
+
+```dart
+// 設定（ホーム／設定画面のスイッチ）
+ProviderScope(overrides: [
+  handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('g_kentei')),
+]);
+await ref.read(handsFreeProvider.notifier).load();          // 起動時
+await ref.read(handsFreeProvider.notifier).setEnabled(true); // スイッチ
+
+// 読み上げ。音声合成は端末標準（flutter_tts など）をアプリが SpeechBackend として実装して渡す
+final speaker = HandsFreeSpeaker(backend: myTts, settings: () => ref.read(handsFreeProvider));
+await speaker.readQuestion(q.prompt, q.choices); // モードが有効で「問題を読み上げる」がオンのときだけ読む
+await speaker.readExplanation(q.explanation);
+
+// 画面: 問題文は上、選択肢は下に寄せる
+HandsFreeQuestionLayout(
+  question: QuestionCard(...),
+  trailing: ReadAloudButton(onPressed: () => speaker.speakNow(text)), // ボタンはモードに関わらず読む
+  choices: [for (...) HandsFreeChoiceTile(label: 'ア', text: c, state: state, onTap: onTap)],
+)
+```
+
+- ボタンは高さ 72pt 以上。✓／✕のアイコンと文言も出す（色だけに頼らない）
+- 読み上げは失敗しても例外を出さず、学習を止めない（`false` を返す）。端末の音声合成が使えない場合も同じ
+- 設定: 有効／問題を読む／解説を読む／読み上げの速さ（0.5〜1.5）。保存先は `SharedPreferencesHandsFreeStore(appId)`
+- 数式・図の読み上げは対象外（問題文・解説の文字だけ）。読ませたくない部分は、アプリ側で読み上げ用の文を別に渡す
+
 ## 推し（v0.2）
 
 ```dart
