@@ -161,7 +161,7 @@ void main() {
       SizedBox(width: 400, height: 500, child: PassShareCard(data: data)),
       strings: KitStrings.en,
     ));
-    expect(find.text('Ukalab'), findsOneWidget);
+    expect(find.text('Qualab'), findsOneWidget);
     expect(find.text('I passed!'), findsOneWidget);
     expect(find.text('Oct 9, 2026'), findsOneWidget);
 

@@ -410,7 +410,7 @@ class KitStrings {
     sourceNote: _enSourceNote,
     sourceNoteChecked: _enSourceNoteChecked,
     mockRecordCert: _enMockRecordCert,
-    shareCardBrand: 'Ukalab',
+    shareCardBrand: 'Qualab',
     shareCardPassed: 'I passed!',
     shareDate: _enShareDate,
   );

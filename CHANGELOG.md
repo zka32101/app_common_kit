@@ -7,11 +7,11 @@
 共有カードの多言語化（ja/en）。追加のみ。
 
 ### 追加
-- `PassShareCard` がブランド名（日本語「うかラボ」／英語「Ukalab」）・既定の一言（合格しました！／I passed!）・日付表記（2026年10月9日／Oct 9, 2026）を `KitStrings` で切り替える。`strings:` 引数でも指定可（ダイアログ内では呼び出し側の文言を引き継ぐ）
+- `PassShareCard` がブランド名（日本語「うかラボ」／英語「Qualab」）・既定の一言（合格しました！／I passed!）・日付表記（2026年10月9日／Oct 9, 2026）を `KitStrings` で切り替える。`strings:` 引数でも指定可（ダイアログ内では呼び出し側の文言を引き継ぐ）
 - `ShareCardData.message` は null 許容に変更（null なら既定の一言。渡せば従来どおり優先）。`ShareCardData.dateText` は日本語表記のまま残す（言語に合わせるなら `KitStrings.shareDate`）
 
 ### 注意
-- 英語のブランド名「Ukalab」は仮。変えるなら `KitStrings.en` の `shareCardBrand`
+- 英語のブランド名は「Qualab」（`KitStrings.en` の `shareCardBrand`）
 
 ## [0.22.0] - 2026-10-09
 
