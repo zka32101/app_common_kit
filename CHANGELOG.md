@@ -2,6 +2,15 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.19.0] - 2026-10-09
+
+コイン同期をアプリに組み込める形にした。
+
+### 追加
+- `FirebaseCoinRemote(uid:, examId:)`: 台帳の Firestore 実装。保存先は `users/{uid}/exams/{examId}/coin/ledger`（既存の共通ルールに含まれ、ルール変更は不要）
+- `CoinNotifier.syncWith(remote, minInterval:)`: 同期して画面の状態を更新する。間隔内の再同期・同期中はスキップ（null）、失敗は `CoinSyncResult.failed`（例外なし）
+- 組み込み手順を README に追加
+
 ## [0.18.0] - 2026-10-09
 
 多言語化の対象を拡大。

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'coin_rules.dart';
 import 'coin_service.dart';
+import 'coin_sync.dart';
 import 'shop.dart';
 
 /// アプリ側で上書きして使う。
@@ -80,6 +81,32 @@ class CoinNotifier extends Notifier<CoinState> {
     final r = await _s.purchase(itemId);
     state = _snapshot();
     return r;
+  }
+
+  DateTime? _lastSync;
+  bool _syncing = false;
+
+  /// サーバー（共通アカウント）の台帳と統合して、画面の状態を更新する。
+  ///
+  /// アプリ起動時・購入の後などに呼ぶ。[minInterval] 以内に同期済み、または同期中なら
+  /// 何もせず null を返す。失敗（オフライン等）は [CoinSyncResult.failed]（例外は出さない）。
+  Future<CoinSyncResult?> syncWith(
+    CoinRemote remote, {
+    Duration minInterval = Duration.zero,
+    DateTime Function()? clock,
+  }) async {
+    final now = (clock ?? DateTime.now)();
+    final last = _lastSync;
+    if (_syncing || (last != null && now.difference(last) < minInterval)) return null;
+    _syncing = true;
+    try {
+      final r = await CoinSync(service: _s, remote: remote).sync();
+      if (r == CoinSyncResult.synced) _lastSync = now;
+      state = _snapshot();
+      return r;
+    } finally {
+      _syncing = false;
+    }
   }
 
   Future<bool> equip(String itemId) async {
