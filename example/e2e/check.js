@@ -1,0 +1,25 @@
+const { chromium } = require('playwright');
+(async () => {
+  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
+  const page = await browser.newPage({ viewport: { width: 420, height: 1000 } });
+  const errors = [];
+  page.on('pageerror', e => errors.push(String(e)));
+  await page.goto('http://localhost:8099/');
+  await page.waitForSelector('flt-semantics-placeholder', { state: 'attached', timeout: 60000 });
+  await page.evaluate(() => document.querySelector('flt-semantics-placeholder').click());
+  await page.waitForTimeout(1500);
+  const text = async () => (await page.locator('flt-semantics').allInnerTexts()).join('\n');
+  const ja = await text();
+  const jaRes = ['今日から始めよう', '合計', 'もう一度試す'].map(s => `${s}=${ja.includes(s)}`).join(' ');
+  console.log('JA:', jaRes);
+  await page.screenshot({ path: (process.argv[2] || '.') + '/ja.png' });
+  await page.locator('flt-semantics[role="switch"], [role="switch"]').first().click();
+  await page.waitForTimeout(1000);
+  const en = await text();
+  const enRes = ['Start today', 'Total', 'Try again'].map(s => `${s}=${en.includes(s)}`).join(' ');
+  console.log('EN:', enRes);
+  await page.screenshot({ path: (process.argv[2] || '.') + '/en.png' });
+  console.log('errors:', errors.length);
+  if (errors.length || /=false/.test(jaRes + enRes) ) process.exitCode = 1;
+  await browser.close();
+})();
