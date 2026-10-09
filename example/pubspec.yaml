@@ -1,0 +1,16 @@
+name: app_common_kit_example
+description: app_common_kit の動作確認用アプリ（Web で Playwright 確認に使う）。
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  app_common_kit:
+    path: ..
+
+flutter:
+  uses-material-design: true
