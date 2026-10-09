@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'entitlement_provider.dart';
-import 'entitlement_service.dart';
 import 'entitlement_state.dart';
 
 /// 設定タブに出す「購入」の欄。広告非表示・プレミアムの購入と、購入の復元。
