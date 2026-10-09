@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 境界線スライダー（型①、決定76・77）の二値条件1つ。
 ///
 /// ukalab_core の `BoundaryCondition` と同じ構造を持つ、UI 層の軽量な
@@ -94,7 +96,7 @@ class _BoundarySliderWidgetState extends State<BoundarySliderWidget> {
         _BoundaryConclusionCard(conclusion: conclusion),
         const SizedBox(height: 8),
         Text(
-          '※ 条件の切り替えで判定の目安がどう変わるかを体験するものです。実際の判断は必ず原文・専門家にご確認ください。',
+          LabStrings.of(context).boundaryDisclaimer,
           style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
         ),
       ],
@@ -164,14 +166,14 @@ class _BoundaryConclusionCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: conclusion == null
-            ? Text('この組み合わせの判定は未設定です', style: theme.textTheme.bodyMedium)
+            ? Text(LabStrings.of(context).boundaryUnset, style: theme.textTheme.bodyMedium)
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(conclusion.text, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 4),
                   Text(
-                    '根拠: ${conclusion.lawReference}',
+                    LabStrings.of(context).boundaryBasis(conclusion.lawReference),
                     style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
                   ),
                 ],

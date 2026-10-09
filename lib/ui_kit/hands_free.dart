@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'choice_tile.dart';
+import 'kit_strings.dart';
 
 /// 片手・ながら学習モード用の大きな選択肢ボタン。親指で押しやすいよう高さ 72pt 以上、
 /// 文字も大きくする。色だけに頼らず、✓／✕のアイコンと文言も出す（[ChoiceTile] と同じ）。
@@ -11,8 +12,8 @@ class HandsFreeChoiceTile extends StatelessWidget {
     required this.text,
     required this.state,
     this.onTap,
-    this.correctText = '正解',
-    this.incorrectText = '不正解',
+    this.correctText,
+    this.incorrectText,
   });
 
   /// 「ア」「A」「1」など。
@@ -20,8 +21,9 @@ class HandsFreeChoiceTile extends StatelessWidget {
   final String text;
   final ChoiceState state;
   final VoidCallback? onTap;
-  final String correctText;
-  final String incorrectText;
+  /// null なら [KitStrings] の既定（正解／不正解）。
+  final String? correctText;
+  final String? incorrectText;
 
   /// ボタンの最小の高さ。
   static const minHeight = 72.0;
@@ -30,6 +32,7 @@ class HandsFreeChoiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final strings = KitStrings.of(context);
     final dark = theme.brightness == Brightness.dark;
     final success = dark ? const Color(0xFF5BD17F) : const Color(0xFF1E8E3E);
 
@@ -51,19 +54,19 @@ class HandsFreeChoiceTile extends StatelessWidget {
         bg = success.withValues(alpha: 0.12);
         icon = Icons.check_circle;
         iconColor = success;
-        mark = correctText;
+        mark = correctText ?? strings.correctLabel;
       case ChoiceState.incorrect:
         border = scheme.error;
         bg = scheme.error.withValues(alpha: 0.12);
         icon = Icons.cancel;
         iconColor = scheme.error;
-        mark = incorrectText;
+        mark = incorrectText ?? strings.incorrectLabel;
     }
 
     return Semantics(
       button: onTap != null,
       selected: state == ChoiceState.selected,
-      label: '$label。$text${mark == null ? '' : '。$mark'}',
+      label: '$label${strings.sentenceSeparator}$text${mark == null ? '' : '${strings.sentenceSeparator}$mark'}',
       excludeSemantics: true,
       child: Material(
         color: bg ?? scheme.surface,
@@ -123,16 +126,18 @@ class ReadAloudButton extends StatelessWidget {
   const ReadAloudButton({
     super.key,
     required this.onPressed,
-    this.tooltip = '読み上げ',
+    this.tooltip,
   });
 
   final VoidCallback? onPressed;
-  final String tooltip;
+
+  /// null なら [KitStrings] の既定（読み上げ）。
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) => IconButton.filledTonal(
         onPressed: onPressed,
-        tooltip: tooltip,
+        tooltip: tooltip ?? KitStrings.of(context).readAloud,
         iconSize: 32,
         constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
         icon: const Icon(Icons.volume_up),

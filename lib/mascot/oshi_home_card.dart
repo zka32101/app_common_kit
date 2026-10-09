@@ -185,13 +185,13 @@ class _UkalabOshiCardState extends ConsumerState<UkalabOshiCard> {
       outfit = ref.watch(equippedOutfitProvider);
     } catch (_) {}
 
-    final lines = MascotLines.forTone(pack.tone);
+    final s = KitStrings.of(context);
+    final lines = MascotLines.forTone(pack.tone, lang: s.languageCode);
     final line = (situation == MascotSituation.greeting && widget.greeting != null)
         ? widget.greeting!(now, _seed)
         : lines.pick(situation, seed: _seed);
     final small = _display == MascotDisplay.small;
 
-    final s = KitStrings.of(context);
     final menu = PopupMenuButton<Object>(
       tooltip: s.oshiMenuTooltip,
       icon: const Icon(Icons.more_vert),

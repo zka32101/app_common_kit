@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'lab_controls.dart';
+import 'lab_strings.dart';
 
 /// 機械学習ラボ（画期的な機能1）のデータ点1件。
 class MlLabPointSpec {
@@ -59,27 +60,28 @@ class _MlLabWidgetState extends State<MlLabWidget> {
     }
   }
 
-  String get _hint => switch (_method) {
+  String _hint(LabStrings l) => switch (_method) {
         MlMethod.knn => _k <= 2
-            ? 'kが小さいと、1点の近くだけ見て判断するため境界が複雑になりすぎます（過学習）。'
+            ? l.mlKnnSmallHint
             : _k >= 10
-                ? 'kが大きいと、遠くの点まで見てしまい境界が単純になりすぎます（未学習）。'
-                : 'kを変えて、境界がどう変わるか見てみましょう。',
+                ? l.mlKnnLargeHint
+                : l.mlKnnMidHint,
         MlMethod.decisionTree => _maxDepth <= 1
-            ? '深さが浅いと、分け方が単純すぎます（未学習）。'
+            ? l.mlTreeShallowHint
             : _maxDepth >= 5
-                ? '深さが深いと、データに合わせすぎて境界がギザギザになります（過学習）。'
-                : '深さを変えて、境界がどう変わるか見てみましょう。',
+                ? l.mlTreeDeepHint
+                : l.mlTreeMidHint,
         MlMethod.linear => _regularization <= 0.05
-            ? '正則化が弱いと、境界が訓練データに寄りすぎることがあります（過学習）。'
+            ? l.mlLinearWeakHint
             : _regularization >= 1.0
-                ? '正則化が強いと、境界が単純な直線に近づきすぎます（未学習）。'
-                : '正則化の強さを変えて、境界がどう変わるか見てみましょう。',
+                ? l.mlLinearStrongHint
+                : l.mlLinearMidHint,
       };
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = LabStrings.of(context);
     final classify = _classifierFor(_method);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,10 +92,10 @@ class _MlLabWidgetState extends State<MlLabWidget> {
         Text(widget.description, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 12),
         SegmentedButton<MlMethod>(
-          segments: const [
-            ButtonSegment(value: MlMethod.knn, label: Text('k近傍法')),
-            ButtonSegment(value: MlMethod.decisionTree, label: Text('決定木')),
-            ButtonSegment(value: MlMethod.linear, label: Text('線形分類')),
+          segments: [
+            ButtonSegment(value: MlMethod.knn, label: Text(l.mlKnn)),
+            ButtonSegment(value: MlMethod.decisionTree, label: Text(l.mlDecisionTree)),
+            ButtonSegment(value: MlMethod.linear, label: Text(l.mlLinear)),
           ],
           selected: {_method},
           onSelectionChanged: (s) => setState(() => _method = s.first),
@@ -110,7 +112,7 @@ class _MlLabWidgetState extends State<MlLabWidget> {
               onChanged: (v) => setState(() => _k = v.round()),
             ),
           MlMethod.decisionTree => HyperParamSlider(
-              label: '深さ',
+              label: l.mlDepth,
               value: _maxDepth.toDouble(),
               min: 1,
               max: 6,
@@ -119,7 +121,7 @@ class _MlLabWidgetState extends State<MlLabWidget> {
               onChanged: (v) => setState(() => _maxDepth = v.round()),
             ),
           MlMethod.linear => HyperParamSlider(
-              label: '正則化',
+              label: l.mlRegularization,
               value: _regularization,
               min: 0,
               max: 2,
@@ -139,13 +141,13 @@ class _MlLabWidgetState extends State<MlLabWidget> {
         const SizedBox(height: 8),
         Row(
           children: [
-            LegendMark(color: theme.colorScheme.primary, shape: BoxShape.circle, label: 'クラス0'),
+            LegendMark(color: theme.colorScheme.primary, shape: BoxShape.circle, label: l.class0),
             const SizedBox(width: 16),
-            LegendMark(color: theme.colorScheme.error, shape: BoxShape.rectangle, label: 'クラス1'),
+            LegendMark(color: theme.colorScheme.error, shape: BoxShape.rectangle, label: l.class1),
           ],
         ),
         const SizedBox(height: 8),
-        Text(_hint, style: theme.textTheme.bodySmall),
+        Text(_hint(l), style: theme.textTheme.bodySmall),
       ],
     );
   }

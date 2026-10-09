@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 画像認識の中身を見る（画期的な機能4）の1画像。
 class ConvLabImageSpec {
   const ConvLabImageSpec({
@@ -42,19 +44,19 @@ const Map<ConvFilter, List<List<double>>> _kernels = {
   ],
 };
 
-const Map<ConvFilter, String> _filterLabels = {
-  ConvFilter.verticalEdge: '縦エッジ検出',
-  ConvFilter.horizontalEdge: '横エッジ検出',
-  ConvFilter.blur: 'ぼかし',
-  ConvFilter.sharpen: 'シャープ化',
-};
+String _filterLabel(LabStrings l, ConvFilter f) => switch (f) {
+      ConvFilter.verticalEdge => l.convVerticalEdge,
+      ConvFilter.horizontalEdge => l.convHorizontalEdge,
+      ConvFilter.blur => l.convBlur,
+      ConvFilter.sharpen => l.convSharpen,
+    };
 
-const Map<ConvFilter, String> _filterHints = {
-  ConvFilter.verticalEdge: '縦方向の明暗の変化（左右のエッジ）を強調するフィルタです。',
-  ConvFilter.horizontalEdge: '横方向の明暗の変化（上下のエッジ）を強調するフィルタです。',
-  ConvFilter.blur: '周囲の画素を均して滑らかにするフィルタです。',
-  ConvFilter.sharpen: '中心の画素を周囲との差で強調するフィルタです。',
-};
+String _filterHint(LabStrings l, ConvFilter f) => switch (f) {
+      ConvFilter.verticalEdge => l.convVerticalEdgeHint,
+      ConvFilter.horizontalEdge => l.convHorizontalEdgeHint,
+      ConvFilter.blur => l.convBlurHint,
+      ConvFilter.sharpen => l.convSharpenHint,
+    };
 
 /// 画像認識の中身を見る（画期的な機能4）。
 ///
@@ -77,6 +79,7 @@ class _ConvLabWidgetState extends State<ConvLabWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = LabStrings.of(context);
     final grid = widget.image.grid;
     final featureMap = _convolve(grid, _kernels[_filter]!);
     final pooled = _maxPool2x2(featureMap);
@@ -92,7 +95,7 @@ class _ConvLabWidgetState extends State<ConvLabWidget> {
         SegmentedButton<ConvFilter>(
           segments: [
             for (final f in ConvFilter.values)
-              ButtonSegment(value: f, label: Text(_filterLabels[f]!)),
+              ButtonSegment(value: f, label: Text(_filterLabel(l, f))),
           ],
           selected: {_filter},
           onSelectionChanged: (s) => setState(() => _filter = s.first),
@@ -101,18 +104,18 @@ class _ConvLabWidgetState extends State<ConvLabWidget> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _Stage(label: '入力画像', grid: grid, normalize: false)),
+            Expanded(child: _Stage(label: l.convInput, grid: grid, normalize: false)),
             const SizedBox(width: 8),
-            Expanded(child: _Stage(label: '特徴マップ', grid: featureMap, normalize: true)),
+            Expanded(child: _Stage(label: l.convFeatureMap, grid: featureMap, normalize: true)),
             const SizedBox(width: 8),
-            Expanded(child: _Stage(label: 'プーリング後', grid: pooled, normalize: true)),
+            Expanded(child: _Stage(label: l.convPooled, grid: pooled, normalize: true)),
           ],
         ),
         const SizedBox(height: 8),
-        Text(_filterHints[_filter]!, style: theme.textTheme.bodySmall),
+        Text(_filterHint(l, _filter), style: theme.textTheme.bodySmall),
         const SizedBox(height: 4),
         Text(
-          'プーリング（2x2のmax pooling）で、特徴マップが縦横半分に縮小されます。',
+          l.convPoolingNote,
           style: theme.textTheme.bodySmall,
         ),
       ],

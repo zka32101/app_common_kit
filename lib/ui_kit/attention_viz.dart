@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// Transformerの注意の可視化（画期的な機能5）の1場面。
 class AttentionVizSpec {
   const AttentionVizSpec({
@@ -67,11 +69,11 @@ class _AttentionVizWidgetState extends State<AttentionVizWidget> {
         Text(widget.scenario.description, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 4),
         Text(
-          '※ 実際のモデルの出力ではなく、教育用に用意した固定データです。',
+          LabStrings.of(context).attentionNote,
           style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
         ),
         const SizedBox(height: 12),
-        Text('注目する単語（クエリ）を選んでください', style: theme.textTheme.labelMedium),
+        Text(LabStrings.of(context).attentionPickQuery, style: theme.textTheme.labelMedium),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -102,8 +104,11 @@ class _AttentionVizWidgetState extends State<AttentionVizWidget> {
         ),
         const SizedBox(height: 8),
         Text(
-          '「${tokens[_query]}」は「${tokens[topKey]}」に最も強く注目しています'
-          '（${(weights[topKey] * 100).round()}%）。線が太く濃いほど、注意が強いことを表します。',
+          LabStrings.of(context).attentionSummary(
+            tokens[_query],
+            tokens[topKey],
+            (weights[topKey] * 100).round(),
+          ),
           style: theme.textTheme.bodySmall,
         ),
       ],

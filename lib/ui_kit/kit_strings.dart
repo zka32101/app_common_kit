@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 @immutable
 class KitStrings {
   const KitStrings({
+    required this.languageCode,
     required this.coinTotal,
     required this.coinBreakdownTitle,
     required this.coinEventLabels,
@@ -72,8 +73,31 @@ class KitStrings {
     required this.passAskTitle,
     required this.passCoin,
     required this.passOutfit,
+    required this.characterNames,
+    required this.characterRoles,
+    required this.feedbackTitleRequired,
+    required this.feedbackDetailRequired,
+    required this.feedbackTitleTooLong,
+    required this.feedbackDetailTooLong,
+    required this.correctLabel,
+    required this.incorrectLabel,
+    required this.sentenceSeparator,
+    required this.explanationTitle,
+    required this.tabLabels,
+    required this.readAloud,
+    required this.mockRecordTitle,
+    required this.mockRecordNote,
+    required this.mockRecordMessage,
+    required this.sourceNote,
+    required this.sourceNoteChecked,
+    required this.mockRecordCert,
+    required this.shareCardBrand,
+    required this.shareCardPassed,
+    required this.shareDate,
   });
 
+  /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
+  final String languageCode;
   final String coinTotal;
   final String coinBreakdownTitle;
 
@@ -141,8 +165,33 @@ class KitStrings {
   final String Function(String cert) passAskTitle;
   final String Function(int amount) passCoin;
   final String Function(String name) passOutfit;
+  /// `CharacterPack.id` → 表示名。無い id はパックの name を使う。
+  final Map<String, String> characterNames;
+
+  /// `CharacterPack.id` → 役割の説明。
+  final Map<String, String> characterRoles;
+  final String feedbackTitleRequired;
+  final String feedbackDetailRequired;
+  final String Function(int max) feedbackTitleTooLong;
+  final String Function(int max) feedbackDetailTooLong;
+  final String correctLabel;
+  final String incorrectLabel;
+  final String sentenceSeparator;
+  final String explanationTitle;
+  final List<String> tabLabels;
+  final String readAloud;
+  final String mockRecordTitle;
+  final String mockRecordNote;
+  final String mockRecordMessage;
+  final String Function(String src) sourceNote;
+  final String Function(String src, String checkedAt) sourceNoteChecked;
+  final String Function(String cert) mockRecordCert;
+  final String shareCardBrand;
+  final String shareCardPassed;
+  final String Function(DateTime date) shareDate;
 
   static const ja = KitStrings(
+    languageCode: 'ja',
     coinTotal: '合計',
     coinBreakdownTitle: '今回貯まった学習コイン',
     coinEventLabels: {
@@ -220,9 +269,37 @@ class KitStrings {
     passAskTitle: _jaPassAskTitle,
     passCoin: _jaPassCoin,
     passOutfit: _jaPassOutfit,
+    characterNames: {},
+    characterRoles: {
+      'standard': 'フラスコの助手',
+      'kai': '頼れる先輩',
+      'mio': '明るい後輩',
+      'moka': 'ゆるい相棒（犬）',
+      'mike': 'ていねいな解説役（猫）',
+    },
+    feedbackTitleRequired: 'タイトルを入力してください',
+    feedbackDetailRequired: '詳細を入力してください',
+    feedbackTitleTooLong: _jaTitleTooLong,
+    feedbackDetailTooLong: _jaDetailTooLong,
+    correctLabel: '正解',
+    incorrectLabel: '不正解',
+    sentenceSeparator: '。',
+    explanationTitle: '解説',
+    tabLabels: ['ホーム', '学ぶ', '模擬', '記録', '設定'],
+    readAloud: '読み上げ',
+    mockRecordTitle: '学習の記録カード',
+    mockRecordNote: '模擬試験の記録です。本番の合格ではありません。名前などの個人情報は入りません。',
+    mockRecordMessage: '合格点を超えました！',
+    sourceNote: _jaSourceNote,
+    sourceNoteChecked: _jaSourceNoteChecked,
+    mockRecordCert: _jaMockRecordCert,
+    shareCardBrand: 'うかラボ',
+    shareCardPassed: '合格しました！',
+    shareDate: _jaShareDate,
   );
 
   static const en = KitStrings(
+    languageCode: 'en',
     coinTotal: 'Total',
     coinBreakdownTitle: 'Study coins earned this time',
     coinEventLabels: {
@@ -303,6 +380,39 @@ class KitStrings {
     passAskTitle: _enPassAskTitle,
     passCoin: _enPassCoin,
     passOutfit: _enPassOutfit,
+    characterNames: {
+      'standard': 'Uka',
+      'kai': 'Kai',
+      'mio': 'Mio',
+      'moka': 'Moka',
+      'mike': 'Mike',
+    },
+    characterRoles: {
+      'standard': 'Flask assistant',
+      'kai': 'Reliable senior',
+      'mio': 'Cheerful junior',
+      'moka': 'Easygoing buddy (dog)',
+      'mike': 'Careful explainer (cat)',
+    },
+    feedbackTitleRequired: 'Please enter a title',
+    feedbackDetailRequired: 'Please enter the details',
+    feedbackTitleTooLong: _enTitleTooLong,
+    feedbackDetailTooLong: _enDetailTooLong,
+    correctLabel: 'Correct',
+    incorrectLabel: 'Incorrect',
+    sentenceSeparator: '. ',
+    explanationTitle: 'Explanation',
+    tabLabels: ['Home', 'Learn', 'Mock', 'Records', 'Settings'],
+    readAloud: 'Read aloud',
+    mockRecordTitle: 'Study record card',
+    mockRecordNote: 'This is a mock exam record, not an actual pass. It contains no personal information such as your name.',
+    mockRecordMessage: 'You beat the passing score!',
+    sourceNote: _enSourceNote,
+    sourceNoteChecked: _enSourceNoteChecked,
+    mockRecordCert: _enMockRecordCert,
+    shareCardBrand: 'Qualab',
+    shareCardPassed: 'I passed!',
+    shareDate: _enShareDate,
   );
 
   /// 言語コードから選ぶ。未対応の言語は日本語。
@@ -339,6 +449,22 @@ String _jaWardrobePrice(int p) => '${p}コイン';
 String _enWardrobePrice(int p) => '$p coins';
 String _jaLockedNotPurchased(int p) => '${p}コインで購入できます';
 String _enLockedNotPurchased(int p) => 'Buy for $p coins';
+
+String _jaTitleTooLong(int m) => 'タイトルは$m文字以内で入力してください';
+String _enTitleTooLong(int m) => 'Title must be $m characters or fewer';
+String _jaDetailTooLong(int m) => '詳細は$m文字以内で入力してください';
+String _enDetailTooLong(int m) => 'Details must be $m characters or fewer';
+
+String _jaSourceNote(String s) => '出典: $s';
+String _enSourceNote(String s) => 'Source: $s';
+String _jaSourceNoteChecked(String s, String d) => '出典: $s（$d 確認）';
+String _enSourceNoteChecked(String s, String d) => 'Source: $s (checked $d)';
+String _jaMockRecordCert(String c) => '$c 模擬試験';
+String _enMockRecordCert(String c) => '$c mock exam';
+
+String _jaShareDate(DateTime d) => '${d.year}年${d.month}月${d.day}日';
+const _enShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+String _enShareDate(DateTime d) => '${_enShortMonths[d.month - 1]} ${d.day}, ${d.year}';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///

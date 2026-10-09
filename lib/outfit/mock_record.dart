@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../mascot/mascot_models.dart';
 import '../theme/ukalab_palette.dart';
+import '../ui_kit/kit_strings.dart';
 import 'outfit_models.dart';
 import 'outfit_provider.dart';
 import 'share_card.dart';
@@ -24,7 +25,10 @@ Future<void> showMockRecordDialog(
   String? scoreText,
   Future<void> Function(Uint8List png)? onShare,
   DateTime? now,
+  KitStrings? strings,
 }) {
+  // ダイアログは Navigator の上に積まれるので、呼び出し側の context から文言を取っておく。
+  final s = strings ?? KitStrings.of(context);
   Outfit? outfit;
   try {
     outfit = ref.read(equippedOutfitProvider);
@@ -33,23 +37,25 @@ Future<void> showMockRecordDialog(
     context: context,
     builder: (ctx) => _MockRecordDialog(
       data: ShareCardData(
-        certLabel: '${cert.label} 模擬試験',
+        certLabel: s.mockRecordCert(cert.label),
         date: now ?? DateTime.now(),
         packName: pack.name,
         stage: stage,
         outfit: outfit,
         scoreText: scoreText,
-        message: '合格点を超えました！',
+        message: s.mockRecordMessage,
       ),
       pack: pack,
       onShare: onShare,
+      strings: s,
     ),
   );
 }
 
 class _MockRecordDialog extends StatefulWidget {
-  const _MockRecordDialog({required this.data, required this.pack, this.onShare});
+  const _MockRecordDialog({required this.data, required this.pack, required this.strings, this.onShare});
 
+  final KitStrings strings;
   final ShareCardData data;
   final CharacterPack pack;
   final Future<void> Function(Uint8List png)? onShare;
@@ -74,19 +80,19 @@ class _MockRecordDialogState extends State<_MockRecordDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = widget.strings;
     return AlertDialog(
-      title: const Text('学習の記録カード'),
+      title: Text(s.mockRecordTitle),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             RepaintBoundary(
               key: _key,
-              child: PassShareCard(data: widget.data, pack: widget.pack),
+              child: PassShareCard(data: widget.data, pack: widget.pack, strings: s),
             ),
             const SizedBox(height: 12),
-            Text('模擬試験の記録です。本番の合格ではありません。名前などの個人情報は入りません。',
-                style: theme.textTheme.bodySmall),
+            Text(s.mockRecordNote, style: theme.textTheme.bodySmall),
           ],
         ),
       ),
@@ -94,9 +100,9 @@ class _MockRecordDialogState extends State<_MockRecordDialog> {
         if (widget.onShare != null)
           OutlinedButton(
             onPressed: _sharing ? null : _share,
-            child: const Text('共有する'),
+            child: Text(s.passShare),
           ),
-        FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text('閉じる')),
+        FilledButton(onPressed: () => Navigator.of(context).pop(), child: Text(s.close)),
       ],
     );
   }

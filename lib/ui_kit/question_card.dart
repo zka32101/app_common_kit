@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 問題文のカード。「第3問 / 10問」の進行表示つき。選択肢は [child] に並べる。
 class QuestionCard extends StatelessWidget {
   const QuestionCard({
@@ -35,7 +37,9 @@ class QuestionCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  total == null ? '第$index問' : '第$index問 / $total問',
+                  total == null
+                      ? LabStrings.of(context).questionNo(index!)
+                      : LabStrings.of(context).questionNoOfTotal(index!, total!),
                   style: theme.textTheme.labelMedium,
                 ),
               ),

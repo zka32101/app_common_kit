@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 推しの答案を添削（型③、決定76・77）の選択肢1つ。
 ///
 /// ukalab_core の `MisconceptionOption` と同じ構造を持つ、UI 層の軽量な
@@ -91,7 +93,7 @@ class _TeachMascotWidgetState extends State<TeachMascotWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _solved ? 'わかった!' : 'ここが分からない…',
+                  _solved ? LabStrings.of(context).gotIt : LabStrings.of(context).mascotStuck,
                   style: theme.textTheme.labelLarge
                       ?.copyWith(color: theme.colorScheme.primary),
                 ),
@@ -117,7 +119,7 @@ class _TeachMascotWidgetState extends State<TeachMascotWidget> {
                 if (_justWrong && !_solved) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'んー、違うかも。もう一度選んでみて。',
+                    LabStrings.of(context).wrongTryAgain,
                     style: theme.textTheme.bodySmall
                         ?.copyWith(color: theme.colorScheme.error),
                   ),

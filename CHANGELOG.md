@@ -2,6 +2,28 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.23.0] - 2026-10-09
+
+共有カードの多言語化（ja/en）。追加のみ。
+
+### 追加
+- `PassShareCard` がブランド名（日本語「うかラボ」／英語「Qualab」）・既定の一言（合格しました！／I passed!）・日付表記（2026年10月9日／Oct 9, 2026）を `KitStrings` で切り替える。`strings:` 引数でも指定可（ダイアログ内では呼び出し側の文言を引き継ぐ）
+- `ShareCardData.message` は null 許容に変更（null なら既定の一言。渡せば従来どおり優先）。`ShareCardData.dateText` は日本語表記のまま残す（言語に合わせるなら `KitStrings.shareDate`）
+
+### 注意
+- 英語のブランド名は「Qualab」（`KitStrings.en` の `shareCardBrand`）
+
+## [0.22.0] - 2026-10-09
+
+多言語化（ja/en）の残りの画面部品を対応。追加のみ（文言の引数は null 許容になり、渡せば従来どおり優先）。
+
+### 追加
+- `ChoiceTile`・`HandsFreeChoiceTile`（正解／不正解・読み上げ用ラベルの区切り）、`ExplanationPanel`（見出し・出典）、`UkalabShell`（下部タブ）、`ReadAloudButton`（ツールチップ）、`showMockRecordDialog`（学習の記録カード。`strings:` 引数あり）が `KitStrings` に対応
+- `UkalabShell.labels` は null 許容に変更（null なら `KitStrings.tabLabels`。日本語は従来の `defaultLabels` と同じ）
+
+### 注意
+- 共有カード画像の文言（「うかラボ」・日付表記）と、衣装名・資格名などのカタログは日本語のまま
+
 ## [0.21.0] - 2026-10-09
 
 片手・ながら学習モード（大きなボタン・下部配置・端末標準の音声読み上げ）。追加のみで、既存 API に破壊的変更はない。

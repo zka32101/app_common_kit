@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 /// 予測→実行（型②、決定76）: 先に答えを予測してから、計算結果とのズレを見て
 /// 学ぶウィジェット。ukalab_core の `PredictRunScenario` には依存せず、
 /// 呼び出し側が `compute()` の結果を詰め替えて渡す（`BoundarySliderWidget`
@@ -85,7 +87,7 @@ class _PredictRunWidgetState extends State<PredictRunWidget> {
         if (!_revealed)
           FilledButton(
             onPressed: () => setState(() => _revealed = true),
-            child: const Text('予測する'),
+            child: Text(LabStrings.of(context).predictButton),
           )
         else
           _PredictRunResult(
@@ -129,10 +131,10 @@ class _PredictRunResult extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _Stat(label: 'あなたの予測', value: format(prediction), theme: theme),
+                  child: _Stat(label: LabStrings.of(context).predictYours, value: format(prediction), theme: theme),
                 ),
                 Expanded(
-                  child: _Stat(label: '正解', value: format(correctAnswer), theme: theme),
+                  child: _Stat(label: LabStrings.of(context).predictCorrect, value: format(correctAnswer), theme: theme),
                 ),
               ],
             ),
@@ -141,7 +143,7 @@ class _PredictRunResult extends StatelessWidget {
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
-              child: TextButton(onPressed: onReset, child: const Text('もう一度予測する')),
+              child: TextButton(onPressed: onReset, child: Text(LabStrings.of(context).predictAgain)),
             ),
           ],
         ),

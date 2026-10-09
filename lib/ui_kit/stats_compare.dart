@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 import '../stats/exam_stats_models.dart';
 
 /// 模擬試験結果に添える全国集計との比較。集計が無ければ何も表示しない。
@@ -25,14 +27,14 @@ class StatsCompareWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('全国平均との比較', style: theme.textTheme.titleMedium),
+            Text(LabStrings.of(context).statsTitle, style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
-            Text('全国平均点 ${s.averageScore.toStringAsFixed(1)}点（${s.sampleCount}人分）'),
-            Text('あなたの点数 $myScore点'),
+            Text(LabStrings.of(context).statsAverage(s.averageScore.toStringAsFixed(1), s.sampleCount)),
+            Text(LabStrings.of(context).statsMyScore(myScore)),
             if (deviation != null) ...[
               const SizedBox(height: 4),
               Text(
-                '偏差値 ${deviation.toStringAsFixed(1)}',
+                LabStrings.of(context).statsDeviation(deviation.toStringAsFixed(1)),
                 style: theme.textTheme.titleLarge,
               ),
             ],

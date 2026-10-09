@@ -35,7 +35,10 @@ class MascotLines {
   }
 
   /// 口調に合ったセリフ。用意のない口調は標準（やさしい）に戻す。
-  static MascotLines forTone(MascotTone tone) => _byTone[tone] ?? gentle;
+  ///
+  /// [lang] は `'en'` で英語、それ以外は日本語。
+  static MascotLines forTone(MascotTone tone, {String lang = 'ja'}) =>
+      lang == 'en' ? (_byToneEn[tone] ?? gentleEn) : (_byTone[tone] ?? gentle);
 
   static const gentle = MascotLines({
     MascotSituation.greeting: ['こんにちは。今日も少しずつ進めましょう', 'ようこそ。ゆっくりで大丈夫です'],
@@ -50,7 +53,46 @@ class MascotLines {
     MascotSituation.tap: ['用語でわからないところは、解説を開いてみましょう', '間違えた問題は、復習で力になります'],
   });
 
+  static const gentleEn = MascotLines({
+    MascotSituation.greeting: [
+      "Hello! Let's make a little progress today.",
+      'Welcome. Taking it slow is perfectly fine.',
+    ],
+    MascotSituation.studied: [
+      "Nice work on today's study session.",
+      "Well done. You're moving forward steadily.",
+    ],
+    MascotSituation.streak: [
+      'Keeping at it is wonderful.',
+      'Your daily effort is building real strength.',
+    ],
+    MascotSituation.welcomeBack: [
+      "Welcome back! Let's go on together.",
+      'Welcome back. Even one question today is great.',
+    ],
+    MascotSituation.examApproaching: [
+      "The exam is getting close. Let's check your weak spots.",
+    ],
+    MascotSituation.examClose: [
+      'The exam is almost here. Focus on review rather than new material.',
+    ],
+    MascotSituation.examEve: [
+      'The exam is tomorrow. Check your things and rest early.',
+    ],
+    MascotSituation.examToday: [
+      'Exam day. Stay calm and do it like you always do.',
+    ],
+    MascotSituation.passed: [
+      "Congratulations on passing! It's the result of your hard work.",
+    ],
+    MascotSituation.tap: [
+      'If a term is unclear, open its explanation.',
+      'Questions you missed become strength through review.',
+    ],
+  });
+
   static const _byTone = <MascotTone, MascotLines>{MascotTone.gentle: gentle};
+  static const _byToneEn = <MascotTone, MascotLines>{MascotTone.gentle: gentleEn};
 }
 
 /// 禁止表現（責める・消える・恋愛依存）。推しは応援と成長の関係に限る。
@@ -85,8 +127,33 @@ const List<(String, String)> kForbiddenExpressions = [
   ('あなただけ', '恋愛依存'),
 ];
 
-/// 文に含まれる禁止表現を返す（なければ空）。
-List<String> findForbiddenExpressions(String text) => [
-      for (final (word, kind) in kForbiddenExpressions)
-        if (text.contains(word)) '$word（$kind）',
-    ];
+/// 英語の禁止表現（小文字で照合する）。
+const List<(String, String)> kForbiddenExpressionsEn = [
+  ('why didn', 'blame'),
+  ('lazy', 'blame'),
+  ('disappoint', 'blame'),
+  ('you should have', 'blame'),
+  ('slacking', 'blame'),
+  ('goodbye', 'disappear'),
+  ('farewell', 'disappear'),
+  ('leave you', 'disappear'),
+  ('never see you', 'disappear'),
+  ('so sad', 'down'),
+  ('crying', 'down'),
+  ('forever together', 'romance/dependence'),
+  ('love you', 'romance/dependence'),
+  ('miss you', 'romance/dependence'),
+  ('lonely', 'romance/dependence'),
+  ('only you', 'romance/dependence'),
+];
+
+/// 文に含まれる禁止表現を返す（なければ空）。日本語・英語の両方を検査する。
+List<String> findForbiddenExpressions(String text) {
+  final lower = text.toLowerCase();
+  return [
+    for (final (word, kind) in kForbiddenExpressions)
+      if (text.contains(word)) '$word（$kind）',
+    for (final (word, kind) in kForbiddenExpressionsEn)
+      if (lower.contains(word)) '$word ($kind)',
+  ];
+}

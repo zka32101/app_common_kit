@@ -19,6 +19,12 @@ void main() {
       expect(limits.validateDescription('a' * 2000), isNull);
       expect(limits.validateDescription('a' * 2001), isNotNull);
     });
+    test('英語の文言で返せる', () {
+      expect(limits.validateTitle('', KitStrings.en), 'Please enter a title');
+      expect(limits.validateTitle('a' * 101, KitStrings.en),
+          'Title must be 100 characters or fewer');
+      expect(limits.validateTitle('', KitStrings.ja), 'タイトルを入力してください');
+    });
   });
 
   group('FeedbackNotifier', () {

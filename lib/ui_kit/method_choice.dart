@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lab_strings.dart';
+
 import 'failure_gallery.dart' show FailureChoiceSpec;
 
 /// 手法の選び方（事例仕分け、画期的な機能6）の1場面。
@@ -84,7 +86,7 @@ class _MethodChoiceWidgetState extends State<MethodChoiceWidget> {
           if (_wrongOptionId != null) ...[
             const SizedBox(height: 8),
             Text(
-              'んー、違うかも。もう一度選んでみて。',
+              LabStrings.of(context).wrongTryAgain,
               style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
             ),
           ],
@@ -98,7 +100,7 @@ class _MethodChoiceWidgetState extends State<MethodChoiceWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'わかった!',
+                    LabStrings.of(context).gotIt,
                     style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
                   ),
                   const SizedBox(height: 8),
