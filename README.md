@@ -300,9 +300,29 @@ await coin.purchase('hat'); // purchased / insufficient / alreadyOwned / unknown
 
 - 重複防止: 同じ問題・同じ段階・同じ資格は二度付与されない。1日の上限（新しい問題30コイン、復習20コイン、自己ベスト3回）あり
 - 残高は台帳の合計。購入は残高以内でしか記録しないので負にならない
-- 端末移行・同期: `CoinLedger.toJson()` を共通アカウントに保存し、`CoinService.mergeLedger` で統合（何度統合しても同じ）。サーバー側の保存は `CoinRemote` をアプリ側（Firestore など）が実装し、`CoinSync(service:, remote:).sync()` で統合・書き戻す
+- 端末移行・同期: `CoinLedger.toJson()` を共通アカウントに保存し、`CoinService.mergeLedger` で統合（何度統合しても同じ）。サーバー側の保存は下の「共通アカウントで同期する」を参照
 - 数値は暫定（学習コイン仕様 §2）。`CoinRules` を作り直して調整
 - 網羅率や正答率の**到達判定**は呼び出し側（学習ログ）が行い、到達したらイベントを渡す
+
+### 共通アカウントで同期する（Firestore）
+
+端末移行・複数端末で、同じアカウントなら同じコインになる。台帳は追記専用で行ごとに ID があるため、何度同期しても二重にならない。
+
+```dart
+// 1. サインイン後（匿名でも可）に、保存先を作る。uid は Firebase Auth の uid。
+final remote = FirebaseCoinRemote(uid: user.uid, examId: UkalabCert.bikeLicense.id);
+
+// 2. 起動時と、購入の後に同期する。5分以内の再同期は自動でスキップ、失敗しても例外は出ない。
+await ref.read(coinProvider.notifier).load();
+await ref.read(coinProvider.notifier).syncWith(remote, minInterval: const Duration(minutes: 5));
+// 購入後:  await notifier.purchase(id); await notifier.syncWith(remote);
+```
+
+- 保存先は `users/{uid}/exams/{examId}/coin/ledger`。共通ルール（`firebase/firestore.rules`）に含まれるため、**ルールの変更は不要**（本人だけが読み書きでき、examId は登録済みの資格だけ）
+- 台帳は1ドキュメント（Firestore の1MB上限）。1行 約150バイトで 6,000行ほど。1日の獲得上限があるので通常は収まる
+- 装備中の衣装は端末ごと（同期しない）
+- 2台で同時に購入すると、統合後の残高が一時的にマイナスになりうる（購入は残高以内でしか記録しないが、オフラインの2台は互いを知らないため）。マイナスは次の獲得で戻る。必要ならアプリ側で表示を 0 に丸める
+- Firestore 以外に置くなら `CoinRemote`（`readLedger`/`writeLedger`）を実装して渡す
 
 
 ## 推し（v0.2）
