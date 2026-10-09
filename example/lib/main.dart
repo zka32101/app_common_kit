@@ -1,7 +1,26 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() => runApp(const ExampleApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // 実データの保存先はアプリごとに違うので、example はメモリ上のものを渡す。
+  final coin = CoinService(
+    store: InMemoryCoinStore(),
+    shop: OutfitCatalog.shopItems([UkalabCert.bikeLicense]),
+  );
+  await coin.load();
+  await coin.grant(CoinEvent.passReport(UkalabCert.bikeLicense.id)); // 衣装を買える残高
+  final outfit = OutfitService(store: InMemoryOutfitStore());
+  await outfit.load();
+  runApp(ProviderScope(
+    overrides: [
+      coinServiceProvider.overrideWithValue(coin),
+      outfitServiceProvider.overrideWithValue(outfit),
+    ],
+    child: const ExampleApp(),
+  ));
+}
 
 class ExampleApp extends StatefulWidget {
   const ExampleApp({super.key});
@@ -14,6 +33,15 @@ class _ExampleAppState extends State<ExampleApp> {
   bool _en = false;
 
   @override
+  void initState() {
+    super.initState();
+    // フィードバックの送信先（本番は Firestore 等）。example は何もしない。
+    ProviderScope.containerOf(context, listen: false)
+        .read(feedbackProvider.notifier)
+        .setSubmitHandler((report) async {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final strings = _en ? KitStrings.en : KitStrings.ja;
     return MaterialApp(
@@ -23,21 +51,21 @@ class _ExampleAppState extends State<ExampleApp> {
       builder: (context, child) =>
           KitStringsScope(strings: strings, child: child!),
       home: Scaffold(
-        appBar: AppBar(title: const Text('app_common_kit example')),
+        appBar: AppBar(
+          title: const Text('app_common_kit example'),
+          // 一覧をスクロールしても常に押せるよう、アプリバーに置く。
+          actions: [
+            const Center(child: Text('English')),
+            Switch(
+              key: const Key('lang-switch'),
+              value: _en,
+              onChanged: (v) => setState(() => _en = v),
+            ),
+          ],
+        ),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Row(
-              children: [
-                const Text('English'),
-                Switch(
-                  key: const Key('lang-switch'),
-                  value: _en,
-                  onChanged: (v) => setState(() => _en = v),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
             const StreakBadge(days: 3),
             const SizedBox(height: 8),
             const StreakBadge(days: 0),
@@ -58,9 +86,81 @@ class _ExampleAppState extends State<ExampleApp> {
               onClose: () {},
             ),
             SizedBox(height: 200, child: ErrorState(onRetry: () {})),
+            const SizedBox(height: 16),
+            UkalabOshiCard(
+              cert: UkalabCert.bikeLicense,
+              stage: MascotStage.lv1,
+              appId: 'example',
+            ),
+            const SizedBox(height: 16),
+            // 積んだ画面（Navigator の上の Scope から文言が届くかの確認）。
+            const _NavButtons(),
           ],
         ),
       ),
     );
   }
+}
+
+class _NavButtons extends StatelessWidget {
+  const _NavButtons();
+
+  void _push(BuildContext context, Widget page) =>
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          FilledButton(
+            onPressed: () => _push(context, const FeedbackFormPage(appName: 'example')),
+            child: const Text('Open feedback'),
+          ),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: () => _push(context, const WardrobeScreen(cert: UkalabCert.bikeLicense)),
+            child: const Text('Open wardrobe'),
+          ),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: () => _push(context, const _HandsFreeDemo()),
+            child: const Text('Open hands-free'),
+          ),
+        ],
+      );
+}
+
+class _HandsFreeDemo extends StatefulWidget {
+  const _HandsFreeDemo();
+
+  @override
+  State<_HandsFreeDemo> createState() => _HandsFreeDemoState();
+}
+
+class _HandsFreeDemoState extends State<_HandsFreeDemo> {
+  int? _picked;
+  static const _answer = 0;
+
+  ChoiceState _state(int i) {
+    if (_picked == null) return ChoiceState.idle;
+    if (i == _answer) return ChoiceState.correct;
+    return i == _picked ? ChoiceState.incorrect : ChoiceState.idle;
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('hands-free')),
+        body: HandsFreeQuestionLayout(
+          question: const Text('1 + 1 = ?', style: TextStyle(fontSize: 22)),
+          trailing: ReadAloudButton(onPressed: () {}),
+          choices: [
+            for (final (i, t) in ['2', '3'].indexed)
+              HandsFreeChoiceTile(
+                label: 'AB'[i],
+                text: t,
+                state: _state(i),
+                onTap: _picked == null ? () => setState(() => _picked = i) : null,
+              ),
+          ],
+        ),
+      );
 }
