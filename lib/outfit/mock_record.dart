@@ -89,7 +89,7 @@ class _MockRecordDialogState extends State<_MockRecordDialog> {
           children: [
             RepaintBoundary(
               key: _key,
-              child: PassShareCard(data: widget.data, pack: widget.pack),
+              child: PassShareCard(data: widget.data, pack: widget.pack, strings: s),
             ),
             const SizedBox(height: 12),
             Text(s.mockRecordNote, style: theme.textTheme.bodySmall),

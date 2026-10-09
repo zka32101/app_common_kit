@@ -91,6 +91,9 @@ class KitStrings {
     required this.sourceNote,
     required this.sourceNoteChecked,
     required this.mockRecordCert,
+    required this.shareCardBrand,
+    required this.shareCardPassed,
+    required this.shareDate,
   });
 
   /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
@@ -183,6 +186,9 @@ class KitStrings {
   final String Function(String src) sourceNote;
   final String Function(String src, String checkedAt) sourceNoteChecked;
   final String Function(String cert) mockRecordCert;
+  final String shareCardBrand;
+  final String shareCardPassed;
+  final String Function(DateTime date) shareDate;
 
   static const ja = KitStrings(
     languageCode: 'ja',
@@ -287,6 +293,9 @@ class KitStrings {
     sourceNote: _jaSourceNote,
     sourceNoteChecked: _jaSourceNoteChecked,
     mockRecordCert: _jaMockRecordCert,
+    shareCardBrand: 'うかラボ',
+    shareCardPassed: '合格しました！',
+    shareDate: _jaShareDate,
   );
 
   static const en = KitStrings(
@@ -401,6 +410,9 @@ class KitStrings {
     sourceNote: _enSourceNote,
     sourceNoteChecked: _enSourceNoteChecked,
     mockRecordCert: _enMockRecordCert,
+    shareCardBrand: 'Ukalab',
+    shareCardPassed: 'I passed!',
+    shareDate: _enShareDate,
   );
 
   /// 言語コードから選ぶ。未対応の言語は日本語。
@@ -449,6 +461,10 @@ String _jaSourceNoteChecked(String s, String d) => '出典: $s（$d 確認）';
 String _enSourceNoteChecked(String s, String d) => 'Source: $s (checked $d)';
 String _jaMockRecordCert(String c) => '$c 模擬試験';
 String _enMockRecordCert(String c) => '$c mock exam';
+
+String _jaShareDate(DateTime d) => '${d.year}年${d.month}月${d.day}日';
+const _enShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+String _enShareDate(DateTime d) => '${_enShortMonths[d.month - 1]} ${d.day}, ${d.year}';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///

@@ -144,4 +144,39 @@ void main() {
     expect(find.text('a'), findsOneWidget);
     expect(find.text('Home'), findsNothing);
   });
+
+  testWidgets('共有カードの文言・日付が ja/en で切り替わる', (tester) async {
+    final data = ShareCardData(
+      certLabel: 'Bike License',
+      date: DateTime(2026, 10, 9),
+      packName: 'p',
+      stage: MascotStage.lv1,
+    );
+    await tester.pumpWidget(_wrap(SizedBox(width: 400, height: 500, child: PassShareCard(data: data))));
+    expect(find.text('うかラボ'), findsOneWidget);
+    expect(find.text('合格しました！'), findsOneWidget);
+    expect(find.text('2026年10月9日'), findsOneWidget);
+
+    await tester.pumpWidget(_wrap(
+      SizedBox(width: 400, height: 500, child: PassShareCard(data: data)),
+      strings: KitStrings.en,
+    ));
+    expect(find.text('Ukalab'), findsOneWidget);
+    expect(find.text('I passed!'), findsOneWidget);
+    expect(find.text('Oct 9, 2026'), findsOneWidget);
+
+    // message を渡せば Scope より優先。strings 引数も Scope より優先。
+    final custom = ShareCardData(
+      certLabel: 'x',
+      date: DateTime(2026, 1, 1),
+      packName: 'p',
+      stage: MascotStage.lv1,
+      message: 'Great!',
+    );
+    await tester.pumpWidget(_wrap(
+      SizedBox(width: 400, height: 500, child: PassShareCard(data: custom, strings: KitStrings.en)),
+    ));
+    expect(find.text('Great!'), findsOneWidget);
+    expect(find.text('Jan 1, 2026'), findsOneWidget);
+  });
 }
