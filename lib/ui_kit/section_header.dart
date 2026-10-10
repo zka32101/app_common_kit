@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 /// カード一覧を分類する見出し。ホーム画面などで、同形のカードが
 /// フラットに並ぶのを避けるために使う。
-class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.title});
+///
+/// `SectionHeader` という名前は既存アプリ側のウィジェットと衝突しやすいため、
+/// キット内では `Kit` を付けて区別する。
+class KitSectionHeader extends StatelessWidget {
+  const KitSectionHeader({super.key, required this.title});
 
   final String title;
 

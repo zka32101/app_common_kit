@@ -83,7 +83,7 @@ final _catalog = <String, Widget Function()>{
   ),
   'ExamDateTile': () =>
       _body(ExamDateTile(date: DateTime(2026, 11, 22), onChanged: (_) {})),
-  'SectionHeader': () => _body(const SectionHeader(title: '今日のおすすめ')),
+  'KitSectionHeader': () => _body(const KitSectionHeader(title: '今日のおすすめ')),
   'MinutesBadge': () => _body(const MinutesBadge(minutes: 3)),
   'PremiumLockTrailing（全状態）': () => _body(
     const Column(

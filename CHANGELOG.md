@@ -6,7 +6,7 @@
 
 ### 追加
 - ホーム画面などのカード一覧を分類するための部品4点（うかラボ 生成AIパスポートでの実装から昇格）
-  - `SectionHeader`: カード群の見出し（「今日のおすすめ」など）
+  - `KitSectionHeader`: カード群の見出し（「今日のおすすめ」など）。`SectionHeader`という名前はアプリ側の既存ウィジェットと衝突しやすいため`Kit`を付けた
   - `MinutesBadge`: カードの所要時間バッジ（「約n分」）。`KitStrings.minutesBadge`（ja・en・zh・zh-Hant・ko）
   - `PremiumLockTrailing`: プレミアム限定カードの trailing。未購入なら鍵アイコンを添えて、タップ前に有料と分かるようにする。`KitStrings.premiumLocked`（ja・en・zh・zh-Hant・ko）
   - `CountdownProgressBar`: 締切（試験直前モードなど）までの残り日数を示す進捗バー
