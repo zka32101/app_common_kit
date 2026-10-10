@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// クラッシュ・エラーの送り先。Firebase Crashlytics や Sentry などをアプリが実装して渡す
