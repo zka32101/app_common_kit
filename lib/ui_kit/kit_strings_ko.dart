@@ -50,7 +50,7 @@ const kitStringsKo = KitStrings(
   examDateClear: '시험일 해제',
   settingsTitle: '설정',
   settingsTheme: '화면 모드',
-  themeSystem: '기기 설정에 따름',
+  themeSystem: '기기 설정',
   themeLight: '라이트',
   themeDark: '다크',
   settingsLanguage: '언어',
