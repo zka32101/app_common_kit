@@ -842,3 +842,19 @@ await promptForUpdate(
 
 - `minVersion` 未満 → 閉じられない強制ダイアログ / `latestVersion` 未満 → 「あとで」できる案内
 - 取得に失敗してもアプリは止めない（何も出さない）
+
+## 分析イベント
+
+イベント名をアプリ間でそろえ、個人情報の混入を防ぐ共通の窓口。送り先（Firebase Analytics など）はアプリが `AnalyticsBackend` で実装して渡す。
+
+```dart
+ProviderScope(overrides: [
+  analyticsProvider.overrideWithValue(Analytics(MyFirebaseAnalyticsBackend())),
+], child: ...);
+
+ref.read(analyticsProvider).log(AnalyticsEvents.studyComplete, {'cert': 'it_passport', 'score': 80});
+```
+
+- 名前は英小文字・数字・`_`（40字以内）。違反は送らない
+- `email`・`name`・`uid`・`token` などのキーは自動で落とす。文字列は100字、パラメータは25個まで
+- 同意前など、送り先を渡さなければ何もしない。送信の失敗でアプリは止まらない
