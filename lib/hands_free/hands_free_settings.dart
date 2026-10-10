@@ -94,11 +94,17 @@ class InMemoryHandsFreeStore implements HandsFreeStore {
 }
 
 class SharedPreferencesHandsFreeStore implements HandsFreeStore {
-  SharedPreferencesHandsFreeStore(this.appId);
+  SharedPreferencesHandsFreeStore(
+    this.appId, {
+    this.keyPrefix = 'ukalab_hands_free_',
+  });
 
   final String appId;
 
-  String get _key => 'ukalab_hands_free_$appId';
+  /// 保存キーの前置き。既定は従来のまま（変えると保存済みの設定が読めなくなる）。
+  final String keyPrefix;
+
+  String get _key => '$keyPrefix$appId';
 
   @override
   Future<Map<String, dynamic>?> read() async {

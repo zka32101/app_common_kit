@@ -18,8 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///   Widget build(BuildContext context) => ValueListenableBuilder<ThemeMode>(
 ///         valueListenable: appThemeMode,
 ///         builder: (context, mode, _) => MaterialApp(
-///           theme: UkalabTheme.light(field: ...),
-///           darkTheme: UkalabTheme.dark(field: ...),
+///           theme: AppTheme.light(field: ...),
+///           darkTheme: AppTheme.dark(field: ...),
 ///           themeMode: mode,
 ///           home: ...,
 ///         ),
