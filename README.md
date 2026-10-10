@@ -44,6 +44,40 @@ Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(
 - アプリ固有の項目は `extraSections` に足す（`SettingsSection(title:, children:)` で見出しがそろう）
 - `KitStringsScope` を `MaterialApp.builder` に置いていれば、設定画面も中の部品（購入欄・受験日）も同じ言語になる。置かない場合は `strings:` を渡す
 
+## アプリ内レビューを頼むタイミング（`ReviewPromptService`）
+
+良い体験の直後にだけ、頼みすぎないようにレビューを頼む。ストアのレビュー画面の実処理（`in_app_review` など）は、アプリが `ReviewBackend` として渡す（キットはプラグインに依存しない）。
+
+```dart
+// 1. アプリ側で ReviewBackend を実装して渡す
+class MyReviewBackend implements ReviewBackend {
+  @override
+  Future<bool> isAvailable() => InAppReview.instance.isAvailable();
+  @override
+  Future<void> requestReview() => InAppReview.instance.requestReview();
+}
+
+ProviderScope(overrides: [
+  reviewPromptServiceProvider.overrideWithValue(ReviewPromptService(
+    store: SharedPreferencesReviewStore('boki3'),
+    backend: MyReviewBackend(),
+  )),
+])
+
+// 2. 起動時に load（初回起動の日付を記録する）
+await ref.read(reviewPromptServiceProvider).load();
+
+// 3. 良い体験（合格・自己ベスト・連続学習など）のたびに記録し、その直後に確認ダイアログを出す
+final review = ref.read(reviewPromptServiceProvider);
+await review.recordPositiveMoment();
+await showReviewPrePrompt(context, review, onNegative: () => openFeedback(context));
+```
+
+- 既定の条件（`ReviewPromptRules`）: 初回起動から7日／良い体験3回／前回から120日／生涯3回まで／「いいえ」と答えた後は90日。条件を満たさなければ `showReviewPrePrompt` は何も出さない
+- 「いいえ」ではレビューを頼まず、`onNegative` でフィードバックへ案内するのが定石（不満の声をストアのレビューに書かせない）
+- 不具合の直後や学習の途中では呼ばない。頼んだ結果（星の数）はアプリ側からは分からない（OS の仕様）
+- OS 側にも回数の制限がある（頼んでも画面が出ないことがある）。キットの上限は、それよりも控えめにしてある
+
 ## アクセシビリティの自動検査
 
 `test/accessibility_test.dart` が、主要な共通UI部品を機械的に検査する: 文字200%・幅320dpでもはみ出さない／タップ領域が Android 48dp・iOS 44pt 以上／タップできるものに読み上げラベルがある／文字のコントラスト。言語（ja/en）と明暗の組み合わせすべてで行う。

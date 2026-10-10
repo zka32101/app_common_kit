@@ -12,6 +12,10 @@ import 'lab_strings.dart';
 class KitStrings {
   const KitStrings({
     required this.languageCode,
+    required this.reviewEnjoyTitle,
+    required this.reviewYes,
+    required this.reviewNo,
+    required this.reviewLater,
     required this.purchaseTitle,
     required this.purchasedPremium,
     required this.purchasedNoAds,
@@ -129,6 +133,10 @@ class KitStrings {
 
   /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
   final String languageCode;
+  final String reviewEnjoyTitle;
+  final String reviewYes;
+  final String reviewNo;
+  final String reviewLater;
   final String purchaseTitle;
   final String purchasedPremium;
   final String purchasedNoAds;
@@ -251,6 +259,10 @@ class KitStrings {
   /// 一部の文言だけ差し替えた複製を返す（ほかの言語の土台にも使える）。
   KitStrings copyWith({
     String? languageCode,
+    String? reviewEnjoyTitle,
+    String? reviewYes,
+    String? reviewNo,
+    String? reviewLater,
     String? purchaseTitle,
     String? purchasedPremium,
     String? purchasedNoAds,
@@ -367,6 +379,10 @@ class KitStrings {
   }) =>
       KitStrings(
       languageCode: languageCode ?? this.languageCode,
+      reviewEnjoyTitle: reviewEnjoyTitle ?? this.reviewEnjoyTitle,
+      reviewYes: reviewYes ?? this.reviewYes,
+      reviewNo: reviewNo ?? this.reviewNo,
+      reviewLater: reviewLater ?? this.reviewLater,
       purchaseTitle: purchaseTitle ?? this.purchaseTitle,
       purchasedPremium: purchasedPremium ?? this.purchasedPremium,
       purchasedNoAds: purchasedNoAds ?? this.purchasedNoAds,
@@ -484,6 +500,10 @@ class KitStrings {
 
   static const ja = KitStrings(
     languageCode: 'ja',
+    reviewEnjoyTitle: 'アプリを楽しんでいますか？',
+    reviewYes: 'はい',
+    reviewNo: 'いいえ',
+    reviewLater: 'あとで',
     purchaseTitle: '購入',
     purchasedPremium: 'プレミアムを購入済みです',
     purchasedNoAds: '広告非表示を購入済みです',
@@ -619,6 +639,10 @@ class KitStrings {
 
   static const en = KitStrings(
     languageCode: 'en',
+    reviewEnjoyTitle: 'Are you enjoying the app?',
+    reviewYes: 'Yes',
+    reviewNo: 'Not really',
+    reviewLater: 'Later',
     purchaseTitle: 'Purchases',
     purchasedPremium: 'You own Premium',
     purchasedNoAds: 'You own Ad-free',
