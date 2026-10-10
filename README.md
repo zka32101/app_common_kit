@@ -326,6 +326,19 @@ final crash = CrashReporter(MyCrashBackend())..install(); // runApp の前に
 - 理由・ログのメール・長いトークン・電話番号らしい数字は伏せる。同じエラーは1分間に1回だけ送る
 - 送信の失敗でアプリを止めない
 
+## 法務リンク（プライバシーポリシー・利用規約）
+
+文面はキットに含めず、アプリが公開した文書へのリンクだけを設定画面に出す。専門家の確認の手順は
+[`docs/法務文書_確認用チェックリスト.md`](docs/法務文書_確認用チェックリスト.md)。
+
+```dart
+SettingsScreen(
+  appName: '…',
+  legal: const LegalLinks(privacyPolicyUrl: 'https://…/privacy', termsUrl: 'https://…/terms'),
+  onOpenLink: (uri) => launchUrl(uri, mode: LaunchMode.externalApplication),
+)
+```
+
 ## データ削除の窓口
 
 「データを削除」（ストアの審査・プライバシー対応で求められる）。消す対象を `DataEraser` で並べる。
