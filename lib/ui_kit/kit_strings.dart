@@ -13,6 +13,12 @@ class KitStrings {
   const KitStrings({
     required this.languageCode,
     required this.reviewEnjoyTitle,
+    required this.updateRequiredTitle,
+    required this.updateRequiredBody,
+    required this.updateAvailableTitle,
+    required this.updateAvailableBody,
+    required this.updateNow,
+    required this.updateLater,
     required this.reviewYes,
     required this.reviewNo,
     required this.reviewLater,
@@ -134,6 +140,12 @@ class KitStrings {
   /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
   final String languageCode;
   final String reviewEnjoyTitle;
+  final String updateRequiredTitle;
+  final String updateRequiredBody;
+  final String updateAvailableTitle;
+  final String updateAvailableBody;
+  final String updateNow;
+  final String updateLater;
   final String reviewYes;
   final String reviewNo;
   final String reviewLater;
@@ -260,6 +272,12 @@ class KitStrings {
   KitStrings copyWith({
     String? languageCode,
     String? reviewEnjoyTitle,
+    String? updateRequiredTitle,
+    String? updateRequiredBody,
+    String? updateAvailableTitle,
+    String? updateAvailableBody,
+    String? updateNow,
+    String? updateLater,
     String? reviewYes,
     String? reviewNo,
     String? reviewLater,
@@ -380,6 +398,12 @@ class KitStrings {
       KitStrings(
       languageCode: languageCode ?? this.languageCode,
       reviewEnjoyTitle: reviewEnjoyTitle ?? this.reviewEnjoyTitle,
+      updateRequiredTitle: updateRequiredTitle ?? this.updateRequiredTitle,
+      updateRequiredBody: updateRequiredBody ?? this.updateRequiredBody,
+      updateAvailableTitle: updateAvailableTitle ?? this.updateAvailableTitle,
+      updateAvailableBody: updateAvailableBody ?? this.updateAvailableBody,
+      updateNow: updateNow ?? this.updateNow,
+      updateLater: updateLater ?? this.updateLater,
       reviewYes: reviewYes ?? this.reviewYes,
       reviewNo: reviewNo ?? this.reviewNo,
       reviewLater: reviewLater ?? this.reviewLater,
@@ -501,6 +525,12 @@ class KitStrings {
   static const ja = KitStrings(
     languageCode: 'ja',
     reviewEnjoyTitle: 'アプリを楽しんでいますか？',
+    updateRequiredTitle: 'アップデートが必要です',
+    updateRequiredBody: 'このバージョンはご利用いただけません。最新版にアップデートしてください。',
+    updateAvailableTitle: '新しいバージョンがあります',
+    updateAvailableBody: '最新版にアップデートできます。',
+    updateNow: 'アップデート',
+    updateLater: 'あとで',
     reviewYes: 'はい',
     reviewNo: 'いいえ',
     reviewLater: 'あとで',
@@ -640,6 +670,12 @@ class KitStrings {
   static const en = KitStrings(
     languageCode: 'en',
     reviewEnjoyTitle: 'Are you enjoying the app?',
+    updateRequiredTitle: 'Update required',
+    updateRequiredBody: 'This version is no longer supported. Please update to the latest version.',
+    updateAvailableTitle: 'A new version is available',
+    updateAvailableBody: 'You can update to the latest version.',
+    updateNow: 'Update',
+    updateLater: 'Later',
     reviewYes: 'Yes',
     reviewNo: 'Not really',
     reviewLater: 'Later',

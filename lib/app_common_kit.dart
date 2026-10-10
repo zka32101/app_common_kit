@@ -27,6 +27,7 @@ export 'ui_kit/settings_screen.dart';
 export 'review/review_backend.dart';
 export 'review/review_prompt.dart';
 export 'review/review_pre_prompt.dart';
+export 'update/app_update.dart';
 export 'ui_kit/kit_strings.dart';
 export 'ui_kit/lab_strings.dart';
 export 'ui_kit/choice_tile.dart';
