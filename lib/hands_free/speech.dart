@@ -1,7 +1,7 @@
 import 'hands_free_settings.dart';
 
-/// 音声合成の窓口。端末標準の読み上げ（`flutter_tts` など）をアプリが実装して渡す。
-/// キットは音声のプラグインに依存しない。
+/// 音声合成の窓口。既定の実体は端末標準の読み上げ（[FlutterTtsSpeechBackend]）。
+/// 別の実装を使うときは `speechBackendProvider` を上書きする。
 abstract class SpeechBackend {
   /// [text] を読み上げる。[rate] は 1.0 が標準。
   Future<void> speak(String text, {double rate = 1.0});

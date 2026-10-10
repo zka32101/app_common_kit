@@ -92,6 +92,19 @@ ja/en 以外の言語を、アプリ側から足せるようにした。追加�
 - `MascotLines.forTone(custom:)`
 - README に「言語を足す」手順を追加（あわせて、欠けていた「構成」の見出しを戻した）
 
+## [0.25.0] - 2026-10-10
+
+ながら学習モードの音声読み上げの実体と、選択式の表示をキットに移す。追加のみで、既存 API に破壊的変更はない。
+**依存の追加**: `flutter_tts: ^4.0.2`（これまで各アプリが個別に持っていた）。
+
+### 追加
+- `FlutterTtsSpeechBackend`: 端末標準の音声合成による [SpeechBackend]（3アプリで同一だったもの）
+- `speechBackendProvider` / `handsFreeSpeakerProvider`: 読み上げの窓口と、設定に従う読み上げ。テストでは `speechBackendProvider` を [FakeSpeechBackend] で上書きする
+- `HandsFreeChoiceBody`: 選択式の問題のながら学習表示（問題が変わるたびに自動で読み上げ）
+
+### 変更
+- `SpeechBackend` の説明を更新（キットは音声のプラグインに依存しない、から変更）
+
 ## [0.24.0] - 2026-10-09
 
 アプリごとに重複していた設定タブの部品を共通化する。追加のみで、既存 API に破壊的変更はない。
