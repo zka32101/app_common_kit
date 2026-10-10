@@ -51,3 +51,4 @@ export 'ui_kit/term_map.dart';
 export 'crash/crash_reporter.dart';
 export 'privacy/data_deletion.dart';
 export 'legal/legal_links.dart';
+export 'feedback_effects/answer_feedback.dart';

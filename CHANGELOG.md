@@ -2,6 +2,13 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.9.0]
+
+### 追加
+- 解答時の音と触覚の共通の窓口 `AnswerFeedback`（`correct` / `incorrect` / `badgeUnlocked` / `combo` / `tap`）。`SoundBackend`（音の再生。`audioplayers` などでアプリが実装。キットは音声プラグインに依存しない）、`HapticBackend`（既定 `SystemHapticBackend`）、`Fake*`、`answerFeedbackProvider`
+- 音・触覚は個別に切れる／音量は 0〜1 に収める（既定 0.7）／音源の未配置・非対応の端末でも例外を出さない／`sound` が null なら触覚だけ
+- 音源（ファイル）はキットに含めない（アプリが持つ）
+
 ## [1.8.0]
 
 ### 追加
