@@ -11,6 +11,7 @@
   - `UkalabShell`・`CoinBreakdownCard`・`ReadinessProgressCard`・`TeachMascot`
   - マスコットの画像（`assets/mascot/`）
 - `KitStringsScope` から `mascotLines` を削除（推しのセリフは `ukalab_core` の `UkalabScope` で渡す）
+- アイコン生成（`tools/icon_gen`）も `ukalab_core` へ移した（うかラボのアプリアイコン用で、色を `UkalabPalette` から読むため）。CI の `icons` ジョブもコア側へ
 - 旧コードは `v0.30.0` のタグに残る
 
 ### 変更なし

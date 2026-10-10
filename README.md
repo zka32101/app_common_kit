@@ -437,25 +437,6 @@ HandsFreeQuestionLayout(
 - 設定: 有効／問題を読む／解説を読む／読み上げの速さ（0.5〜1.5）。保存先は `SharedPreferencesHandsFreeStore(appId)`
 - 数式・図の読み上げは対象外（問題文・解説の文字だけ）。読ませたくない部分は、アプリ側で読み上げ用の文を別に渡す
 
-## アイコン生成（tools/icon_gen）
-
-共通テンプレート（上段「うかラボ」／中央にシンボル／下部に試験名。組織ロゴ・✓バッジなし）で、データから量産する。
-
-```bash
-pip install -r tools/icon_gen/requirements.txt
-python tools/icon_gen/icon_gen.py --spec tools/icon_gen/specs/sample.json --out build/icons
-python tools/icon_gen/check_icons.py --spec tools/icon_gen/specs/sample.json --out build/icons
-```
-
-- 定義（JSON）: `{"id": 資格ID, "short": 試験名の短縮, "symbol": symbols/ のファイル名}`。資格ID（例: `g_kentei`）
-- シンボルは白一色の SVG（viewBox `-50 -50 100 100`）を `tools/icon_gen/symbols/` に置く。中抜きの色が必要なら `__BG__`（背景色に置換）
-- 出力: `<id>_1024.png`、`<id>_fg.png`／`<id>_bg.png`（Android adaptive。前景は中央66%以内）、`<id>_small_1024.png`（最小サイズ用）
-- 日本語の太字フォントが必要（Windows は游ゴシック、CI は fonts-noto-cjk）。`--font` で指定もできる
-- AI 画像は使わない。試験団体のロゴ・「公式」「認定」の文字は入れない
-- シンボルの最終デザインは未決（サンプルは仮）
-- 実際のアプリ用の定義は `tools/icon_gen/specs/ukalab_apps.json`（今は `bike_license` のみ。シンボル `motorcycle` は仮のデザイン）。アプリのアイコンを更新するときは、これで生成して `<id>_1024.png`・`<id>_fg.png`・`<id>_bg.png` を使う
-
-
 ## 全国平均点・偏差値の匿名集計（決定32）
 
 `ExamStatsService` は模擬試験結果を匿名で集計し、全国平均点・偏差値を結果画面に表示するための抽象。
