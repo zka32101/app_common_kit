@@ -326,6 +326,25 @@ final crash = CrashReporter(MyCrashBackend())..install(); // runApp の前に
 - 理由・ログのメール・長いトークン・電話番号らしい数字は伏せる。同じエラーは1分間に1回だけ送る
 - 送信の失敗でアプリを止めない
 
+## データ削除の窓口
+
+「データを削除」（ストアの審査・プライバシー対応で求められる）。消す対象を `DataEraser` で並べる。
+
+```dart
+SettingsScreen(
+  appName: '…',
+  dataDeletion: DataDeletion([
+    CallbackEraser('account', deleteAccountOnServer), // サーバー側（あれば）
+    SharedPreferencesEraser(prefixes: ['myapp_']),    // 端末内
+  ]),
+  onDataDeleted: (r) => restartApp(),                 // 初期画面へ戻す等はアプリ側
+)
+```
+
+- 確認で「元に戻せない」のチェックを入れるまで削除できない
+- ひとつ失敗しても残りを続ける（結果は `DeletionResult`）。サーバー削除が失敗したら端末内を残したいときは `stopOnFailure: true` と、サーバー側を先に並べる
+- 文言は ja・en・zh・zh-Hant・ko（機械翻訳の下書きを含む）。画面は `KitStrings.languageCode` に合わせる
+
 ## 機能3: 権利管理（Entitlement）
 
 権利名は `noads`（広告なし・買い切り）と `premium`（期間付き／買い切り）。どちらかを持てば `adsHidden == true`。

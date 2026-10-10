@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../entitlement/purchase_section.dart';
 import '../hands_free/hands_free_settings.dart';
+import '../privacy/data_deletion.dart';
 import '../theme/theme_mode_store.dart';
 import '../widgets/feedback_form_page.dart';
 import 'exam_date_tile.dart';
@@ -29,6 +30,7 @@ class SettingsLanguage {
 /// | 片手・ながら学習 | [showHandsFree]（既定 true）。`handsFreeStoreProvider` の override が要る |
 /// | ご意見・不具合報告 | [showFeedback]（既定 true） |
 /// | 学習の引き継ぎ | [onTransfer] を渡す（画面はアプリ側が出す） |
+/// | データを削除 | [dataDeletion] を渡す（確認と削除はキットが行う） |
 /// | このアプリについて | 常に出す（[disclaimer] があれば表示する） |
 ///
 /// アプリ固有の項目は [extraSections] に足す（[SettingsSection] を使うと見出しがそろう）。
@@ -62,6 +64,8 @@ class SettingsScreen extends ConsumerWidget {
     this.onExamDateChanged,
     this.showFeedback = true,
     this.onTransfer,
+    this.dataDeletion,
+    this.onDataDeleted,
     this.disclaimer,
     this.extraSections = const [],
   });
@@ -101,6 +105,12 @@ class SettingsScreen extends ConsumerWidget {
 
   /// 渡すと「学習の引き継ぎ」の欄を出す。押したら、アプリ側が引き継ぎの画面を開く。
   final VoidCallback? onTransfer;
+
+  /// 渡すと「データを削除」の欄を出す。確認 → 削除 → 結果の通知までをキットが行う。
+  final DataDeletion? dataDeletion;
+
+  /// 削除が済んだ（失敗を含む）ときに呼ばれる。初期画面へ戻す等はアプリ側で行う。
+  final ValueChanged<DeletionResult>? onDataDeleted;
 
   /// 「このアプリについて」に出す免責の文面（試験団体と無関係であること、など）。
   final String? disclaimer;
@@ -146,6 +156,19 @@ class SettingsScreen extends ConsumerWidget {
           trailing: const Icon(Icons.chevron_right),
           onTap: onTransfer,
         ),
+      if (dataDeletion != null)
+        Builder(builder: (context) {
+          final d = DataDeletionStrings.forCode(s.languageCode);
+          return ListTile(
+            leading: const Icon(Icons.delete_outline),
+            title: Text(d.menu),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () async {
+              final r = await showDataDeletionFlow(context, dataDeletion!, strings: d);
+              if (r != null) onDataDeleted?.call(r);
+            },
+          );
+        }),
       ListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(s.settingsAbout),
