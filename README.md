@@ -313,6 +313,19 @@ npm test        # 指紋・Issue の組み立てなどの単体テスト
 実際の GitHub Issue 作成の動作確認は、Firebase Emulator Suite 上で
 `feedback` コレクションにドキュメントを作成して確認する。
 
+## クラッシュ収集の窓口
+
+`CrashReporter`（分析の `Analytics` と同じ作り）。送り先（Crashlytics・Sentry など）はアプリが `CrashBackend` を実装して渡す。
+
+```dart
+final crash = CrashReporter(MyCrashBackend())..install(); // runApp の前に
+// ProviderScope(overrides: [crashReporterProvider.overrideWithValue(crash)], ...)
+```
+
+- 同意が無い・使わないときは `backend` を null（何もしない）
+- 理由・ログのメール・長いトークン・電話番号らしい数字は伏せる。同じエラーは1分間に1回だけ送る
+- 送信の失敗でアプリを止めない
+
 ## 機能3: 権利管理（Entitlement）
 
 権利名は `noads`（広告なし・買い切り）と `premium`（期間付き／買い切り）。どちらかを持てば `adsHidden == true`。
