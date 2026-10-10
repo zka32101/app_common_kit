@@ -38,15 +38,9 @@ final _catalog = <String, Widget Function()>{
   'StreakBadge': () => _body(const Column(children: [StreakBadge(days: 3), StreakBadge(days: 0)])),
   'ProgressRing': () => _body(const ProgressRing(value: 0.8, label: '習得度')),
   'ExplanationPanel': () => _body(const ExplanationPanel(body: '解説の本文です。', sourceRef: '第1条', checkedAt: '2026-10-09')),
-  'CoinBreakdownCard': () => _body(CoinBreakdownCard(grants: [
-        CoinGrant(CoinEvent.newQuestion('q1'), 5),
-        CoinGrant(CoinEvent.mockPass('m1'), 50),
-      ])),
   'ExamDateTile': () => _body(ExamDateTile(date: DateTime(2026, 11, 22), onChanged: (_) {})),
   'PurchaseSection': () => _body(const PurchaseSection()),
   'FeedbackFormPage': () => const FeedbackFormPage(appName: 'test'),
-  'WardrobeScreen': () => const WardrobeScreen(cert: UkalabCert.bikeLicense),
-  'UkalabOshiCard': () => _body(const UkalabOshiCard(cert: UkalabCert.bikeLicense, stage: MascotStage.lv1, appId: 'a11y')),
   'SettingsScreen': () => SettingsScreen(
         appName: 'test',
         appVersion: '1.0.0',
@@ -57,7 +51,6 @@ final _catalog = <String, Widget Function()>{
         languageCode: 'ja',
         onLanguageChanged: (_) {},
       ),
-  'UkalabShell': () => UkalabShell(pages: [for (var i = 0; i < 5; i++) Center(child: Text('page $i'))]),
 };
 
 /// 部品を置く台。Flutter の検査は、画面の端に接している部品を「スクロールで一部が隠れているかも」
@@ -74,13 +67,9 @@ Widget _app(Widget page, {required KitStrings strings, required double scale, re
       EntitlementOffer(id: 'noads', productId: 'p_noads', title: '広告非表示', priceString: '¥480'),
     ],
   );
-  final coin = CoinService(store: InMemoryCoinStore(), shop: OutfitCatalog.shopItems([UkalabCert.bikeLicense]));
-  final outfit = OutfitService(store: InMemoryOutfitStore());
   return ProviderScope(
     overrides: [
       entitlementServiceProvider.overrideWithValue(service),
-      coinServiceProvider.overrideWithValue(coin),
-      outfitServiceProvider.overrideWithValue(outfit),
       handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
     ],
     child: MaterialApp(

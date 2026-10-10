@@ -4,15 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // 実データの保存先はアプリごとに違うので、example はメモリ上のものを渡す。
-  final coin = CoinService(
-    store: InMemoryCoinStore(),
-    shop: OutfitCatalog.shopItems([UkalabCert.bikeLicense]),
-  );
-  await coin.load();
-  await coin.grant(CoinEvent.passReport(UkalabCert.bikeLicense.id)); // 衣装を買える残高
-  final outfit = OutfitService(store: InMemoryOutfitStore());
-  await outfit.load();
   // 購入欄の確認用。実際の課金は使わず、購入するとすぐ反映されるモック。
   final entitlement = FakeEntitlementService(
     availableOffers: const [
@@ -23,8 +14,6 @@ Future<void> main() async {
   runApp(ProviderScope(
     overrides: [
       entitlementServiceProvider.overrideWithValue(entitlement),
-      coinServiceProvider.overrideWithValue(coin),
-      outfitServiceProvider.overrideWithValue(outfit),
       handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
     ],
     child: const ExampleApp(),
@@ -79,14 +68,6 @@ class _ExampleAppState extends State<ExampleApp> {
             const SizedBox(height: 8),
             const StreakBadge(days: 0),
             const SizedBox(height: 16),
-            CoinBreakdownCard(
-              grants: [
-                CoinGrant(CoinEvent.newQuestion('q1'), 5),
-                CoinGrant(CoinEvent.newQuestion('q2'), 5),
-                CoinGrant(CoinEvent.mockPass('m1'), 50),
-              ],
-            ),
-            const SizedBox(height: 16),
             ResultSummary(
               correct: 8,
               total: 10,
@@ -95,12 +76,6 @@ class _ExampleAppState extends State<ExampleApp> {
               onClose: () {},
             ),
             SizedBox(height: 200, child: ErrorState(onRetry: () {})),
-            const SizedBox(height: 16),
-            UkalabOshiCard(
-              cert: UkalabCert.bikeLicense,
-              stage: MascotStage.lv1,
-              appId: 'example',
-            ),
             const SizedBox(height: 16),
             // 積んだ画面（Navigator の上の Scope から文言が届くかの確認）。
             _NavButtons(en: _en, onLanguage: (code) => setState(() => _en = code == 'en')),
@@ -126,11 +101,6 @@ class _NavButtons extends StatelessWidget {
           FilledButton(
             onPressed: () => _push(context, const FeedbackFormPage(appName: 'example')),
             child: const Text('Open feedback'),
-          ),
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: () => _push(context, const WardrobeScreen(cert: UkalabCert.bikeLicense)),
-            child: const Text('Open wardrobe'),
           ),
           const SizedBox(height: 8),
           FilledButton(

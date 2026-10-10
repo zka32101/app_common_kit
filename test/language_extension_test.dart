@@ -2,12 +2,11 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _app(Widget child, {KitStrings? strings, LabStrings? labs, Map<MascotTone, MascotLines>? lines}) =>
+Widget _app(Widget child, {KitStrings? strings, LabStrings? labs}) =>
     MaterialApp(
       home: KitStringsScope(
         strings: strings ?? KitStrings.ja,
         labs: labs,
-        mascotLines: lines,
         child: Scaffold(body: child),
       ),
     );
@@ -70,23 +69,6 @@ void main() {
       expect(find.text(LabStrings.en.progressDefault), findsOneWidget);
     });
 
-    testWidgets('mascotLines を渡せば推しのセリフが差し替わる', (tester) async {
-      final lines = {
-        MascotTone.gentle: const MascotLines({
-          MascotSituation.greeting: ['你好'],
-        }),
-      };
-      late MascotLines resolved;
-      await tester.pumpWidget(_app(
-        Builder(builder: (c) {
-          resolved = MascotLines.forTone(MascotTone.gentle, custom: KitStringsScope.mascotLinesOf(c));
-          return const SizedBox();
-        }),
-        lines: lines,
-      ));
-      expect(resolved.pick(MascotSituation.greeting), '你好');
-      // 渡さなければ既定
-      expect(MascotLines.forTone(MascotTone.gentle).pick(MascotSituation.greeting), isNot('你好'));
-    });
   });
 }
+

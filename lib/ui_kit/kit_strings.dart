@@ -1,7 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../mascot/mascot_lines.dart';
-import '../mascot/mascot_models.dart';
 import 'lab_strings.dart';
 
 /// キット内蔵ウィジェットの既定文言（日本語・英語）。
@@ -898,7 +896,6 @@ String _enAboutVersion(String v) => 'Version $v';
 /// KitStringsScope(
 ///   strings: zh,          // KitStrings（画面の文言）
 ///   labs: zhLabs,         // LabStrings（ラボ系ウィジェットの文言）
-///   mascotLines: zhLines, // 推しのセリフ（口調 → セリフ集）
 ///   child: ...,
 /// )
 /// ```
@@ -907,7 +904,6 @@ class KitStringsScope extends InheritedWidget {
     super.key,
     required this.strings,
     this.labs,
-    this.mascotLines,
     required super.child,
   });
 
@@ -916,20 +912,11 @@ class KitStringsScope extends InheritedWidget {
   /// ラボ系ウィジェットの文言。null なら [LabStrings.ja]／[LabStrings.en]。
   final LabStrings? labs;
 
-  /// 推しのセリフ。null、または口調が無ければ、既定のセリフ集。
-  final Map<MascotTone, MascotLines>? mascotLines;
-
   /// 最も近い [KitStringsScope] の [labs]。無ければ null。
   static LabStrings? labsOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<KitStringsScope>()?.labs;
 
-  /// 最も近い [KitStringsScope] の [mascotLines]。無ければ null。
-  static Map<MascotTone, MascotLines>? mascotLinesOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<KitStringsScope>()?.mascotLines;
-
   @override
   bool updateShouldNotify(KitStringsScope old) =>
-      strings != old.strings ||
-      labs != old.labs ||
-      mascotLines != old.mascotLines;
+      strings != old.strings || labs != old.labs;
 }

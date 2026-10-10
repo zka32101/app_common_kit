@@ -16,22 +16,16 @@ const T = {
   ja: {
     settings: ['設定', '表示モード', '片手・ながら学習', 'ご意見・不具合報告'],
     settingsTheme: ['ダーク'],
-    home: ['今日から始めよう', '合計', 'もう一度試す'],
+    home: ['今日から始めよう', 'もう一度試す'],
     feedback: ['ご意見・不具合報告', '不具合報告', '改善要望', '送信する'],
-    wardrobe: ['着替え・ショップ', '合格したときに解放されます', '学習コイン'],
-    menuButton: '推しのメニュー',
-    menuItems: ['推しを選ぶ', '試験の結果を報告'],
     correct: '正解',
     incorrect: '不正解',
   },
   en: {
     settings: ['Settings', 'Appearance', 'One-handed study', 'Feedback & bug reports'],
     settingsTheme: ['Dark'],
-    home: ['Start today', 'Total', 'Try again'],
+    home: ['Start today', 'Try again'],
     feedback: ['Feedback & bug reports', 'Bug report', 'Feature request', 'Send'],
-    wardrobe: ['Outfits & shop', 'Unlocked when you pass', 'Study coins'],
-    menuButton: 'Companion menu',
-    menuItems: ['Choose companion', 'Report exam result'],
     correct: 'Correct',
     incorrect: 'Incorrect',
   },
@@ -91,12 +85,6 @@ const T = {
     await page.screenshot({ path: `${shots}/${lang}-feedback.png` });
     await back();
 
-    // 着替え・ショップ
-    await click('button', 'Open wardrobe');
-    for (const s of t.wardrobe) check(`[${lang}] 着替えに「${s}」`, await waitText(s));
-    await page.screenshot({ path: `${shots}/${lang}-wardrobe.png` });
-    await back();
-
     // 片手モード: 不正解の選択肢を押すと、押した方が不正解・正解の方が正解と出る
     await click('button', 'Open hands-free');
     check(`[${lang}] 片手モードの問題文`, await waitText('1 + 1'));
@@ -143,15 +131,6 @@ const T = {
     }
     await back();
 
-    // 推しカードのメニュー → 着替え・ショップ（カードの文言が積んだ画面に引き継がれる）
-    await click('button', t.menuButton);
-    for (const s of t.menuItems) {
-      check(`[${lang}] 推しメニューに「${s}」`, (await page.getByRole('menuitem', { name: s }).count()) > 0);
-    }
-    await click('menuitem', t.wardrobe[0]);
-    check(`[${lang}] 推しメニューから着替え画面（「${t.wardrobe[0]}」）`, await waitText(t.wardrobe[1]));
-    await page.screenshot({ path: `${shots}/${lang}-oshi-wardrobe.png` });
-    await back();
   }
 
   check('ページエラーなし', errors.length === 0);
