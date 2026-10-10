@@ -48,3 +48,5 @@ export 'stats/fake_exam_stats_service.dart';
 export 'stats/firebase_exam_stats_service.dart';
 export 'ui_kit/stats_compare.dart';
 export 'ui_kit/term_map.dart';
+export 'speech/flutter_tts_speech_backend.dart';
+export 'speech/speech_providers.dart';

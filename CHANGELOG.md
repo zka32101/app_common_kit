@@ -2,6 +2,12 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.5.0]
+
+### 追加
+- `FlutterTtsSpeechBackend`（端末標準の読み上げ。`language` で言語を変えられる、既定 `ja-JP`）、`speechBackendProvider`、`handsFreeSpeakerProvider`: 4アプリで同一だった実装をキットへ。アプリ側の同名ファイルは削除してキットを使う
+- 依存に `flutter_tts` を追加
+
 ## [1.4.0]
 
 ### 追加
