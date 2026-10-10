@@ -2,6 +2,13 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.6.0]
+
+### 追加
+- クラッシュ収集の共通の窓口 `CrashReporter` / `CrashBackend` / `FakeCrashBackend` / `crashReporterProvider`（`app_common_kit.dart` から）。送り先（Crashlytics・Sentry など）はアプリが `CrashBackend` を実装して渡す（キットはプラグインに依存しない）
+- 個人情報の混入を防ぐ（メール・長いトークン・電話番号らしい数字を伏せる）、同じエラーを1分間は1回だけ送る、送信の失敗でアプリを止めない、`backend` を null にすれば何もしない（同意前・使わないアプリ）
+- `install()`: `FlutterError.onError` と `PlatformDispatcher.onError` を窓口へ流す（既存のハンドラは先に呼ぶ）
+
 ## [1.5.0]
 
 ながら学習モードの音声読み上げの実体と、選択式の表示をキットに移す。追加のみで、既存 API に破壊的変更はない。
