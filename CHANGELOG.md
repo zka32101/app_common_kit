@@ -2,6 +2,12 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.30.0]
+
+### 追加
+- フィードバックの Issue 自動化を強化（`functions/`）: 同じ内容の報告は既存 Issue にコメントして重複を防ぐ（指紋）、`app:<アプリ名>` ラベル、メタ情報の表、本文の長さ制限。単体テストを追加し CI で実行
+- `templates/autofix-issue.yml`: Issue に `autofix` ラベルを付けると Claude Code が修正 PR を作る GitHub Actions のテンプレート
+
 ## [0.29.0]
 
 ### 追加

@@ -5,6 +5,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "lint": "eslint src --ext .ts",
+    "test": "tsc && node --test test/feedback-issue.test.js",
     "deploy": "firebase deploy --only functions"
   },
   "engines": {
