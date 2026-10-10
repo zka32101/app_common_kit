@@ -2,6 +2,20 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.5.0]
+
+ながら学習モードの音声読み上げの実体と、選択式の表示をキットに移す。追加のみで、既存 API に破壊的変更はない。
+**別の入口**: `import 'package:app_common_kit/hands_free_tts.dart';`（`app_common_kit.dart` からは出さない。アプリが同じ名前の部品を自前で持っていても、名前が衝突しない。アプリは自前のコピーを消して、この入口に切り替える）
+**依存の追加**: `flutter_tts: ^4.0.2`（これまで各アプリが個別に持っていた）。
+
+### 追加
+- `FlutterTtsSpeechBackend`: 端末標準の音声合成による [SpeechBackend]（3アプリで同一だったもの）
+- `speechBackendProvider` / `handsFreeSpeakerProvider`: 読み上げの窓口と、設定に従う読み上げ。テストでは `speechBackendProvider` を [FakeSpeechBackend] で上書きする
+- `HandsFreeChoiceBody`: 選択式の問題のながら学習表示（問題が変わるたびに自動で読み上げ）
+
+### 変更
+- `SpeechBackend` の説明を更新（キットは音声のプラグインに依存しない、から変更）
+
 ## [1.4.0]
 
 ### 追加

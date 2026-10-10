@@ -1,6 +1,6 @@
 name: app_common_kit
 description: "Petit Works Apps 全体で使う共通パッケージ（フィードバック機能など）。小学コレシリーズに限らない全アプリが対象。"
-version: 1.4.0
+version: 1.5.0
 publish_to: 'none'
 
 environment:
@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.6.1
+  flutter_tts: ^4.0.2
   shared_preferences: ^2.3.0
   uuid: ^4.0.0
   purchases_flutter: ">=9.0.0 <11.0.0"
