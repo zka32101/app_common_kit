@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
 
-/// 起動時画面の下部に出す、組織（Your Wish）のロゴ。全アプリ共通。
+/// 起動時画面の下部に出す、組織のロゴ。
 ///
 /// 起動中の読み込み画面（[Scaffold] の body など）の一番下に置く。
-/// 画像はキットに同梱（`assets/branding/yourwish_logo.png`）。
+/// 既定はキット同梱の画像（`assets/branding/yourwish_logo.png`）。
+/// [logoAsset] を渡すと、自分の組織のロゴに差し替えられる（[logoPackage] は
+/// 画像が別パッケージにあるときだけ指定）。
 class OrgBrandingFooter extends StatelessWidget {
-  const OrgBrandingFooter({super.key, this.logoHeight = 72});
+  const OrgBrandingFooter({
+    super.key,
+    this.logoHeight = 72,
+    this.logoAsset,
+    this.logoPackage,
+    this.semanticsLabel = 'Your Wish',
+  });
 
   final double logoHeight;
+
+  /// 差し替えるロゴのアセットパス。null ならキット同梱のロゴ。
+  final String? logoAsset;
+
+  /// [logoAsset] があるパッケージ名。null ならアプリ自身（[logoAsset] 指定時）。
+  final String? logoPackage;
+
+  /// 読み上げ用のラベル（組織名）。
+  final String semanticsLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +33,10 @@ class OrgBrandingFooter extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 24),
         child: Semantics(
-          label: 'Your Wish',
+          label: semanticsLabel,
           child: Image.asset(
-            'assets/branding/yourwish_logo.png',
-            package: 'app_common_kit',
+            logoAsset ?? 'assets/branding/yourwish_logo.png',
+            package: logoAsset == null ? 'app_common_kit' : logoPackage,
             height: logoHeight,
             fit: BoxFit.contain,
           ),
@@ -41,6 +58,7 @@ class StartupSplash extends StatelessWidget {
     this.appIconAsset,
     this.backgroundColor,
     this.appIconSize = 112,
+    this.footer = const OrgBrandingFooter(),
   });
 
   /// 中央に出すもの。省略時は進行表示（[appIconAsset] があればアイコン+進行表示）。
@@ -55,6 +73,9 @@ class StartupSplash extends StatelessWidget {
 
   /// [appIconAsset] の一辺の大きさ。
   final double appIconSize;
+
+  /// 下部の組織ロゴ。自分の組織のロゴに替えるときに渡す。
+  final Widget footer;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +103,7 @@ class StartupSplash extends StatelessWidget {
       body: Column(
         children: [
           Expanded(child: Center(child: middle)),
-          const OrgBrandingFooter(),
+          footer,
         ],
       ),
     );

@@ -2,6 +2,15 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.4.0]
+
+### 追加
+- `OrgBrandingFooter` / `StartupSplash`: 組織ロゴを差し替えられる（`logoAsset`・`logoPackage`・`semanticsLabel`・`footer`）。既定は従来どおり
+- `SharedPreferencesHandsFreeStore(keyPrefix:)`: 保存キーの前置きを変えられる。既定は従来の `ukalab_hands_free_`（変えると保存済みの設定は読めない）
+
+### 変更
+- コメントの例から特定アプリの名前を除いた
+
 ## [1.3.0]
 
 ### 追加
