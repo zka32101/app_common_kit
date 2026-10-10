@@ -554,3 +554,11 @@ ref.read(analyticsProvider).log(AnalyticsEvents.studyComplete, {'cert': 'it_pass
 - 設定: Settings → Actions → General →「Allow GitHub Actions to create and approve pull requests」をオンにする。アプリの CI も PR で動かしたいときは `KIT_UPDATE_TOKEN`（PAT）を Secrets に入れる
 - 手動で試す: `python3 tools/kit_update/bump_kit_refs.py pubspec.yaml`
 
+## 互換チェック（マージ前に、アプリが壊れないか確かめる）
+
+`lib/`・`assets/`・`pubspec.yaml` を変える PR では、`compat` ワークフローが走る。使っている5つのアプリ（`ukalab_otsu4`・`ukalab_g_kentei`・`ukalab_boki`・`ukalab_seisei_ai_passport`・`ukalab_kanken`）の main に、この PR のコードを差し込み、`flutter pub get`・`analyze`（エラーのみ）・`test` を通す。アプリごとに結果が出るので、どのアプリが壊れるかが分かる。
+
+- 題名が `feat!:` のような破壊的変更（`!:` を含む）は、アプリ側の移行が要るので飛ばす
+- `ukalab_kanken` は、main のままでもテスト4件（`hands_free_wiring_test`）がローカルで失敗するため、テストは飛ばして解析のエラーだけを見る
+- アプリを足したら、`.github/workflows/compat.yml` の matrix に1行足す
+

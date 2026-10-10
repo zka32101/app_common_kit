@@ -1,0 +1,57 @@
+# 共通基盤（このパッケージ）の変更が、使っているアプリを壊さないかを、マージ前に確かめる。
+#
+# PR のコードを各アプリ（main）に差し込み（dependency_overrides）、flutter pub get・analyze・test を通す。
+# 名前の衝突・import の漏れ・挙動の変化を、マージ前に見つけるためのもの。
+#
+#  - 破壊的変更の PR（題名が `feat!:` などの `!:`）は、アプリ側の移行が要るので飛ばす
+#  - 解析は、エラーだけを見る（info・warning は、各アプリの既存の指摘で赤くならないように）
+#  - 失敗は、アプリごとに赤く出る（どのアプリが壊れるかが分かる）
+#  - アプリを足したら、下の matrix に1行足す
+name: compat
+
+on:
+  pull_request:
+    paths:
+      - 'lib/**'
+      - 'assets/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/compat.yml'
+
+jobs:
+  apps:
+    if: ${{ !contains(github.event.pull_request.title, '!:') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { app: ukalab_otsu4, flutter: '3.35.5' }
+          - { app: ukalab_g_kentei, flutter: '3.35.5' }
+          - { app: ukalab_boki, flutter: '3.35.5' }
+          - { app: ukalab_seisei_ai_passport, flutter: '3.35.5' }
+          # kanken は main のままでも、ながら学習のテスト4件（hands_free_wiring_test）が失敗する。直るまで、テストは飛ばして解析のエラーだけを見る
+          - { app: ukalab_kanken, flutter: '3.47.4', skip_test: true }
+    name: apps (${{ matrix.app }})
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: kit
+      - uses: actions/checkout@v4
+        with:
+          repository: zka32101/${{ matrix.app }}
+          path: app
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ matrix.flutter }}
+      - name: この PR のコードを差し込む
+        working-directory: app
+        run: |
+          printf 'dependency_overrides:\n  app_common_kit:\n    path: ../kit\n' > pubspec_overrides.yaml
+      - working-directory: app
+        run: flutter pub get
+      - working-directory: app
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+      - working-directory: app
+        if: ${{ !matrix.skip_test }}
+        run: flutter test
