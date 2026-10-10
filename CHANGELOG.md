@@ -2,6 +2,11 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.28.0]
+
+### 追加
+- 強制アップデート・お知らせ: `UpdatePolicy`（minVersion / latestVersion / storeUrl / message）、`UpdateBackend`（Remote Config 等をアプリ側で実装して渡す）、`FakeUpdateBackend`、`compareVersions` / `decideUpdate` / `checkForUpdate`、`promptForUpdate`（強制は閉じられない・任意は「あとで」可）。取得失敗は無視してアプリを止めない。ja/en 文言つき
+
 ## [0.27.0] - 2026-10-10
 
 アプリ内レビューを頼むタイミングの制御を追加。追加のみ。

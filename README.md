@@ -826,3 +826,19 @@ StoryModeWidget(
 
 どちらも保存キーをパッケージ非依存の固定文字列にしており、アプリごとに個別の名前空間指定は不要
 （各アプリはOS側で独立したストレージサンドボックスを持つため、キーの衝突は起きない）。
+
+## 強制アップデート・お知らせ
+
+配信側（Firebase Remote Config など）の値を `UpdateBackend` で返せば、起動時に1行で確認できる。キットは Remote Config に依存しない。
+
+```dart
+await promptForUpdate(
+  context,
+  backend: MyRemoteConfigUpdateBackend(), // UpdatePolicy(minVersion:, latestVersion:, storeUrl:, message:) を返す
+  currentVersion: appVersion,
+  openStore: (url) => launchUrl(Uri.parse(url ?? defaultStoreUrl)),
+);
+```
+
+- `minVersion` 未満 → 閉じられない強制ダイアログ / `latestVersion` 未満 → 「あとで」できる案内
+- 取得に失敗してもアプリは止めない（何も出さない）
