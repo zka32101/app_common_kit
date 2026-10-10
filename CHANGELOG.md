@@ -2,6 +2,11 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.29.0]
+
+### 追加
+- 分析イベントの共通窓口: `AnalyticsBackend`（Firebase Analytics 等をアプリ側で実装）、`FakeAnalyticsBackend`、共通イベント名 `AnalyticsEvents`、`Analytics`（イベント名・パラメータの検査、個人情報らしいキーの除外、100字切り詰め、25個上限、送信例外の握りつぶし）、`analyticsProvider`
+
 ## [0.28.0]
 
 ### 追加
