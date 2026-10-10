@@ -167,6 +167,13 @@ KitStringsScope(
 - `languageCode` は必ず自分の言語にする（`en` 以外の言語で `labs` / `mascotLines` を渡さないと、それらは日本語になる）
 - 推しのセリフは [`findForbiddenExpressions`](lib/mascot/mascot_lines.dart) の検査（責めない・煽らない）を、アプリ側のテストでも通すこと
 
+### 内蔵の言語
+
+画面の文言（`KitStrings`）は、ja・en・簡体字(`zh`)・繁体字(`zh-Hant`)・韓国語(`ko`) を内蔵している。`KitStrings.forLocale(locale)` が選ぶ（`zh_TW`・`zh_HK`・`zh_MO` は繁体字）。
+
+- zh・zh-Hant・ko は**機械翻訳の下書き**。公開前に、母語話者の確認が要る
+- ラボ系ウィジェットの文言（`LabStrings`）と推しのセリフ（`ukalab_core`）は、まだ ja/en のみ。これらは zh・ko では日本語で出る（次の段階で対応）
+
 ## 構成
 
 ```
