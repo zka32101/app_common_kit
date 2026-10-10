@@ -2,19 +2,6 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
-## [0.25.0] - 2026-10-09
-
-ja/en 以外の言語を、アプリ側から足せるようにした。追加のみ（既定の表示は変わらない）。
-
-> 注意: この変更は、0.24.0（`PurchaseSection`・`ExamDateTile`）と同じ番号で `main` に入ってしまった。`v0.24.0` のタグは `PurchaseSection` のコミットを指し、この変更は含まない。番号を 0.25.0 に直した。
-
-### 追加
-- `KitStrings.copyWith`・`LabStrings.copyWith`: 一部の文言だけ差し替えた複製（ほかの言語の土台にも使える）
-- `KitStrings.forLocale(locale, supported: {...})`: アプリが用意した言語を選べる（無い言語は従来どおり。en は英語、他は日本語）
-- `KitStringsScope(labs:, mascotLines:)`: ラボ系の文言と推しのセリフも差し込める。省略時は従来どおり言語に応じた ja/en
-- `MascotLines.forTone(custom:)`
-- README に「言語を足す」手順を追加（あわせて、欠けていた「構成」の見出しを戻した）
-
 ## [1.4.0]
 
 ながら学習モードの音声読み上げの実体と、選択式の表示をキットに移す。追加のみで、既存 API に破壊的変更はない。
@@ -115,6 +102,19 @@ ja/en 以外の言語を、アプリ側から足せるようにした。追加�
 
 ### 追加（テストのみ）
 - `test/accessibility_test.dart`: 主要な共通UI部品（17種）を、言語（ja/en）× 文字の大きさ（標準・200%）× 明暗で検査する。はみ出し（320dp も）・タップ領域（Android 48dp／iOS 44pt）・読み上げラベル・文字のコントラスト。検査自体が悪い部品を検知できることも確認する
+
+## [0.25.0] - 2026-10-09
+
+ja/en 以外の言語を、アプリ側から足せるようにした。追加のみ（既定の表示は変わらない）。
+
+> 注意: この変更は、0.24.0（`PurchaseSection`・`ExamDateTile`）と同じ番号で `main` に入ってしまった。`v0.24.0` のタグは `PurchaseSection` のコミットを指し、この変更は含まない。番号を 0.25.0 に直した。
+
+### 追加
+- `KitStrings.copyWith`・`LabStrings.copyWith`: 一部の文言だけ差し替えた複製（ほかの言語の土台にも使える）
+- `KitStrings.forLocale(locale, supported: {...})`: アプリが用意した言語を選べる（無い言語は従来どおり。en は英語、他は日本語）
+- `KitStringsScope(labs:, mascotLines:)`: ラボ系の文言と推しのセリフも差し込める。省略時は従来どおり言語に応じた ja/en
+- `MascotLines.forTone(custom:)`
+- README に「言語を足す」手順を追加（あわせて、欠けていた「構成」の見出しを戻した）
 
 ## [0.24.0] - 2026-10-09
 
