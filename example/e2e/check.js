@@ -31,6 +31,35 @@ const T = {
   },
 };
 
+// 内蔵の追加言語（簡体字・繁体字・韓国語）。設定画面の言語欄で切り替えて、画面の文言が変わることを確かめる。
+// 期待値は KitStrings の各言語の値（機械翻訳の下書き）。
+const MORE = {
+  zh: {
+    label: '简体中文',
+    home: ['从今天开始吧', '重试'],
+    settings: ['设置', '显示模式', '单手・边做边学', '意见反馈・问题报告'],
+    feedback: ['意见反馈・问题报告', '问题报告', '改进建议', '提交'],
+    correct: '正确',
+    incorrect: '错误',
+  },
+  'zh-Hant': {
+    label: '繁體中文',
+    home: ['從今天開始吧', '重試'],
+    settings: ['設定', '顯示模式', '單手・邊做邊學', '意見回饋・問題回報'],
+    feedback: ['意見回饋・問題回報', '問題回報', '改善建議', '送出'],
+    correct: '正確',
+    incorrect: '錯誤',
+  },
+  ko: {
+    label: '한국어',
+    home: ['오늘부터 시작해 봐요', '다시 시도'],
+    settings: ['설정', '화면 모드', '한 손・틈틈이 학습', '의견・오류 신고'],
+    feedback: ['의견・오류 신고', '오류 신고', '개선 요청', '보내기'],
+    correct: '정답',
+    incorrect: '오답',
+  },
+};
+
 (async () => {
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox'] });
   const page = await browser.newPage({
@@ -131,6 +160,33 @@ const T = {
     }
     await back();
 
+  }
+
+  // 追加言語。いまは英語。設定画面の言語欄から切り替える。
+  for (const [code, m] of Object.entries(MORE)) {
+    // 設定画面を開き、言語を選ぶ（選んだ言語で、設定画面そのものが切り替わる）
+    await click('button', 'Open settings');
+    await click('button', m.label);
+    for (const x of m.settings) check(`[${code}] 設定に「${x}」`, await waitText(x));
+    await page.screenshot({ path: `${shots}/${code}-settings.png` });
+    await back();
+
+    // ホーム（積んだ画面ではない、土台の画面にも届く）
+    for (const x of m.home) check(`[${code}] ホームに「${x}」`, await waitText(x));
+    await page.screenshot({ path: `${shots}/${code}-home.png` });
+
+    // フィードバック画面（積んだ画面に文言が届く）
+    await click('button', 'Open feedback');
+    for (const x of m.feedback) check(`[${code}] フィードバックに「${x}」`, await waitText(x));
+    await page.screenshot({ path: `${shots}/${code}-feedback.png` });
+    await back();
+
+    // 片手モード: 正誤の文言
+    await click('button', 'Open hands-free');
+    await click('button', '3');
+    check(`[${code}] 片手モードで「${m.incorrect}」`, await waitText(m.incorrect));
+    check(`[${code}] 片手モードで「${m.correct}」`, await waitText(m.correct));
+    await back();
   }
 
   check('ページエラーなし', errors.length === 0);

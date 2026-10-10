@@ -1,6 +1,6 @@
 // 共通UI部品のアクセシビリティを、まとめて機械的に確かめる。
 //
-// 次を、部品 × 言語（ja/en）× 文字の大きさ（標準・200%）× 明暗で確かめる。
+// 次を、部品 × 言語（ja・en・zh・zh-Hant・ko）× 文字の大きさ（標準・200%）× 明暗で確かめる。
 //  - 文字を200%に拡大しても、はみ出し（overflow）や例外が出ない。幅の狭い端末（320dp）でも
 //  - タップできるものは、タップ領域が Android 48dp・iOS 44pt 以上（Flutter 標準の検査）
 //  - タップできるものは、読み上げ用のラベルを持つ
@@ -107,7 +107,13 @@ Future<void> _pump(
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  final languages = {'ja': KitStrings.ja, 'en': KitStrings.en};
+  final languages = {
+    'ja': KitStrings.ja,
+    'en': KitStrings.en,
+    'zh': KitStrings.zhHans,
+    'zh-Hant': KitStrings.zhHant,
+    'ko': KitStrings.ko,
+  };
 
   group('文字を200%に拡大しても、はみ出さない', () {
     for (final e in _catalog.entries) {

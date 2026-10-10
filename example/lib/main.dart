@@ -20,6 +20,11 @@ Future<void> main() async {
   ));
 }
 
+/// 言語コード（`zh-Hant` を含む）から、`Locale` を作る。
+Locale _localeOf(String code) => code == 'zh-Hant'
+    ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant')
+    : Locale(code);
+
 class ExampleApp extends StatefulWidget {
   const ExampleApp({super.key});
 
@@ -28,7 +33,9 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  bool _en = false;
+  /// 選んでいる言語（ja・en・zh・zh-Hant・ko）。
+
+  String _code = 'ja';
 
   @override
   void initState() {
@@ -41,7 +48,7 @@ class _ExampleAppState extends State<ExampleApp> {
 
   @override
   Widget build(BuildContext context) {
-    final strings = _en ? KitStrings.en : KitStrings.ja;
+    final strings = KitStrings.forLocale(_localeOf(_code));
     return MaterialApp(
       title: 'app_common_kit example',
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
@@ -56,8 +63,8 @@ class _ExampleAppState extends State<ExampleApp> {
             const Center(child: Text('English')),
             Switch(
               key: const Key('lang-switch'),
-              value: _en,
-              onChanged: (v) => setState(() => _en = v),
+              value: _code == 'en',
+              onChanged: (v) => setState(() => _code = v ? 'en' : 'ja'),
             ),
           ],
         ),
@@ -78,7 +85,7 @@ class _ExampleAppState extends State<ExampleApp> {
             SizedBox(height: 200, child: ErrorState(onRetry: () {})),
             const SizedBox(height: 16),
             // 積んだ画面（Navigator の上の Scope から文言が届くかの確認）。
-            _NavButtons(en: _en, onLanguage: (code) => setState(() => _en = code == 'en')),
+            _NavButtons(code: _code, onLanguage: (code) => setState(() => _code = code)),
           ],
         ),
       ),
@@ -87,9 +94,9 @@ class _ExampleAppState extends State<ExampleApp> {
 }
 
 class _NavButtons extends StatelessWidget {
-  const _NavButtons({required this.en, required this.onLanguage});
+  const _NavButtons({required this.code, required this.onLanguage});
 
-  final bool en;
+  final String code;
   final ValueChanged<String> onLanguage;
 
   void _push(BuildContext context, Widget page) =>
@@ -109,7 +116,7 @@ class _NavButtons extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           FilledButton(
-            onPressed: () => _push(context, _SettingsDemo(en: en, onLanguage: onLanguage)),
+            onPressed: () => _push(context, _SettingsDemo(code: code, onLanguage: onLanguage)),
             child: const Text('Open settings'),
           ),
         ],
@@ -155,9 +162,9 @@ class _HandsFreeDemoState extends State<_HandsFreeDemo> {
 /// 設定タブ相当。共通の設定画面（[SettingsScreen]）に、状態（受験日・言語）を持たせて置く。
 /// 状態の保存は、本番ではアプリ側（ここではメモリ上）。
 class _SettingsDemo extends StatefulWidget {
-  const _SettingsDemo({required this.en, required this.onLanguage});
+  const _SettingsDemo({required this.code, required this.onLanguage});
 
-  final bool en;
+  final String code;
   final ValueChanged<String> onLanguage;
 
   @override
@@ -166,7 +173,7 @@ class _SettingsDemo extends StatefulWidget {
 
 class _SettingsDemoState extends State<_SettingsDemo> {
   DateTime? _examDate;
-  late String _lang = widget.en ? 'en' : 'ja';
+  late String _lang = widget.code;
 
   @override
   Widget build(BuildContext context) => SettingsScreen(
@@ -175,7 +182,13 @@ class _SettingsDemoState extends State<_SettingsDemo> {
         disclaimer: 'This is an example app.',
         examDate: _examDate,
         onExamDateChanged: (d) => setState(() => _examDate = d),
-        languages: const [SettingsLanguage('ja', '日本語'), SettingsLanguage('en', 'English')],
+        languages: const [
+          SettingsLanguage('ja', '日本語'),
+          SettingsLanguage('en', 'English'),
+          SettingsLanguage('zh', '简体中文'),
+          SettingsLanguage('zh-Hant', '繁體中文'),
+          SettingsLanguage('ko', '한국어'),
+        ],
         languageCode: _lang,
         onLanguageChanged: (c) {
           setState(() => _lang = c);

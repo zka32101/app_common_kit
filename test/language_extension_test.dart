@@ -31,12 +31,13 @@ void main() {
   group('forLocale', () {
     final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计');
 
-    test('アプリが用意した言語を選べる。無い言語は従来どおり（en→英語、他→日本語）', () {
+    test('アプリが用意した言語を選べる。内蔵に無い言語は従来どおり日本語', () {
       final supported = {'zh': zh};
       expect(KitStrings.forLocale(const Locale('zh', 'CN'), supported: supported), same(zh));
       expect(KitStrings.forLocale(const Locale('en'), supported: supported), same(KitStrings.en));
       expect(KitStrings.forLocale(const Locale('fr'), supported: supported), same(KitStrings.ja));
-      expect(KitStrings.forLocale(const Locale('zh')), same(KitStrings.ja)); // 渡さなければ日本語
+      expect(KitStrings.forLocale(const Locale('zh')), same(KitStrings.zhHans)); // 中国語は内蔵（v1.3.0〜）
+      expect(KitStrings.forLocale(const Locale('vi')), same(KitStrings.ja)); // 内蔵に無く、渡さなければ日本語
     });
 
     test('supported で ja/en を上書きもできる', () {

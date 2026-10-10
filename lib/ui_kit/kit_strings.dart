@@ -1,3 +1,6 @@
+import 'kit_strings_ko.dart';
+import 'kit_strings_zh_hans.dart';
+import 'kit_strings_zh_hant.dart';
 import 'package:flutter/widgets.dart';
 
 import 'lab_strings.dart';
@@ -819,19 +822,45 @@ class KitStrings {
     shareDate: _enShareDate,
   );
 
-  /// 言語コードから選ぶ。未対応の言語は日本語。
-  /// 言語コードから選ぶ。アプリが用意した言語は [supported]（言語コード → 文言）で渡す。
+  /// 言語から選ぶ。内蔵は ja・en・簡体字(zh)・繁体字(zh-Hant、`zh_TW`/`zh_HK`/`zh_MO` も)・ko。
+  /// アプリが用意した言語は [supported]（言語コード → 文言）で渡す（内蔵より優先）。
   /// どちらにも無い言語は日本語。
   ///
   /// ```dart
-  /// final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计', /* … */);
-  /// KitStrings.forLocale(locale, supported: {'zh': zh});
+  /// KitStrings.forLocale(locale);                         // 内蔵の言語
+  /// KitStrings.forLocale(locale, supported: {'vi': vi});  // ベトナム語などを足す
   /// ```
   static KitStrings forLocale(
     Locale locale, {
     Map<String, KitStrings> supported = const {},
-  }) =>
-      supported[locale.languageCode] ?? (locale.languageCode == 'en' ? en : ja);
+  }) {
+    final custom = supported[locale.languageCode];
+    if (custom != null) return custom;
+    switch (locale.languageCode) {
+      case 'en':
+        return en;
+      case 'ko':
+        return ko;
+      case 'zh':
+        return _isTraditionalChinese(locale) ? zhHant : zhHans;
+      default:
+        return ja;
+    }
+  }
+
+  /// 繁体字か。`zh-Hant` か、台湾・香港・マカオ（スクリプト指定なし）なら繁体字。
+  static bool _isTraditionalChinese(Locale l) =>
+      l.scriptCode == 'Hant' ||
+      (l.scriptCode == null && const {'TW', 'HK', 'MO'}.contains(l.countryCode));
+
+  /// 簡体字中国語（`zh`）。機械翻訳の下書き。公開前に母語話者の確認が要る。
+  static const zhHans = kitStringsZhHans;
+
+  /// 繁体字中国語（`zh-Hant`）。機械翻訳の下書き。公開前に母語話者の確認が要る。
+  static const zhHant = kitStringsZhHant;
+
+  /// 韓国語（`ko`）。機械翻訳の下書き。公開前に母語話者の確認が要る。
+  static const ko = kitStringsKo;
 
   /// 最も近い [KitStringsScope] の文言。無ければ日本語。
   static KitStrings of(BuildContext context) =>
