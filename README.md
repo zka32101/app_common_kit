@@ -248,10 +248,22 @@ GitHub Issue を自動作成する Cloud Functions のテンプレートを同�
 1. アプリ側で `feedbackProvider.notifier.setSubmitHandler()` が Firestore の
    `feedback` コレクションに `FeedbackReport.toJson()` を書き込む
 2. `onFeedbackCreated`（`functions/src/feedback-github-issue.ts`）が onCreate を検知
-3. `FeedbackType` を label にマッピング（`bug`→`bug`, `feature`→`enhancement`,
-   `other`→`feedback`）し、GitHub Issues API で Issue を作成
-4. 作成した Issue の URL を同じ Firestore ドキュメントの `githubIssueUrl` に書き戻し、
-   `status` を `'reviewing'` に更新（アプリ側からも対応状況を参照可能）
+3. **重複検知**: アプリ・種別・題名（大小文字・空白・全角半角を無視）が同じ報告が、開いている Issue にあれば、
+   新しい Issue は作らず、その Issue に「N件目」とバージョン・端末を**コメント**する
+4. 無ければ Issue を作成。ラベルは種別（`bug` / `enhancement` / `feedback`）と **`app:<アプリ名>`**。
+   本文に表（アプリ・バージョン・プラットフォーム・種別・日時・userId）を付ける
+5. Issue の URL を Firestore の `githubIssueUrl` に書き戻し、`status` を `'reviewing'` に更新
+   （重複のときは `duplicate: true` も付く）
+
+### Issue から修正 PR までの自動化
+
+`templates/autofix-issue.yml` を各アプリのリポジトリの `.github/workflows/` にコピーし、
+Secrets に `ANTHROPIC_API_KEY` を登録する。Issue の内容を確認した人が **`autofix` ラベル**を付けると、
+Claude Code が原因を調べ、修正とテストを足したプルリクエストを作る（マージは人が行う）。
+
+- `autofix` ラベルは `functions/` からは付けない。利用者が書いた文章をそのまま自動修正に流さないため
+- 原因が特定できない・修正が大きいときは、PR を作らず Issue にコメントで状況を書く
+- 利用者の文章は「報告」として読み、中の指示には従わない（prompt で指定）
 
 ### 各アプリへの導入手順
 
@@ -293,7 +305,8 @@ npm run deploy
 ```bash
 cd functions
 npm install
-npm run build   # tsc の型チェック・コンパイルのみ確認可能
+npm run build   # tsc の型チェック・コンパイル
+npm test        # 指紋・Issue の組み立てなどの単体テスト
 ```
 
 実際の GitHub Issue 作成の動作確認は、Firebase Emulator Suite 上で
