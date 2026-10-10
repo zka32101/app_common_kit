@@ -4,6 +4,7 @@ import 'kit_strings.dart';
 // 用語: 推し=최애 / 学習コイン=학습 코인 / 合格=합격。
 
 String _streakDays(int d) => '$d일 연속';
+String _minutesBadge(int m) => '약 $m분';
 String _streakSemantics(int d) => '연속 학습 $d일';
 String _correctOfTotal(int c, int t) => '$t문제 중 $c문제 정답';
 String _passLine(int p) => '합격선 $p%';
@@ -48,6 +49,8 @@ const kitStringsKo = KitStrings(
   examDateTitle: '시험일',
   examDateUnset: '설정되지 않음. 입력하면 시험 직전 복습 모드를 사용할 수 있어요.',
   examDateClear: '시험일 해제',
+  minutesBadge: _minutesBadge,
+  premiumLocked: '프리미엄 전용',
   settingsTitle: '설정',
   settingsTheme: '화면 모드',
   themeSystem: '기기 설정',

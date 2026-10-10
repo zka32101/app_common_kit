@@ -4,6 +4,7 @@ import 'kit_strings.dart';
 // 用語: 推し=本命 / 学習コイン=學習幣 / 合格=通過。
 
 String _streakDays(int d) => '連續$d天';
+String _minutesBadge(int m) => '約$m分鐘';
 String _streakSemantics(int d) => '連續學習 $d 天';
 String _correctOfTotal(int c, int t) => '答對 $c / $t 題';
 String _passLine(int p) => '及格線 $p%';
@@ -48,6 +49,8 @@ const kitStringsZhHant = KitStrings(
   examDateTitle: '考試日期',
   examDateUnset: '尚未設定。輸入後即可使用考前複習模式。',
   examDateClear: '清除考試日期',
+  minutesBadge: _minutesBadge,
+  premiumLocked: '僅限進階版',
   settingsTitle: '設定',
   settingsTheme: '顯示模式',
   themeSystem: '跟隨裝置',
