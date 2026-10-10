@@ -2,6 +2,13 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.7.0]
+
+### 追加
+- データ削除の共通の窓口 `DataDeletion`（`DataEraser` を並べて実行。ひとつ失敗しても残りを続け、`DeletionResult` にまとめる。`stopOnFailure` で最初の失敗で止めることもできる）。`SharedPreferencesEraser`（キー・前置き・全消去）、`CallbackEraser`（サーバーのアカウント削除など任意の処理）
+- `showDataDeletionFlow`: 確認（「元に戻せない」のチェックを入れるまで削除ボタンが押せない）→ 削除 → 結果の通知。文言 `DataDeletionStrings` は ja・en・zh・zh-Hant・ko を内蔵（zh・zh-Hant・ko は機械翻訳の下書き）。`KitStrings` には項目を足していない（アプリが自前で組んだ文言を壊さない）
+- `SettingsScreen(dataDeletion:, onDataDeleted:)`: 渡すと「データを削除」の欄を出す。既定は出ない
+
 ## [1.6.0]
 
 ### 追加

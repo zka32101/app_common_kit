@@ -49,3 +49,4 @@ export 'stats/firebase_exam_stats_service.dart';
 export 'ui_kit/stats_compare.dart';
 export 'ui_kit/term_map.dart';
 export 'crash/crash_reporter.dart';
+export 'privacy/data_deletion.dart';
