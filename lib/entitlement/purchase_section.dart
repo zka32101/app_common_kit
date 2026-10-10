@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../ui_kit/kit_strings.dart';
 import 'entitlement_provider.dart';
 import 'entitlement_state.dart';
 
@@ -17,17 +18,18 @@ class PurchaseSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entitlement = ref.watch(entitlementStateProvider).valueOrNull ?? EntitlementState.free;
     final service = ref.watch(entitlementServiceProvider);
+    final s = KitStrings.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('購入', style: titleStyle ?? Theme.of(context).textTheme.titleMedium),
+        Text(s.purchaseTitle, style: titleStyle ?? Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         if (entitlement.adsHidden)
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.check_circle, color: Colors.green),
-            title: Text(entitlement.hasPremium ? 'プレミアムを購入済みです' : '広告非表示を購入済みです'),
+            title: Text(entitlement.hasPremium ? s.purchasedPremium : s.purchasedNoAds),
           )
         else
           FutureBuilder<List<EntitlementOffer>>(
@@ -51,7 +53,7 @@ class PurchaseSection extends ConsumerWidget {
           ),
         TextButton(
           onPressed: () => _restore(context, ref),
-          child: const Text('購入を復元'),
+          child: Text(s.purchaseRestore),
         ),
       ],
     );
@@ -60,11 +62,12 @@ class PurchaseSection extends ConsumerWidget {
   Future<void> _purchase(BuildContext context, WidgetRef ref, EntitlementOffer offer) async {
     final outcome = await ref.read(entitlementServiceProvider).purchaseOffer(offer.id);
     if (!context.mounted) return;
+    final s = KitStrings.of(context);
     final message = switch (outcome) {
-      PurchaseOutcome.success => '購入しました。',
-      PurchaseOutcome.cancelled => '購入をキャンセルしました。',
-      PurchaseOutcome.blockedByGate => '購入できませんでした。',
-      PurchaseOutcome.failed => '購入に失敗しました。',
+      PurchaseOutcome.success => s.purchaseSuccess,
+      PurchaseOutcome.cancelled => s.purchaseCancelled,
+      PurchaseOutcome.blockedByGate => s.purchaseBlocked,
+      PurchaseOutcome.failed => s.purchaseFailed,
     };
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
@@ -72,7 +75,8 @@ class PurchaseSection extends ConsumerWidget {
   Future<void> _restore(BuildContext context, WidgetRef ref) async {
     final state = await ref.read(entitlementServiceProvider).restore();
     if (!context.mounted) return;
-    final message = state.adsHidden ? '購入を復元しました。' : '復元できる購入がありませんでした。';
+    final s = KitStrings.of(context);
+    final message = state.adsHidden ? s.restoreDone : s.restoreNone;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }

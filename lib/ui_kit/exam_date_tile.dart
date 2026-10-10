@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'kit_strings.dart';
+
 /// 受験日の入力欄。日付ピッカーで選び、解除もできる。
 ///
 /// 状態は持たない。保存は呼び出し側（[onChanged] で受け取り、アプリ側の保存先へ書く）。
@@ -19,16 +21,17 @@ class ExamDateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = date;
+    final s = KitStrings.of(context);
     return ListTile(
       leading: const Icon(Icons.event),
-      title: const Text('受験日'),
+      title: Text(s.examDateTitle),
       subtitle: Text(
-        d == null ? '未設定。入力すると直前の復習モードが使えます。' : '${d.year}/${d.month}/${d.day}',
+        d == null ? s.examDateUnset : '${d.year}/${d.month}/${d.day}',
       ),
       trailing: d == null
           ? null
           : IconButton(
-              tooltip: '受験日を解除',
+              tooltip: s.examDateClear,
               icon: const Icon(Icons.clear),
               onPressed: () => onChanged(null),
             ),

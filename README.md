@@ -12,6 +12,38 @@ Petit Works apps 全体で使う共通ユーティリティパッケージです
 | `cross_promo_kit` | 全アプリ横断のクロスプロモーション専用 | `firebase_remote_config` + `url_launcher` のみ |
 | `app_common_kit`（本リポジトリ） | 全アプリ横断の共通基盤 | 機能ごとに最小限（下記参照） |
 
+## 共通の設定画面（`SettingsScreen`）
+
+設定タブの完成品。全アプリで同じ並びの設定画面になる。項目はそれぞれ任意で、引数で出し分ける。
+
+```dart
+Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(
+  appName: 'ITパスポート',
+  appVersion: '1.2.0',
+  examDate: examDate,                 // 渡すと「受験日」を出す
+  onExamDateChanged: saveExamDate,    // 保存はアプリ側
+  languages: const [SettingsLanguage('ja', '日本語'), SettingsLanguage('en', 'English')],
+  languageCode: currentCode,          // 2つ以上あるとき「言語」を出す
+  onLanguageChanged: changeLanguage,  // 保存と文言の切り替えはアプリ側
+  onTransfer: openTransferScreen,     // 渡すと「学習の引き継ぎ」を出す（画面はアプリ側）
+  disclaimer: '本アプリは試験団体とは関係のない非公式のアプリです。',
+)));
+```
+
+| 項目 | 出す条件 | 必要なもの |
+|---|---|---|
+| 受験日 | `onExamDateChanged` を渡す | — |
+| 購入（広告非表示・プレミアム） | `showPurchase`（既定 true） | `entitlementServiceProvider` の override |
+| 表示モード | `showTheme`（既定 true） | `loadSavedThemeMode()` と `appThemeMode`（下の「テーマ」参照） |
+| 言語 | `languages` が2つ以上 | — |
+| 片手・ながら学習 | `showHandsFree`（既定 true） | `handsFreeStoreProvider` の override |
+| ご意見・不具合報告 | `showFeedback`（既定 true） | フィードバックの送信先（機能1） |
+| 学習の引き継ぎ | `onTransfer` を渡す | — |
+| このアプリについて | 常に出す（`disclaimer` があれば免責も） | — |
+
+- アプリ固有の項目は `extraSections` に足す（`SettingsSection(title:, children:)` で見出しがそろう）
+- `KitStringsScope` を `MaterialApp.builder` に置いていれば、設定画面も中の部品（購入欄・受験日）も同じ言語になる。置かない場合は `strings:` を渡す
+
 ## アクセシビリティの自動検査
 
 `test/accessibility_test.dart` が、主要な共通UI部品を機械的に検査する: 文字200%・幅320dpでもはみ出さない／タップ領域が Android 48dp・iOS 44pt 以上／タップできるものに読み上げラベルがある／文字のコントラスト。言語（ja/en）と明暗の組み合わせすべてで行う。

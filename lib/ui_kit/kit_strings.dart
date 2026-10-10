@@ -12,6 +12,33 @@ import 'lab_strings.dart';
 class KitStrings {
   const KitStrings({
     required this.languageCode,
+    required this.purchaseTitle,
+    required this.purchasedPremium,
+    required this.purchasedNoAds,
+    required this.purchaseRestore,
+    required this.purchaseSuccess,
+    required this.purchaseCancelled,
+    required this.purchaseBlocked,
+    required this.purchaseFailed,
+    required this.restoreDone,
+    required this.restoreNone,
+    required this.examDateTitle,
+    required this.examDateUnset,
+    required this.examDateClear,
+    required this.settingsTitle,
+    required this.settingsTheme,
+    required this.themeSystem,
+    required this.themeLight,
+    required this.themeDark,
+    required this.settingsLanguage,
+    required this.settingsHandsFree,
+    required this.handsFreeEnable,
+    required this.handsFreeSpeakQuestion,
+    required this.handsFreeSpeakExplanation,
+    required this.handsFreeSpeed,
+    required this.settingsTransfer,
+    required this.settingsAbout,
+    required this.aboutVersion,
     required this.coinTotal,
     required this.coinBreakdownTitle,
     required this.coinEventLabels,
@@ -102,6 +129,33 @@ class KitStrings {
 
   /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
   final String languageCode;
+  final String purchaseTitle;
+  final String purchasedPremium;
+  final String purchasedNoAds;
+  final String purchaseRestore;
+  final String purchaseSuccess;
+  final String purchaseCancelled;
+  final String purchaseBlocked;
+  final String purchaseFailed;
+  final String restoreDone;
+  final String restoreNone;
+  final String examDateTitle;
+  final String examDateUnset;
+  final String examDateClear;
+  final String settingsTitle;
+  final String settingsTheme;
+  final String themeSystem;
+  final String themeLight;
+  final String themeDark;
+  final String settingsLanguage;
+  final String settingsHandsFree;
+  final String handsFreeEnable;
+  final String handsFreeSpeakQuestion;
+  final String handsFreeSpeakExplanation;
+  final String handsFreeSpeed;
+  final String settingsTransfer;
+  final String settingsAbout;
+  final String Function(String version) aboutVersion;
   final String coinTotal;
   final String coinBreakdownTitle;
 
@@ -197,6 +251,33 @@ class KitStrings {
   /// 一部の文言だけ差し替えた複製を返す（ほかの言語の土台にも使える）。
   KitStrings copyWith({
     String? languageCode,
+    String? purchaseTitle,
+    String? purchasedPremium,
+    String? purchasedNoAds,
+    String? purchaseRestore,
+    String? purchaseSuccess,
+    String? purchaseCancelled,
+    String? purchaseBlocked,
+    String? purchaseFailed,
+    String? restoreDone,
+    String? restoreNone,
+    String? examDateTitle,
+    String? examDateUnset,
+    String? examDateClear,
+    String? settingsTitle,
+    String? settingsTheme,
+    String? themeSystem,
+    String? themeLight,
+    String? themeDark,
+    String? settingsLanguage,
+    String? settingsHandsFree,
+    String? handsFreeEnable,
+    String? handsFreeSpeakQuestion,
+    String? handsFreeSpeakExplanation,
+    String? handsFreeSpeed,
+    String? settingsTransfer,
+    String? settingsAbout,
+    String Function(String version)? aboutVersion,
     String? coinTotal,
     String? coinBreakdownTitle,
     Map<String, String>? coinEventLabels,
@@ -286,6 +367,33 @@ class KitStrings {
   }) =>
       KitStrings(
       languageCode: languageCode ?? this.languageCode,
+      purchaseTitle: purchaseTitle ?? this.purchaseTitle,
+      purchasedPremium: purchasedPremium ?? this.purchasedPremium,
+      purchasedNoAds: purchasedNoAds ?? this.purchasedNoAds,
+      purchaseRestore: purchaseRestore ?? this.purchaseRestore,
+      purchaseSuccess: purchaseSuccess ?? this.purchaseSuccess,
+      purchaseCancelled: purchaseCancelled ?? this.purchaseCancelled,
+      purchaseBlocked: purchaseBlocked ?? this.purchaseBlocked,
+      purchaseFailed: purchaseFailed ?? this.purchaseFailed,
+      restoreDone: restoreDone ?? this.restoreDone,
+      restoreNone: restoreNone ?? this.restoreNone,
+      examDateTitle: examDateTitle ?? this.examDateTitle,
+      examDateUnset: examDateUnset ?? this.examDateUnset,
+      examDateClear: examDateClear ?? this.examDateClear,
+      settingsTitle: settingsTitle ?? this.settingsTitle,
+      settingsTheme: settingsTheme ?? this.settingsTheme,
+      themeSystem: themeSystem ?? this.themeSystem,
+      themeLight: themeLight ?? this.themeLight,
+      themeDark: themeDark ?? this.themeDark,
+      settingsLanguage: settingsLanguage ?? this.settingsLanguage,
+      settingsHandsFree: settingsHandsFree ?? this.settingsHandsFree,
+      handsFreeEnable: handsFreeEnable ?? this.handsFreeEnable,
+      handsFreeSpeakQuestion: handsFreeSpeakQuestion ?? this.handsFreeSpeakQuestion,
+      handsFreeSpeakExplanation: handsFreeSpeakExplanation ?? this.handsFreeSpeakExplanation,
+      handsFreeSpeed: handsFreeSpeed ?? this.handsFreeSpeed,
+      settingsTransfer: settingsTransfer ?? this.settingsTransfer,
+      settingsAbout: settingsAbout ?? this.settingsAbout,
+      aboutVersion: aboutVersion ?? this.aboutVersion,
       coinTotal: coinTotal ?? this.coinTotal,
       coinBreakdownTitle: coinBreakdownTitle ?? this.coinBreakdownTitle,
       coinEventLabels: coinEventLabels ?? this.coinEventLabels,
@@ -376,6 +484,33 @@ class KitStrings {
 
   static const ja = KitStrings(
     languageCode: 'ja',
+    purchaseTitle: '購入',
+    purchasedPremium: 'プレミアムを購入済みです',
+    purchasedNoAds: '広告非表示を購入済みです',
+    purchaseRestore: '購入を復元',
+    purchaseSuccess: '購入しました。',
+    purchaseCancelled: '購入をキャンセルしました。',
+    purchaseBlocked: '購入できませんでした。',
+    purchaseFailed: '購入に失敗しました。',
+    restoreDone: '購入を復元しました。',
+    restoreNone: '復元できる購入がありませんでした。',
+    examDateTitle: '受験日',
+    examDateUnset: '未設定。入力すると直前の復習モードが使えます。',
+    examDateClear: '受験日を解除',
+    settingsTitle: '設定',
+    settingsTheme: '表示モード',
+    themeSystem: '端末に合わせる',
+    themeLight: 'ライト',
+    themeDark: 'ダーク',
+    settingsLanguage: '言語',
+    settingsHandsFree: '片手・ながら学習',
+    handsFreeEnable: '片手モードを使う',
+    handsFreeSpeakQuestion: '問題を読み上げる',
+    handsFreeSpeakExplanation: '解説を読み上げる',
+    handsFreeSpeed: '読み上げの速さ',
+    settingsTransfer: '学習の引き継ぎ（機種変更）',
+    settingsAbout: 'このアプリについて',
+    aboutVersion: _jaAboutVersion,
     coinTotal: '合計',
     coinBreakdownTitle: '今回貯まった学習コイン',
     coinEventLabels: {
@@ -484,6 +619,33 @@ class KitStrings {
 
   static const en = KitStrings(
     languageCode: 'en',
+    purchaseTitle: 'Purchases',
+    purchasedPremium: 'You own Premium',
+    purchasedNoAds: 'You own Ad-free',
+    purchaseRestore: 'Restore purchases',
+    purchaseSuccess: 'Purchase complete.',
+    purchaseCancelled: 'Purchase cancelled.',
+    purchaseBlocked: 'Could not purchase.',
+    purchaseFailed: 'Purchase failed.',
+    restoreDone: 'Purchases restored.',
+    restoreNone: 'No purchases to restore.',
+    examDateTitle: 'Exam date',
+    examDateUnset: 'Not set. Set it to use the last-minute review mode.',
+    examDateClear: 'Clear exam date',
+    settingsTitle: 'Settings',
+    settingsTheme: 'Appearance',
+    themeSystem: 'System',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    settingsLanguage: 'Language',
+    settingsHandsFree: 'One-handed study',
+    handsFreeEnable: 'Use one-handed mode',
+    handsFreeSpeakQuestion: 'Read questions aloud',
+    handsFreeSpeakExplanation: 'Read explanations aloud',
+    handsFreeSpeed: 'Reading speed',
+    settingsTransfer: 'Transfer your progress',
+    settingsAbout: 'About this app',
+    aboutVersion: _enAboutVersion,
     coinTotal: 'Total',
     coinBreakdownTitle: 'Study coins earned this time',
     coinEventLabels: {
@@ -659,6 +821,9 @@ String _enMockRecordCert(String c) => '$c mock exam';
 String _jaShareDate(DateTime d) => '${d.year}年${d.month}月${d.day}日';
 const _enShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 String _enShareDate(DateTime d) => '${_enShortMonths[d.month - 1]} ${d.day}, ${d.year}';
+
+String _jaAboutVersion(String v) => 'バージョン $v';
+String _enAboutVersion(String v) => 'Version $v';
 
 /// 配下のキットのウィジェットが使う文言を切り替える。
 ///

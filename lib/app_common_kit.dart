@@ -23,6 +23,7 @@ export 'theme/theme_mode_store.dart';
 export 'progress/streak_store.dart';
 export 'ui_kit/org_branding.dart';
 export 'ui_kit/exam_date_tile.dart';
+export 'ui_kit/settings_screen.dart';
 export 'ui_kit/kit_strings.dart';
 export 'ui_kit/lab_strings.dart';
 export 'ui_kit/choice_tile.dart';

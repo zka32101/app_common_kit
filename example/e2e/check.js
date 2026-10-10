@@ -14,6 +14,8 @@ function check(name, ok) {
 // 言語ごとの期待値。
 const T = {
   ja: {
+    settings: ['設定', '表示モード', '片手・ながら学習', 'ご意見・不具合報告'],
+    settingsTheme: ['ダーク'],
     home: ['今日から始めよう', '合計', 'もう一度試す'],
     feedback: ['ご意見・不具合報告', '不具合報告', '改善要望', '送信する'],
     wardrobe: ['着替え・ショップ', '合格したときに解放されます', '学習コイン'],
@@ -23,6 +25,8 @@ const T = {
     incorrect: '不正解',
   },
   en: {
+    settings: ['Settings', 'Appearance', 'One-handed study', 'Feedback & bug reports'],
+    settingsTheme: ['Dark'],
     home: ['Start today', 'Total', 'Try again'],
     feedback: ['Feedback & bug reports', 'Bug report', 'Feature request', 'Send'],
     wardrobe: ['Outfits & shop', 'Unlocked when you pass', 'Study coins'],
@@ -102,9 +106,14 @@ const T = {
     await page.screenshot({ path: `${shots}/${lang}-handsfree.png` });
     await back();
 
-    // 設定タブ相当（購入欄・受験日）。文言は日本語固定なので、状態を持つ操作は ja のときだけ行う。
+    // 設定画面。積んだ画面に文言が届き、購入欄・受験日も同じ言語で出る。
+    // 購入・受験日の操作（ボタン名が日本語）は ja のときだけ行う。
+    await click('button', 'Open settings');
+    for (const x of t.settings) check(`[${lang}] 設定に「${x}」`, await waitText(x));
+    check(`[${lang}] 設定の中の受験日も同じ言語`, await waitText(lang === 'ja' ? '受験日' : 'Exam date'));
+    await click('button', t.settingsTheme[0]); // 表示モードを選べる
+    await page.screenshot({ path: `${shots}/${lang}-settings.png` });
     if (lang === 'ja') {
-      await click('button', 'Open settings');
       const hasOffer = (await waitText('広告非表示')) && (await waitText('¥480'));
       check('[ja] 購入欄に商品と価格', hasOffer);
       if (!hasOffer) await dump('購入欄');
@@ -131,8 +140,8 @@ const T = {
       await page.screenshot({ path: `${shots}/ja-settings-after.png` });
       await click('button', '受験日を解除');
       check('[ja] 受験日を解除すると未設定に戻る', await waitText('未設定'));
-      await back();
     }
+    await back();
 
     // 推しカードのメニュー → 着替え・ショップ（カードの文言が積んだ画面に引き継がれる）
     await click('button', t.menuButton);
