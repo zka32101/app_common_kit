@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _app(Widget child, {double scale = 1.0, Brightness b = Brightness.light}) {
-  final theme = b == Brightness.light
-      ? UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei)
-      : UkalabTheme.dark(field: UkalabField.ai, cert: UkalabCert.gKentei);
+  final theme = ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo, brightness: b);
   return MaterialApp(
     theme: theme,
     builder: (context, c) => MediaQuery(
@@ -221,22 +219,6 @@ void main() {
     });
   });
 
-  group('UkalabShell', () {
-    testWidgets('下部タブは5つで、押すと画面が切り替わる', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        theme: UkalabTheme.light(field: UkalabField.it),
-        home: UkalabShell(pages: [for (final n in ['H', 'M', 'E', 'R', 'S']) Text('page-$n')]),
-      ));
-      expect(find.byType(NavigationDestination), findsNWidgets(5));
-      for (final l in UkalabShell.defaultLabels) {
-        expect(find.text(l), findsOneWidget);
-      }
-      await tester.tap(find.text('設定'));
-      await tester.pump();
-      expect(find.text('page-S'), findsOneWidget);
-    });
-  });
-
   group('文字拡大 200%・ダーク', () {
     for (final b in Brightness.values) {
       testWidgets('全部品が例外なく表示される (${b.name})', (tester) async {
@@ -266,3 +248,4 @@ void main() {
     }
   });
 }
+

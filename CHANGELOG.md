@@ -2,6 +2,21 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.0.0]
+
+### 破壊的変更（公開前の整理）
+- うかラボ専用の部品を、このパッケージから `ukalab_core`（`package:ukalab_core/ui.dart`）へ移した。このパッケージは全アプリ共通のものだけを持つ
+  - `mascot/`（推し）、`outfit/`（衣装・着せ替え・共有カード）、`coin/`（学習コイン）、`transfer/`（学習の引き継ぎ）、`UkalabTheme`・`UkalabPalette`
+  - 学習ラボ系の部品: `MlLab`・`ConvLab`・`NnBuilder`・`AttentionViz`・`AiNewsCard`・`StoryMode`・`ConfusionMatrixLab`・`MethodChoice`・`BoundarySlider`・`FailureGallery`・`PredictRun`・`RouteMap`・`LabControls`
+  - `UkalabShell`・`CoinBreakdownCard`・`ReadinessProgressCard`・`TeachMascot`
+  - マスコットの画像（`assets/mascot/`）
+- `KitStringsScope` から `mascotLines` を削除（推しのセリフは `ukalab_core` の `UkalabScope` で渡す）
+- アイコン生成（`tools/icon_gen`）も `ukalab_core` へ移した（うかラボのアプリアイコン用で、色を `UkalabPalette` から読むため）。CI の `icons` ジョブもコア側へ
+- 旧コードは `v0.30.0` のタグに残る
+
+### 変更なし
+- `KitStrings`・`LabStrings`・`SettingsScreen`・購入・広告・レビュー・更新確認・分析・フィードバック・片手モード・用語カード・用語マップ・統計比較は、そのまま
+
 ## [0.30.0]
 
 ### 追加
