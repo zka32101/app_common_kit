@@ -2,6 +2,17 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [0.27.0] - 2026-10-10
+
+アプリ内レビューを頼むタイミングの制御を追加。追加のみ。
+
+### 追加
+- `ReviewPromptService`: 頼んでよいかの判定（`evaluate`）と、レビュー画面を出す処理（`maybeRequest`）。初回起動からの日数・良い体験の数・前回からの間隔・生涯の上限・断られた直後・同じ起動中にもう頼んだ、を見る。条件は `ReviewPromptRules`（既定は控えめ）
+- `ReviewBackend`（ストアのレビュー画面の窓口。実処理はアプリが実装。キットはレビューのプラグインに依存しない）・`FakeReviewBackend`
+- `ReviewStore`（`InMemoryReviewStore`・`SharedPreferencesReviewStore(appId)`）・`ReviewState`・`ReviewDecision`・`reviewPromptServiceProvider`
+- `showReviewPrePrompt`: 頼む前の確認ダイアログ（「アプリを楽しんでいますか？」）。「はい」→レビュー画面、「いいえ」→レビューは頼まず `onNegative`（フィードバックへの案内など）、「あとで」→何もしない
+- 文言（`KitStrings` に 4 項目）
+
 ## [0.26.0] - 2026-10-09
 
 共通の設定画面を追加。追加のみ（既定の表示は変わらない）。
