@@ -2,7 +2,7 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
-## [1.4.0]
+## [1.5.0]
 
 ながら学習モードの音声読み上げの実体と、選択式の表示をキットに移す。追加のみで、既存 API に破壊的変更はない。
 **別の入口**: `import 'package:app_common_kit/hands_free_tts.dart';`（`app_common_kit.dart` からは出さない。アプリが同じ名前の部品を自前で持っていても、名前が衝突しない。アプリは自前のコピーを消して、この入口に切り替える）
@@ -15,6 +15,15 @@
 
 ### 変更
 - `SpeechBackend` の説明を更新（キットは音声のプラグインに依存しない、から変更）
+
+## [1.4.0]
+
+### 追加
+- `OrgBrandingFooter` / `StartupSplash`: 組織ロゴを差し替えられる（`logoAsset`・`logoPackage`・`semanticsLabel`・`footer`）。既定は従来どおり
+- `SharedPreferencesHandsFreeStore(keyPrefix:)`: 保存キーの前置きを変えられる。既定は従来の `ukalab_hands_free_`（変えると保存済みの設定は読めない）
+
+### 変更
+- コメントの例から特定アプリの名前を除いた
 
 ## [1.3.0]
 
