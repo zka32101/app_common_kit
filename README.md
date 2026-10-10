@@ -326,6 +326,19 @@ final crash = CrashReporter(MyCrashBackend())..install(); // runApp の前に
 - 理由・ログのメール・長いトークン・電話番号らしい数字は伏せる。同じエラーは1分間に1回だけ送る
 - 送信の失敗でアプリを止めない
 
+## 解答時の音と触覚
+
+`AnswerFeedback`。音の再生は、アプリが `SoundBackend`（`audioplayers` など）を実装して渡す。音源ファイルもアプリが持つ。
+
+```dart
+final feedback = AnswerFeedback(sound: MySoundBackend()); // 音なしなら sound を省く（触覚のみ）
+// ProviderScope(overrides: [answerFeedbackProvider.overrideWithValue(feedback)], ...)
+await ref.read(answerFeedbackProvider).correct();   // incorrect / badgeUnlocked / combo / tap
+```
+
+- 音・触覚は `soundEnabled` / `hapticsEnabled` で個別に切れる。音量は `volume`（0〜1、既定 0.7）
+- 音源の未配置・触覚に非対応の端末でも例外を出さない
+
 ## 法務リンク（プライバシーポリシー・利用規約）
 
 文面はキットに含めず、アプリが公開した文書へのリンクだけを設定画面に出す。専門家の確認の手順は
