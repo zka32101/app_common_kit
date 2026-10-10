@@ -542,3 +542,15 @@ ref.read(analyticsProvider).log(AnalyticsEvents.studyComplete, {'cert': 'it_pass
 - 名前は英小文字・数字・`_`（40字以内）。違反は送らない
 - `email`・`name`・`uid`・`token` などのキーは自動で落とす。文字列は100字、パラメータは25個まで
 - 同意前など、送り先を渡さなければ何もしない。送信の失敗でアプリは止まらない
+
+## 共通基盤のタグ更新を、アプリへ自動で PR にする
+
+アプリは `ref: vX.Y.Z` でタグ固定のため、新しいタグが出ても自動では追従しない（放っておくと、古いまま取り残される）。
+`templates/kit-update.yml` を各アプリの `.github/workflows/` にコピーすると、毎日タグを確かめ、新しいものがあれば PR を作る。
+
+- 対象: `pubspec.yaml` の git 依存のうち、`github.com/zka32101/` のリポジトリで `ref` が `vX.Y.Z` のもの（`app_common_kit`・`ukalab_core`・`cross_promo_kit` など）
+- 上げるだけ（下げない）。major が上がるときは PR に ⚠ が付く
+- PR を作る前に、同じジョブの中で `flutter pub get`・`analyze`・`test` を走らせ、結果を本文に書く
+- 設定: Settings → Actions → General →「Allow GitHub Actions to create and approve pull requests」をオンにする。アプリの CI も PR で動かしたいときは `KIT_UPDATE_TOKEN`（PAT）を Secrets に入れる
+- 手動で試す: `python3 tools/kit_update/bump_kit_refs.py pubspec.yaml`
+
