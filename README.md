@@ -101,6 +101,8 @@ v1.0.0 から、うかラボ専用の部品はこのパッケージから外れ�
 
 `KitStringsScope` から `mascotLines` を外しました（推しのセリフは ukalab_core の `UkalabScope` で渡します）。
 
+`KitStrings` には、`ukalab_core` の UI が読む文言（コイン・着せ替え・推し・共有カード・下部タブなど、約50項目）が残っています。`ukalab_core` が `KitStrings.of(context)` 経由で使うため、**消すと `ukalab_core` が動かなくなります**。これらをうかラボ側へ移すかは、別途判断します（今は、キットに置いたまま）。
+
 ## 設計方針
 
 - `cross_promo_kit` と同じく、依存は機能ごとに最小限に絞ります。
