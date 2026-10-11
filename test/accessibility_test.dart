@@ -99,11 +99,12 @@ final _catalog = <String, Widget Function()>{
     ChapterReadingWidget(
       title: '3 機械学習の概要',
       sections: const [
-        ReadingSectionView(heading: '教師あり学習', body: '正解データを使って学習する手法。'),
+        ReadingSectionView(heading: '教師あり学習', body: '正解データを使って学習する手法。過学習に注意する。'),
         ReadingSectionView(heading: '教師なし学習', body: '正解データなしでパターンを見つける手法。'),
       ],
       relatedTerms: const [RelatedTermRef(termId: 't1', label: '過学習')],
       relatedQuestions: const [RelatedQuestionRef(questionId: 'q1', label: '第1問')],
+      bodyTermReferences: const [TermReference(termId: 't1', matchText: '過学習')],
       onRelatedTermTap: (_) {},
       onRelatedQuestionTap: (_) {},
     ),
