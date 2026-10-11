@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'lab_strings.dart';
+import 'tappable_term_text.dart' show TappableTermText, TermReference;
 import 'term_card.dart' show RelatedTermRef, RelatedQuestionRef;
 
 /// 章ごとの解説読み物（教科書的なまとめページ）の1節（見出し＋本文）。
@@ -22,6 +23,7 @@ class ChapterReadingWidget extends StatelessWidget {
     required this.sections,
     this.relatedTerms = const [],
     this.relatedQuestions = const [],
+    this.bodyTermReferences = const [],
     this.onRelatedTermTap,
     this.onRelatedQuestionTap,
   });
@@ -30,6 +32,10 @@ class ChapterReadingWidget extends StatelessWidget {
   final List<ReadingSectionView> sections;
   final List<RelatedTermRef> relatedTerms;
   final List<RelatedQuestionRef> relatedQuestions;
+
+  /// 本文中で検出してタップ可能にする用語（決定50「どこでもタップして、
+  /// やさしい解説が読める」）。タップ時は [onRelatedTermTap] を呼ぶ。
+  final List<TermReference> bodyTermReferences;
   final ValueChanged<String>? onRelatedTermTap;
   final ValueChanged<String>? onRelatedQuestionTap;
 
@@ -50,7 +56,14 @@ class ChapterReadingWidget extends StatelessWidget {
               style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 8),
-            Text(s.body, style: theme.textTheme.bodyLarge),
+            bodyTermReferences.isEmpty || onRelatedTermTap == null
+                ? Text(s.body, style: theme.textTheme.bodyLarge)
+                : TappableTermText(
+                    text: s.body,
+                    terms: bodyTermReferences,
+                    onTermTap: onRelatedTermTap!,
+                    style: theme.textTheme.bodyLarge,
+                  ),
           ],
           if (relatedTerms.isNotEmpty) ...[
             const SizedBox(height: 20),
