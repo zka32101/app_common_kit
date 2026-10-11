@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'hands_free.dart' show ReadAloudButton;
 import 'lab_strings.dart';
 import 'tappable_term_text.dart' show TappableTermText, TermReference;
 import 'term_card.dart' show RelatedTermRef, RelatedQuestionRef;
@@ -26,6 +27,7 @@ class ChapterReadingWidget extends StatelessWidget {
     this.bodyTermReferences = const [],
     this.onRelatedTermTap,
     this.onRelatedQuestionTap,
+    this.onReadAloud,
   });
 
   final String title;
@@ -39,6 +41,10 @@ class ChapterReadingWidget extends StatelessWidget {
   final ValueChanged<String>? onRelatedTermTap;
   final ValueChanged<String>? onRelatedQuestionTap;
 
+  /// 全文を読み上げる（プレミアム機能）。null ならボタンを出さない
+  /// （無料会員・読み上げ非対応環境など、呼ぶ側が判断する）。
+  final VoidCallback? onReadAloud;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -48,7 +54,12 @@ class ChapterReadingWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(title, style: theme.textTheme.titleLarge),
+          Row(
+            children: [
+              Expanded(child: Text(title, style: theme.textTheme.titleLarge)),
+              if (onReadAloud != null) ReadAloudButton(onPressed: onReadAloud),
+            ],
+          ),
           for (final s in sections) ...[
             const SizedBox(height: 20),
             Text(

@@ -46,6 +46,7 @@ export 'ui_kit/section_header.dart';
 export 'ui_kit/minutes_badge.dart';
 export 'ui_kit/premium_lock_trailing.dart';
 export 'ui_kit/countdown_progress_bar.dart';
+export 'ui_kit/mock_exam_trend_chart.dart';
 export 'stats/exam_stats_models.dart';
 export 'stats/exam_stats_service.dart';
 export 'stats/exam_stats_provider.dart';
