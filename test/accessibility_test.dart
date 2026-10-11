@@ -107,6 +107,16 @@ final _catalog = <String, Widget Function()>{
       bodyTermReferences: const [TermReference(termId: 't1', matchText: '過学習')],
       onRelatedTermTap: (_) {},
       onRelatedQuestionTap: (_) {},
+      onReadAloud: () {},
+    ),
+  ),
+  'MockExamTrendChart': () => _body(
+    const MockExamTrendChart(
+      points: [
+        MockExamTrendPoint(pct: 60, passed: false),
+        MockExamTrendPoint(pct: 80, passed: true),
+      ],
+      passPct: 70,
     ),
   ),
   'PurchaseSection': () => _body(const PurchaseSection()),

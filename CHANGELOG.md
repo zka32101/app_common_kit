@@ -2,6 +2,12 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.13.0]
+
+### 追加
+- `MockExamTrendChart`・`MockExamTrendPoint`: 模擬試験の成長グラフ（複数回分の得点率の推移）。`ukalab_core`の`MockExamHistoryEntry`に対応するが、依存の向きを守るため独自の軽量な型（`pct`・`passed`のみ）を受け取る。合格ラインを渡すと目安の横線を引く。2回未満では何も表示しない
+- `ChapterReadingWidget` に `onReadAloud` を追加。渡すとタイトル横に `ReadAloudButton` を出し、全文読み上げ（プレミアム機能）に使える
+
 ## [1.12.0]
 
 ### 追加
