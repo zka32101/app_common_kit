@@ -2,6 +2,11 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [1.11.0]
+
+### 追加
+- `ChapterReadingWidget`: 章ごとの解説読み物（教科書的なまとめページ）。見出し＋本文の節を順に表示し、末尾に関連用語・関連問題（`TermCard`と同じ`RelatedTermRef`・`RelatedQuestionRef`）を出す。`ukalab_core`の`ChapterReading`モデルに対応
+
 ## [1.10.0]
 
 ### 追加
