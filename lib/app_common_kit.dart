@@ -40,6 +40,7 @@ export 'ui_kit/streak_badge.dart';
 export 'ui_kit/result_summary.dart';
 export 'ui_kit/empty_error_state.dart';
 export 'ui_kit/term_card.dart';
+export 'ui_kit/chapter_reading.dart';
 export 'ui_kit/tappable_term_text.dart';
 export 'ui_kit/section_header.dart';
 export 'ui_kit/minutes_badge.dart';
