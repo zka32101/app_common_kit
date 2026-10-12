@@ -2,6 +2,19 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [2.0.0]
+
+### 破壊的変更
+うかラボ専用の部品を `ukalab_core`（`import 'package:ukalab_core/ui.dart';`）へ移した。このパッケージは全アプリ共通のものだけを持つ。
+
+- 移した: `LabStrings`・`TermCard`（`showTermCard`・`RelatedTermRef`・`RelatedQuestionRef`）・`TermMap` 系・`ChapterReadingWidget`（`ReadingSectionView`）・`TappableTermText`（`TermReference`）・`StatsCompareWidget`・`ExamStats*`（`ExamStatsService`・`FakeExamStatsService`・`FirebaseExamStatsService`・`examStatsServiceProvider` など）
+- `KitStringsScope` の `labs` 引数と `KitStringsScope.labsOf` を削除（`LabStrings` は言語に応じた既定のみ）
+- `QuestionCard` の「第N問」と `ProgressRing` の既定ラベルは `KitStrings`（`questionNo`・`questionNoOfTotal`・`progressDefault`）から読む。指定しない言語は日本語
+
+### 移行
+- 上記の名前を使うファイルで、`package:ukalab_core/ui.dart` を import する
+- `ukalab_core` は、v2.0.0 に対応した版（0.51.0 以降）を使う
+
 ## [1.13.0]
 
 ### 追加
