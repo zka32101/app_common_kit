@@ -101,7 +101,7 @@ v1.0.0 から、うかラボ専用の部品はこのパッケージから外れ�
 
 `KitStringsScope` から `mascotLines` を外しました（推しのセリフは ukalab_core の `UkalabScope` で渡します）。
 
-`KitStrings` には、`ukalab_core` の UI が読む文言（コイン・着せ替え・推し・共有カード・下部タブなど、約50項目）が残っています。`ukalab_core` が `KitStrings.of(context)` 経由で使うため、**消すと `ukalab_core` が動かなくなります**。これらをうかラボ側へ移すかは、別途判断します（今は、キットに置いたまま）。
+v3.0.0 で、`ukalab_core` の画面専用の文言（コイン・着せ替え・推し・合格報告・共有カード・下部タブなど51項目）は `KitStrings` から外れ、`ukalab_core` の `UkalabStrings` に移りました。言語は引き続き `KitStringsScope`（`KitStrings.languageCode`）で切り替わります。
 
 ## 設計方針
 
@@ -152,7 +152,7 @@ KitStringsScope(strings: KitStrings.forLocale(Locale('en')), child: app)
 | 推しのセリフ | `Map<MascotTone, MascotLines>`（口調ごとのセリフ集） |
 
 ```dart
-final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计' /* … */);
+final zh = KitStrings.en.copyWith(languageCode: 'zh', close: '关闭' /* … */);
 
 KitStringsScope(
   strings: KitStrings.forLocale(locale, supported: {'zh': zh}), // 無い言語は ja（en は英語）

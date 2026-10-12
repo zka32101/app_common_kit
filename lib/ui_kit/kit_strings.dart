@@ -3,7 +3,6 @@ import 'kit_strings_zh_hans.dart';
 import 'kit_strings_zh_hant.dart';
 import 'package:flutter/widgets.dart';
 
-
 /// キット内蔵ウィジェットの既定文言（日本語・英語）。
 ///
 /// 既定は日本語。端末の言語には自動で従わず、アプリが [KitStringsScope] で明示したときだけ切り替わる
@@ -51,9 +50,6 @@ class KitStrings {
     required this.settingsTransfer,
     required this.settingsAbout,
     required this.aboutVersion,
-    required this.coinTotal,
-    required this.coinBreakdownTitle,
-    required this.coinEventLabels,
     required this.errorMessage,
     required this.retry,
     required this.streakZero,
@@ -78,46 +74,6 @@ class KitStrings {
     required this.feedbackSubmit,
     required this.feedbackSent,
     required this.feedbackFailed,
-    required this.passAskBody,
-    required this.passNotYet,
-    required this.passNotPassed,
-    required this.passPassed,
-    required this.passEncourageTitle,
-    required this.passEncourageBody,
-    required this.passCongrats,
-    required this.passPrivacy,
-    required this.passShare,
-    required this.wardrobeTitle,
-    required this.wardrobeNote,
-    required this.wardrobeInsufficient,
-    required this.wardrobeAlreadyOwned,
-    required this.wardrobeUnknown,
-    required this.wardrobeCannotWear,
-    required this.wardrobeWear,
-    required this.wardrobeWearing,
-    required this.wardrobeCanWear,
-    required this.lockedNotPassed,
-    required this.lockedNoExamDate,
-    required this.lockedNotReady,
-    required this.oshiMenuTooltip,
-    required this.oshiChoose,
-    required this.oshiPassReport,
-    required this.oshiDisplayNormal,
-    required this.oshiDisplaySmall,
-    required this.oshiDisplayHidden,
-    required this.oshiName,
-    required this.oshiHiddenNote,
-    required this.oshiYours,
-    required this.oshiTapHint,
-    required this.coinBalance,
-    required this.wardrobePurchased,
-    required this.wardrobePrice,
-    required this.lockedNotPurchased,
-    required this.passAskTitle,
-    required this.passCoin,
-    required this.passOutfit,
-    required this.characterNames,
-    required this.characterRoles,
     required this.feedbackTitleRequired,
     required this.feedbackDetailRequired,
     required this.feedbackTitleTooLong,
@@ -126,17 +82,9 @@ class KitStrings {
     required this.incorrectLabel,
     required this.sentenceSeparator,
     required this.explanationTitle,
-    required this.tabLabels,
     required this.readAloud,
-    required this.mockRecordTitle,
-    required this.mockRecordNote,
-    required this.mockRecordMessage,
     required this.sourceNote,
     required this.sourceNoteChecked,
-    required this.mockRecordCert,
-    required this.shareCardBrand,
-    required this.shareCardPassed,
-    required this.shareDate,
     this.questionNo = _jaQuestionNo,
     this.questionNoOfTotal = _jaQuestionNoOfTotal,
     this.progressDefault = '進捗',
@@ -193,11 +141,7 @@ class KitStrings {
   final String settingsTransfer;
   final String settingsAbout;
   final String Function(String version) aboutVersion;
-  final String coinTotal;
-  final String coinBreakdownTitle;
 
-  /// `CoinEventType.name` → 表示名。
-  final Map<String, String> coinEventLabels;
   final String errorMessage;
   final String retry;
   final String streakZero;
@@ -222,50 +166,7 @@ class KitStrings {
   final String feedbackSubmit;
   final String feedbackSent;
   final String feedbackFailed;
-  final String passAskBody;
-  final String passNotYet;
-  final String passNotPassed;
-  final String passPassed;
-  final String passEncourageTitle;
-  final String passEncourageBody;
-  final String passCongrats;
-  final String passPrivacy;
-  final String passShare;
-  final String wardrobeTitle;
-  final String wardrobeNote;
-  final String wardrobeInsufficient;
-  final String wardrobeAlreadyOwned;
-  final String wardrobeUnknown;
-  final String wardrobeCannotWear;
-  final String wardrobeWear;
-  final String wardrobeWearing;
-  final String wardrobeCanWear;
-  final String lockedNotPassed;
-  final String lockedNoExamDate;
-  final String lockedNotReady;
-  final String oshiMenuTooltip;
-  final String oshiChoose;
-  final String oshiPassReport;
-  final String oshiDisplayNormal;
-  final String oshiDisplaySmall;
-  final String oshiDisplayHidden;
-  final String oshiName;
-  final String oshiHiddenNote;
-  final String oshiYours;
-  final String oshiTapHint;
-  final String Function(int balance) coinBalance;
-  final String Function(String name) wardrobePurchased;
-  final String Function(int price) wardrobePrice;
-  final String Function(int price) lockedNotPurchased;
-  final String Function(String cert) passAskTitle;
-  final String Function(int amount) passCoin;
-  final String Function(String name) passOutfit;
 
-  /// `CharacterPack.id` → 表示名。無い id はパックの name を使う。
-  final Map<String, String> characterNames;
-
-  /// `CharacterPack.id` → 役割の説明。
-  final Map<String, String> characterRoles;
   final String feedbackTitleRequired;
   final String feedbackDetailRequired;
   final String Function(int max) feedbackTitleTooLong;
@@ -274,17 +175,9 @@ class KitStrings {
   final String incorrectLabel;
   final String sentenceSeparator;
   final String explanationTitle;
-  final List<String> tabLabels;
   final String readAloud;
-  final String mockRecordTitle;
-  final String mockRecordNote;
-  final String mockRecordMessage;
   final String Function(String src) sourceNote;
   final String Function(String src, String checkedAt) sourceNoteChecked;
-  final String Function(String cert) mockRecordCert;
-  final String shareCardBrand;
-  final String shareCardPassed;
-  final String Function(DateTime date) shareDate;
 
   /// 一部の文言だけ差し替えた複製を返す（ほかの言語の土台にも使える）。
   KitStrings copyWith({
@@ -328,9 +221,6 @@ class KitStrings {
     String? settingsTransfer,
     String? settingsAbout,
     String Function(String version)? aboutVersion,
-    String? coinTotal,
-    String? coinBreakdownTitle,
-    Map<String, String>? coinEventLabels,
     String? errorMessage,
     String? retry,
     String? streakZero,
@@ -355,46 +245,6 @@ class KitStrings {
     String? feedbackSubmit,
     String? feedbackSent,
     String? feedbackFailed,
-    String? passAskBody,
-    String? passNotYet,
-    String? passNotPassed,
-    String? passPassed,
-    String? passEncourageTitle,
-    String? passEncourageBody,
-    String? passCongrats,
-    String? passPrivacy,
-    String? passShare,
-    String? wardrobeTitle,
-    String? wardrobeNote,
-    String? wardrobeInsufficient,
-    String? wardrobeAlreadyOwned,
-    String? wardrobeUnknown,
-    String? wardrobeCannotWear,
-    String? wardrobeWear,
-    String? wardrobeWearing,
-    String? wardrobeCanWear,
-    String? lockedNotPassed,
-    String? lockedNoExamDate,
-    String? lockedNotReady,
-    String? oshiMenuTooltip,
-    String? oshiChoose,
-    String? oshiPassReport,
-    String? oshiDisplayNormal,
-    String? oshiDisplaySmall,
-    String? oshiDisplayHidden,
-    String? oshiName,
-    String? oshiHiddenNote,
-    String? oshiYours,
-    String? oshiTapHint,
-    String Function(int balance)? coinBalance,
-    String Function(String name)? wardrobePurchased,
-    String Function(int price)? wardrobePrice,
-    String Function(int price)? lockedNotPurchased,
-    String Function(String cert)? passAskTitle,
-    String Function(int amount)? passCoin,
-    String Function(String name)? passOutfit,
-    Map<String, String>? characterNames,
-    Map<String, String>? characterRoles,
     String? feedbackTitleRequired,
     String? feedbackDetailRequired,
     String Function(int max)? feedbackTitleTooLong,
@@ -403,17 +253,9 @@ class KitStrings {
     String? incorrectLabel,
     String? sentenceSeparator,
     String? explanationTitle,
-    List<String>? tabLabels,
     String? readAloud,
-    String? mockRecordTitle,
-    String? mockRecordNote,
-    String? mockRecordMessage,
     String Function(String src)? sourceNote,
     String Function(String src, String checkedAt)? sourceNoteChecked,
-    String Function(String cert)? mockRecordCert,
-    String? shareCardBrand,
-    String? shareCardPassed,
-    String Function(DateTime date)? shareDate,
     String Function(int index)? questionNo,
     String Function(int index, int total)? questionNoOfTotal,
     String? progressDefault,
@@ -460,9 +302,6 @@ class KitStrings {
     settingsTransfer: settingsTransfer ?? this.settingsTransfer,
     settingsAbout: settingsAbout ?? this.settingsAbout,
     aboutVersion: aboutVersion ?? this.aboutVersion,
-    coinTotal: coinTotal ?? this.coinTotal,
-    coinBreakdownTitle: coinBreakdownTitle ?? this.coinBreakdownTitle,
-    coinEventLabels: coinEventLabels ?? this.coinEventLabels,
     errorMessage: errorMessage ?? this.errorMessage,
     retry: retry ?? this.retry,
     streakZero: streakZero ?? this.streakZero,
@@ -487,46 +326,6 @@ class KitStrings {
     feedbackSubmit: feedbackSubmit ?? this.feedbackSubmit,
     feedbackSent: feedbackSent ?? this.feedbackSent,
     feedbackFailed: feedbackFailed ?? this.feedbackFailed,
-    passAskBody: passAskBody ?? this.passAskBody,
-    passNotYet: passNotYet ?? this.passNotYet,
-    passNotPassed: passNotPassed ?? this.passNotPassed,
-    passPassed: passPassed ?? this.passPassed,
-    passEncourageTitle: passEncourageTitle ?? this.passEncourageTitle,
-    passEncourageBody: passEncourageBody ?? this.passEncourageBody,
-    passCongrats: passCongrats ?? this.passCongrats,
-    passPrivacy: passPrivacy ?? this.passPrivacy,
-    passShare: passShare ?? this.passShare,
-    wardrobeTitle: wardrobeTitle ?? this.wardrobeTitle,
-    wardrobeNote: wardrobeNote ?? this.wardrobeNote,
-    wardrobeInsufficient: wardrobeInsufficient ?? this.wardrobeInsufficient,
-    wardrobeAlreadyOwned: wardrobeAlreadyOwned ?? this.wardrobeAlreadyOwned,
-    wardrobeUnknown: wardrobeUnknown ?? this.wardrobeUnknown,
-    wardrobeCannotWear: wardrobeCannotWear ?? this.wardrobeCannotWear,
-    wardrobeWear: wardrobeWear ?? this.wardrobeWear,
-    wardrobeWearing: wardrobeWearing ?? this.wardrobeWearing,
-    wardrobeCanWear: wardrobeCanWear ?? this.wardrobeCanWear,
-    lockedNotPassed: lockedNotPassed ?? this.lockedNotPassed,
-    lockedNoExamDate: lockedNoExamDate ?? this.lockedNoExamDate,
-    lockedNotReady: lockedNotReady ?? this.lockedNotReady,
-    oshiMenuTooltip: oshiMenuTooltip ?? this.oshiMenuTooltip,
-    oshiChoose: oshiChoose ?? this.oshiChoose,
-    oshiPassReport: oshiPassReport ?? this.oshiPassReport,
-    oshiDisplayNormal: oshiDisplayNormal ?? this.oshiDisplayNormal,
-    oshiDisplaySmall: oshiDisplaySmall ?? this.oshiDisplaySmall,
-    oshiDisplayHidden: oshiDisplayHidden ?? this.oshiDisplayHidden,
-    oshiName: oshiName ?? this.oshiName,
-    oshiHiddenNote: oshiHiddenNote ?? this.oshiHiddenNote,
-    oshiYours: oshiYours ?? this.oshiYours,
-    oshiTapHint: oshiTapHint ?? this.oshiTapHint,
-    coinBalance: coinBalance ?? this.coinBalance,
-    wardrobePurchased: wardrobePurchased ?? this.wardrobePurchased,
-    wardrobePrice: wardrobePrice ?? this.wardrobePrice,
-    lockedNotPurchased: lockedNotPurchased ?? this.lockedNotPurchased,
-    passAskTitle: passAskTitle ?? this.passAskTitle,
-    passCoin: passCoin ?? this.passCoin,
-    passOutfit: passOutfit ?? this.passOutfit,
-    characterNames: characterNames ?? this.characterNames,
-    characterRoles: characterRoles ?? this.characterRoles,
     feedbackTitleRequired: feedbackTitleRequired ?? this.feedbackTitleRequired,
     feedbackDetailRequired:
         feedbackDetailRequired ?? this.feedbackDetailRequired,
@@ -536,17 +335,9 @@ class KitStrings {
     incorrectLabel: incorrectLabel ?? this.incorrectLabel,
     sentenceSeparator: sentenceSeparator ?? this.sentenceSeparator,
     explanationTitle: explanationTitle ?? this.explanationTitle,
-    tabLabels: tabLabels ?? this.tabLabels,
     readAloud: readAloud ?? this.readAloud,
-    mockRecordTitle: mockRecordTitle ?? this.mockRecordTitle,
-    mockRecordNote: mockRecordNote ?? this.mockRecordNote,
-    mockRecordMessage: mockRecordMessage ?? this.mockRecordMessage,
     sourceNote: sourceNote ?? this.sourceNote,
     sourceNoteChecked: sourceNoteChecked ?? this.sourceNoteChecked,
-    mockRecordCert: mockRecordCert ?? this.mockRecordCert,
-    shareCardBrand: shareCardBrand ?? this.shareCardBrand,
-    shareCardPassed: shareCardPassed ?? this.shareCardPassed,
-    shareDate: shareDate ?? this.shareDate,
     questionNo: questionNo ?? this.questionNo,
     questionNoOfTotal: questionNoOfTotal ?? this.questionNoOfTotal,
     progressDefault: progressDefault ?? this.progressDefault,
@@ -593,21 +384,6 @@ class KitStrings {
     settingsTransfer: '学習の引き継ぎ（機種変更）',
     settingsAbout: 'このアプリについて',
     aboutVersion: _jaAboutVersion,
-    coinTotal: '合計',
-    coinBreakdownTitle: '今回貯まった学習コイン',
-    coinEventLabels: {
-      'newQuestion': '新しい問題',
-      'coverageStep': '網羅率アップ',
-      'accuracyMilestone': '正答率の達成',
-      'accuracyBest': '自己ベスト更新',
-      'reviewCorrected': '復習で克服',
-      'dailyConsult': '今日の相談',
-      'mockDone': '模擬試験の実施',
-      'mockPass': '模擬試験で合格点',
-      'mockBest': '模擬試験の自己ベスト',
-      'streak': '連続学習',
-      'passReport': '合格報告',
-    },
     errorMessage: '読み込めませんでした。通信を確認して、もう一度お試しください。',
     retry: 'もう一度試す',
     streakZero: '今日から始めよう',
@@ -632,52 +408,6 @@ class KitStrings {
     feedbackSubmit: '送信する',
     feedbackSent: '送信しました。ありがとうございます！',
     feedbackFailed: '送信に失敗しました。時間をおいて再度お試しください。',
-    passAskBody: 'お知らせいただいた内容は、この端末の中だけで使います。',
-    passNotYet: 'まだ・結果待ち',
-    passNotPassed: '今回は合格できなかった',
-    passPassed: '合格しました',
-    passEncourageTitle: 'おつかれさまでした',
-    passEncourageBody: '弱点を復習して、また挑戦しましょう。コインや衣装はそのままです。',
-    passCongrats: '合格おめでとうございます',
-    passPrivacy: '共有するカードに、名前などの個人情報は入りません。',
-    passShare: '共有する',
-    wardrobeTitle: '着替え・ショップ',
-    wardrobeNote: 'コインは学習で貯まります。衣装は見た目だけで、学習の内容には影響しません。',
-    wardrobeInsufficient: 'コインが足りません。学習すると貯まります',
-    wardrobeAlreadyOwned: 'すでに持っています',
-    wardrobeUnknown: '購入できません',
-    wardrobeCannotWear: 'この衣装は今は着られません',
-    wardrobeWear: '着る',
-    wardrobeWearing: '着ています',
-    wardrobeCanWear: '着られます',
-    lockedNotPassed: '合格したときに解放されます',
-    lockedNoExamDate: '試験日を設定すると着られます',
-    lockedNotReady: '準備完了の目標を達成すると解放されます',
-    oshiMenuTooltip: '推しのメニュー',
-    oshiChoose: '推しを選ぶ',
-    oshiPassReport: '試験の結果を報告',
-    oshiDisplayNormal: '通常',
-    oshiDisplaySmall: '小さく表示',
-    oshiDisplayHidden: '表示しない',
-    oshiName: '推し',
-    oshiHiddenNote: '推しは非表示です',
-    oshiYours: 'あなたの推し',
-    oshiTapHint: '推しをタップすると、ひとこと話します',
-    coinBalance: _jaCoinBalance,
-    wardrobePurchased: _jaWardrobePurchased,
-    wardrobePrice: _jaWardrobePrice,
-    lockedNotPurchased: _jaLockedNotPurchased,
-    passAskTitle: _jaPassAskTitle,
-    passCoin: _jaPassCoin,
-    passOutfit: _jaPassOutfit,
-    characterNames: {},
-    characterRoles: {
-      'standard': 'フラスコの助手',
-      'kai': '頼れる先輩',
-      'mio': '明るい後輩',
-      'moka': 'ゆるい相棒（犬）',
-      'mike': 'ていねいな解説役（猫）',
-    },
     feedbackTitleRequired: 'タイトルを入力してください',
     feedbackDetailRequired: '詳細を入力してください',
     feedbackTitleTooLong: _jaTitleTooLong,
@@ -686,18 +416,10 @@ class KitStrings {
     incorrectLabel: '不正解',
     sentenceSeparator: '。',
     explanationTitle: '解説',
-    tabLabels: ['ホーム', '学ぶ', '模擬', '記録', '設定'],
     readAloud: '読み上げ',
-    mockRecordTitle: '学習の記録カード',
-    mockRecordNote: '模擬試験の記録です。本番の合格ではありません。名前などの個人情報は入りません。',
-    mockRecordMessage: '合格点を超えました！',
     sourceNote: _jaSourceNote,
     sourceNoteChecked: _jaSourceNoteChecked,
-    mockRecordCert: _jaMockRecordCert,
-    shareCardBrand: 'うかラボ',
-    shareCardPassed: '合格しました！',
-    shareDate: _jaShareDate,
-  );
+);
 
   static const en = KitStrings(
     languageCode: 'en',
@@ -741,21 +463,6 @@ class KitStrings {
     settingsTransfer: 'Transfer your progress',
     settingsAbout: 'About this app',
     aboutVersion: _enAboutVersion,
-    coinTotal: 'Total',
-    coinBreakdownTitle: 'Study coins earned this time',
-    coinEventLabels: {
-      'newQuestion': 'New questions',
-      'coverageStep': 'Coverage up',
-      'accuracyMilestone': 'Accuracy milestone',
-      'accuracyBest': 'New personal best',
-      'reviewCorrected': 'Mastered in review',
-      'dailyConsult': "Today's consult",
-      'mockDone': 'Mock exam taken',
-      'mockPass': 'Mock exam passed',
-      'mockBest': 'Mock exam personal best',
-      'streak': 'Study streak',
-      'passReport': 'Pass report',
-    },
     errorMessage: "Couldn't load. Please check your connection and try again.",
     retry: 'Try again',
     streakZero: 'Start today',
@@ -781,61 +488,6 @@ class KitStrings {
     feedbackSubmit: 'Send',
     feedbackSent: 'Sent. Thank you!',
     feedbackFailed: 'Could not send. Please try again later.',
-    passAskBody: 'What you tell us is used only on this device.',
-    passNotYet: 'Not yet / waiting for results',
-    passNotPassed: "I didn't pass this time",
-    passPassed: 'I passed',
-    passEncourageTitle: 'Good work',
-    passEncourageBody:
-        'Review your weak spots and try again. Your coins and outfits stay as they are.',
-    passCongrats: 'Congratulations on passing!',
-    passPrivacy:
-        'The shared card contains no personal information such as your name.',
-    passShare: 'Share',
-    wardrobeTitle: 'Outfits & shop',
-    wardrobeNote:
-        'Coins are earned by studying. Outfits are cosmetic only and do not affect your study content.',
-    wardrobeInsufficient: 'Not enough coins. You earn them by studying',
-    wardrobeAlreadyOwned: 'You already own this',
-    wardrobeUnknown: 'This cannot be purchased',
-    wardrobeCannotWear: 'You cannot wear this outfit right now',
-    wardrobeWear: 'Wear',
-    wardrobeWearing: 'Wearing',
-    wardrobeCanWear: 'Available to wear',
-    lockedNotPassed: 'Unlocked when you pass',
-    lockedNoExamDate: 'Set your exam date to wear this',
-    lockedNotReady: 'Unlocked when you reach your readiness goal',
-    oshiMenuTooltip: 'Companion menu',
-    oshiChoose: 'Choose companion',
-    oshiPassReport: 'Report exam result',
-    oshiDisplayNormal: 'Normal',
-    oshiDisplaySmall: 'Show small',
-    oshiDisplayHidden: 'Hide',
-    oshiName: 'Companion',
-    oshiHiddenNote: 'Your companion is hidden',
-    oshiYours: 'Your companion',
-    oshiTapHint: 'Tap your companion to hear a word',
-    coinBalance: _enCoinBalance,
-    wardrobePurchased: _enWardrobePurchased,
-    wardrobePrice: _enWardrobePrice,
-    lockedNotPurchased: _enLockedNotPurchased,
-    passAskTitle: _enPassAskTitle,
-    passCoin: _enPassCoin,
-    passOutfit: _enPassOutfit,
-    characterNames: {
-      'standard': 'Uka',
-      'kai': 'Kai',
-      'mio': 'Mio',
-      'moka': 'Moka',
-      'mike': 'Mike',
-    },
-    characterRoles: {
-      'standard': 'Flask assistant',
-      'kai': 'Reliable senior',
-      'mio': 'Cheerful junior',
-      'moka': 'Easygoing buddy (dog)',
-      'mike': 'Careful explainer (cat)',
-    },
     feedbackTitleRequired: 'Please enter a title',
     feedbackDetailRequired: 'Please enter the details',
     feedbackTitleTooLong: _enTitleTooLong,
@@ -844,22 +496,13 @@ class KitStrings {
     incorrectLabel: 'Incorrect',
     sentenceSeparator: '. ',
     explanationTitle: 'Explanation',
-    tabLabels: ['Home', 'Learn', 'Mock', 'Records', 'Settings'],
     readAloud: 'Read aloud',
-    mockRecordTitle: 'Study record card',
-    mockRecordNote:
-        'This is a mock exam record, not an actual pass. It contains no personal information such as your name.',
-    mockRecordMessage: 'You beat the passing score!',
     sourceNote: _enSourceNote,
     sourceNoteChecked: _enSourceNoteChecked,
-    mockRecordCert: _enMockRecordCert,
-    shareCardBrand: 'Qualab',
-    shareCardPassed: 'I passed!',
-    shareDate: _enShareDate,
     questionNo: _enQuestionNo,
     questionNoOfTotal: _enQuestionNoOfTotal,
     progressDefault: 'Progress',
-  );
+);
 
   /// 言語から選ぶ。内蔵は ja・en・簡体字(zh)・繁体字(zh-Hant、`zh_TW`/`zh_HK`/`zh_MO` も)・ko。
   /// アプリが用意した言語は [supported]（言語コード → 文言）で渡す（内蔵より優先）。
@@ -919,22 +562,6 @@ String _enCorrectOfTotal(int c, int t) => '$c of $t correct';
 String _enPassLine(int p) => 'Passing line $p%';
 String _enMinutesBadge(int m) => 'About $m min';
 
-String _jaPassAskTitle(String c) => '${c}の結果を教えてください';
-String _enPassAskTitle(String c) => 'Tell us your $c result';
-String _jaPassCoin(int a) => '学習コイン +$a';
-String _enPassCoin(int a) => 'Study coins +$a';
-String _jaPassOutfit(String n) => '「$n」を着られるようになりました';
-String _enPassOutfit(String n) => 'You can now wear "$n"';
-
-String _jaCoinBalance(int b) => '学習コイン $b';
-String _enCoinBalance(int b) => 'Study coins $b';
-String _jaWardrobePurchased(String n) => '${n}を購入しました';
-String _enWardrobePurchased(String n) => 'Purchased $n';
-String _jaWardrobePrice(int p) => '${p}コイン';
-String _enWardrobePrice(int p) => '$p coins';
-String _jaLockedNotPurchased(int p) => '${p}コインで購入できます';
-String _enLockedNotPurchased(int p) => 'Buy for $p coins';
-
 String _jaTitleTooLong(int m) => 'タイトルは$m文字以内で入力してください';
 String _enTitleTooLong(int m) => 'Title must be $m characters or fewer';
 String _jaDetailTooLong(int m) => '詳細は$m文字以内で入力してください';
@@ -944,26 +571,6 @@ String _jaSourceNote(String s) => '出典: $s';
 String _enSourceNote(String s) => 'Source: $s';
 String _jaSourceNoteChecked(String s, String d) => '出典: $s（$d 確認）';
 String _enSourceNoteChecked(String s, String d) => 'Source: $s (checked $d)';
-String _jaMockRecordCert(String c) => '$c 模擬試験';
-String _enMockRecordCert(String c) => '$c mock exam';
-
-String _jaShareDate(DateTime d) => '${d.year}年${d.month}月${d.day}日';
-const _enShortMonths = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-String _enShareDate(DateTime d) =>
-    '${_enShortMonths[d.month - 1]} ${d.day}, ${d.year}';
 
 String _jaQuestionNo(int i) => '第$i問';
 String _enQuestionNo(int i) => 'Question $i';

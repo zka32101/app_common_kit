@@ -14,10 +14,10 @@ void main() {
   // copyWith に項目を足し忘れると、コンストラクタの必須引数が足りずコンパイルエラーになる。
   group('copyWith', () {
     test('指定した項目だけ変わり、ほかは元のまま', () {
-      final k = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计');
+      final k = KitStrings.en.copyWith(languageCode: 'zh', close: '关闭');
       expect(k.languageCode, 'zh');
-      expect(k.coinTotal, '合计');
-      expect(k.coinBreakdownTitle, KitStrings.en.coinBreakdownTitle);
+      expect(k.close, '关闭');
+      expect(k.retry, KitStrings.en.retry);
       expect(k.streakDays(3), KitStrings.en.streakDays(3));
       expect(KitStrings.en.languageCode, 'en'); // 元は変わらない
 
@@ -28,7 +28,7 @@ void main() {
   });
 
   group('forLocale', () {
-    final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计');
+    final zh = KitStrings.en.copyWith(languageCode: 'zh', close: '关闭');
 
     test('アプリが用意した言語を選べる。内蔵に無い言語は従来どおり日本語', () {
       final supported = {'zh': zh};
@@ -40,7 +40,7 @@ void main() {
     });
 
     test('supported で ja/en を上書きもできる', () {
-      final custom = KitStrings.en.copyWith(coinTotal: 'Sum');
+      final custom = KitStrings.en.copyWith(close: 'Sum');
       expect(KitStrings.forLocale(const Locale('en'), supported: {'en': custom}), same(custom));
     });
   });

@@ -80,16 +80,6 @@ void main() {
     expect(find.text('送信する'), findsOneWidget);
   });
 
-  test('ja/en の文言関数', () {
-    expect(
-      KitStrings.en.passAskTitle('IT Passport'),
-      'Tell us your IT Passport result',
-    );
-    expect(KitStrings.ja.passAskTitle('ITパスポート'), 'ITパスポートの結果を教えてください');
-    expect(KitStrings.en.passCoin(30), 'Study coins +30');
-    expect(KitStrings.ja.passOutfit('帽子'), '「帽子」を着られるようになりました');
-  });
-
   testWidgets('選択肢・解説・読み上げ・下部タブが ja/en で切り替わる', (tester) async {
     Widget body() => Column(children: [
           ChoiceTile(label: 'A', text: 'x', state: ChoiceState.correct),
