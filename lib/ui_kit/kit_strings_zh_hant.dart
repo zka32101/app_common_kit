@@ -8,19 +8,10 @@ String _minutesBadge(int m) => '約$m分鐘';
 String _streakSemantics(int d) => '連續學習 $d 天';
 String _correctOfTotal(int c, int t) => '答對 $c / $t 題';
 String _passLine(int p) => '及格線 $p%';
-String _coinBalance(int b) => '學習幣 $b';
-String _wardrobePurchased(String n) => '已購買$n';
-String _wardrobePrice(int p) => '$p 學習幣';
-String _lockedNotPurchased(int p) => '花 $p 學習幣即可購買';
-String _passAskTitle(String c) => '請告訴我們$c的結果';
-String _passCoin(int a) => '學習幣 +$a';
-String _passOutfit(String n) => '現在可以穿上「$n」了';
 String _titleTooLong(int m) => '標題請在 $m 個字以內';
 String _detailTooLong(int m) => '詳情請在 $m 個字以內';
 String _sourceNote(String s) => '出處：$s';
 String _sourceNoteChecked(String s, String d) => '出處：$s（$d 已確認）';
-String _mockRecordCert(String c) => '$c 模擬考試';
-String _shareDate(DateTime d) => '${d.year}年${d.month}月${d.day}日';
 String _aboutVersion(String v) => '版本 $v';
 
 /// 繁体字中国語（`zh-Hant`）。
@@ -65,21 +56,6 @@ const kitStringsZhHant = KitStrings(
   settingsTransfer: '學習資料轉移（更換裝置）',
   settingsAbout: '關於本應用程式',
   aboutVersion: _aboutVersion,
-  coinTotal: '合計',
-  coinBreakdownTitle: '本次獲得的學習幣',
-  coinEventLabels: {
-    'newQuestion': '新題目',
-    'coverageStep': '涵蓋率提升',
-    'accuracyMilestone': '達成正確率',
-    'accuracyBest': '刷新個人最佳',
-    'reviewCorrected': '複習後攻克',
-    'dailyConsult': '今日諮詢',
-    'mockDone': '完成模擬考試',
-    'mockPass': '模擬考試達到及格分',
-    'mockBest': '模擬考試個人最佳',
-    'streak': '連續學習',
-    'passReport': '通過回報',
-  },
   errorMessage: '載入失敗。請檢查網路連線後再試一次。',
   retry: '重試',
   streakZero: '從今天開始吧',
@@ -104,52 +80,6 @@ const kitStringsZhHant = KitStrings(
   feedbackSubmit: '送出',
   feedbackSent: '已送出，謝謝！',
   feedbackFailed: '送出失敗，請稍後再試。',
-  passAskBody: '您告知的內容僅會在這台裝置內使用。',
-  passNotYet: '還沒有・等待結果',
-  passNotPassed: '這次沒有通過',
-  passPassed: '通過了',
-  passEncourageTitle: '辛苦了',
-  passEncourageBody: '複習弱點後再來挑戰吧。學習幣和服裝都會保留。',
-  passCongrats: '恭喜通過',
-  passPrivacy: '分享的卡片中不會包含姓名等個人資訊。',
-  passShare: '分享',
-  wardrobeTitle: '換裝・商店',
-  wardrobeNote: '學習幣透過學習獲得。服裝只是外觀，不影響學習內容。',
-  wardrobeInsufficient: '學習幣不足。學習即可獲得',
-  wardrobeAlreadyOwned: '已擁有',
-  wardrobeUnknown: '無法購買',
-  wardrobeCannotWear: '目前無法穿上這件服裝',
-  wardrobeWear: '穿上',
-  wardrobeWearing: '穿著中',
-  wardrobeCanWear: '可以穿上',
-  lockedNotPassed: '通過考試後解鎖',
-  lockedNoExamDate: '設定考試日期後即可穿上',
-  lockedNotReady: '達成備考目標後解鎖',
-  oshiMenuTooltip: '本命選單',
-  oshiChoose: '選擇本命',
-  oshiPassReport: '回報考試結果',
-  oshiDisplayNormal: '正常',
-  oshiDisplaySmall: '縮小顯示',
-  oshiDisplayHidden: '不顯示',
-  oshiName: '本命',
-  oshiHiddenNote: '本命已隱藏',
-  oshiYours: '你的本命',
-  oshiTapHint: '點一下本命，牠會說句話',
-  coinBalance: _coinBalance,
-  wardrobePurchased: _wardrobePurchased,
-  wardrobePrice: _wardrobePrice,
-  lockedNotPurchased: _lockedNotPurchased,
-  passAskTitle: _passAskTitle,
-  passCoin: _passCoin,
-  passOutfit: _passOutfit,
-  characterNames: {},
-  characterRoles: {
-    'standard': '燒瓶助手',
-    'kai': '可靠的前輩',
-    'mio': '開朗的後輩',
-    'moka': '悠閒的夥伴（狗）',
-    'mike': '細心的講解員（貓）',
-  },
   feedbackTitleRequired: '請輸入標題',
   feedbackDetailRequired: '請輸入詳情',
   feedbackTitleTooLong: _titleTooLong,
@@ -158,15 +88,7 @@ const kitStringsZhHant = KitStrings(
   incorrectLabel: '錯誤',
   sentenceSeparator: '。',
   explanationTitle: '解析',
-  tabLabels: ['首頁', '學習', '模擬', '紀錄', '設定'],
   readAloud: '朗讀',
-  mockRecordTitle: '學習紀錄卡',
-  mockRecordNote: '這是模擬考試的紀錄，並非正式考試通過。不包含姓名等個人資訊。',
-  mockRecordMessage: '超過及格分了！',
   sourceNote: _sourceNote,
   sourceNoteChecked: _sourceNoteChecked,
-  mockRecordCert: _mockRecordCert,
-  shareCardBrand: 'Qualab',
-  shareCardPassed: '通過了！',
-  shareDate: _shareDate,
 );

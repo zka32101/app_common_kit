@@ -2,6 +2,19 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.0.0]
+
+### 破壊的変更
+`ukalab_core` の画面専用の文言 51 項目を `KitStrings` から外し、`ukalab_core` の `UkalabStrings`（`package:ukalab_core/ui.dart`）へ移した。
+
+- 外した項目: `coinTotal`・`coinBreakdownTitle`・`coinEventLabels`・`pass*`（合格報告）・`wardrobe*`・`locked*`・`oshi*`・`coinBalance`・`character*`・`tabLabels`・`mockRecord*`・`shareCardBrand`・`shareCardPassed`・`shareDate`
+- `KitStrings` のコンストラクタ・`copyWith`・内蔵の ja/en/zh/zh-Hant/ko から上記を削除（`KitStrings.zhHans` などの内蔵言語は残る）
+
+### 移行
+- 上記の項目を `KitStrings` 経由で読んでいたコードは、`UkalabStrings.of(context)`（`ukalab_core` の画面は自動）に切り替える
+- `KitStrings.copyWith` に上記の項目を渡していたコードは、`UkalabStrings.copyWith` に移す
+- `ukalab_core` は v0.52.0 以降を使う
+
 ## [2.0.0]
 
 ### 破壊的変更

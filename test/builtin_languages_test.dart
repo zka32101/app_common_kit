@@ -52,24 +52,14 @@ void main() {
           s.purchaseFailed, s.restoreDone, s.restoreNone, s.examDateTitle, s.examDateUnset, s.examDateClear,
           s.settingsTitle, s.settingsTheme, s.themeSystem, s.themeLight, s.themeDark, s.settingsLanguage,
           s.settingsHandsFree, s.handsFreeEnable, s.handsFreeSpeakQuestion, s.handsFreeSpeakExplanation,
-          s.handsFreeSpeed, s.settingsTransfer, s.settingsAbout, s.coinTotal, s.coinBreakdownTitle, s.errorMessage,
+          s.handsFreeSpeed, s.settingsTransfer, s.settingsAbout, s.errorMessage,
           s.retry, s.streakZero, s.accuracy, s.passLineReached, s.passLineNotYet, s.again, s.close,
           s.feedbackTitle, s.feedbackType, s.feedbackBug, s.feedbackFeature, s.feedbackOther, s.feedbackSubject,
           s.feedbackSubjectHint, s.feedbackDetail, s.feedbackDetailHint, s.feedbackSubmit, s.feedbackSent,
           s.feedbackFailed, s.correctLabel, s.incorrectLabel, s.explanationTitle, s.readAloud,
-          ...s.tabLabels,
         ];
         for (final t in texts) {
           expect(t.trim(), isNotEmpty);
-        }
-      });
-
-      test('${e.key}: コインの種類と推しの役割が、日本語と同じキーを全部持つ', () {
-        expect(s.coinEventLabels.keys.toSet(), KitStrings.ja.coinEventLabels.keys.toSet());
-        expect(s.characterRoles.keys.toSet(), KitStrings.ja.characterRoles.keys.toSet());
-        expect(s.tabLabels.length, 5);
-        for (final v in [...s.coinEventLabels.values, ...s.characterRoles.values]) {
-          expect(v.trim(), isNotEmpty);
         }
       });
 
@@ -79,20 +69,10 @@ void main() {
         expect(s.streakSemantics(7), contains('7'));
         expect(s.correctOfTotal(8, 10), allOf(contains('8'), contains('10')));
         expect(s.passLine(70), contains('70'));
-        expect(s.coinBalance(120), contains('120'));
-        expect(s.wardrobePurchased('帽子'), contains('帽子'));
-        expect(s.wardrobePrice(300), contains('300'));
-        expect(s.lockedNotPurchased(300), contains('300'));
-        expect(s.passAskTitle('G検定'), contains('G検定'));
-        expect(s.passCoin(50), contains('50'));
-        expect(s.passOutfit('帽子'), contains('帽子'));
         expect(s.feedbackTitleTooLong(80), contains('80'));
         expect(s.feedbackDetailTooLong(1000), contains('1000'));
         expect(s.sourceNote('第1条'), contains('第1条'));
         expect(s.sourceNoteChecked('第1条', '2026-10-09'), allOf(contains('第1条'), contains('2026-10-09')));
-        expect(s.mockRecordCert('G検定'), contains('G検定'));
-        final d = s.shareDate(DateTime(2026, 10, 9));
-        expect(d, allOf(contains('2026'), contains('9')));
       });
     }
 
@@ -102,10 +82,9 @@ void main() {
       for (final e in builtIn.entries.where((e) => e.key != 'ja')) {
         final s = e.value;
         final all = <String>[
-          s.reviewEnjoyTitle, s.updateRequiredBody, s.settingsHandsFree, s.examDateUnset, s.passEncourageBody,
-          s.wardrobeNote, s.feedbackFailed, s.oshiTapHint, s.mockRecordNote, s.errorMessage,
-          ...s.coinEventLabels.values, ...s.characterRoles.values, ...s.tabLabels,
-          s.streakDays(3), s.passLine(70), s.shareDate(DateTime(2026, 10, 9)),
+          s.reviewEnjoyTitle, s.updateRequiredBody, s.settingsHandsFree, s.examDateUnset,
+          s.feedbackFailed, s.errorMessage,
+          s.streakDays(3), s.passLine(70),
         ];
         for (final t in all) {
           expect(kana.hasMatch(t), isFalse, reason: '${e.key}: 「$t」にかなが混ざっている');
