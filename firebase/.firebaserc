@@ -1,7 +1,0 @@
-{
-  "projects": {
-    "default": "ukalab-dev",
-    "dev": "ukalab-dev",
-    "prod": "ukalab-prod"
-  }
-}
