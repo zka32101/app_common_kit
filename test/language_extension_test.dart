@@ -2,11 +2,10 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _app(Widget child, {KitStrings? strings, LabStrings? labs}) =>
+Widget _app(Widget child, {KitStrings? strings}) =>
     MaterialApp(
       home: KitStringsScope(
         strings: strings ?? KitStrings.ja,
-        labs: labs,
         child: Scaffold(body: child),
       ),
     );
@@ -22,9 +21,9 @@ void main() {
       expect(k.streakDays(3), KitStrings.en.streakDays(3));
       expect(KitStrings.en.languageCode, 'en'); // 元は変わらない
 
-      final l = LabStrings.en.copyWith(progressDefault: '进度');
-      expect(l.progressDefault, '进度');
-      expect(l.gotIt, LabStrings.en.gotIt);
+      final q = KitStrings.en.copyWith(progressDefault: '进度');
+      expect(q.progressDefault, '进度');
+      expect(q.questionNo(2), KitStrings.en.questionNo(2));
     });
   });
 
@@ -52,24 +51,6 @@ void main() {
       await tester.pumpWidget(_app(const StreakBadge(days: 0), strings: zh));
       expect(find.text('今天开始吧'), findsOneWidget);
     });
-
-    testWidgets('labs を渡せばラボ系の文言も差し替わる。渡さなければ言語に応じた既定', (tester) async {
-      Widget probe() => Builder(builder: (c) => Text(LabStrings.of(c).progressDefault));
-      final zh = KitStrings.en.copyWith(languageCode: 'zh');
-
-      // 渡さない: zh は en ではないので日本語の既定
-      await tester.pumpWidget(_app(probe(), strings: zh));
-      expect(find.text(LabStrings.ja.progressDefault), findsOneWidget);
-
-      // 渡す
-      await tester.pumpWidget(_app(probe(), strings: zh, labs: LabStrings.en.copyWith(progressDefault: '进度')));
-      expect(find.text('进度'), findsOneWidget);
-
-      // en は従来どおり英語
-      await tester.pumpWidget(_app(probe(), strings: KitStrings.en));
-      expect(find.text(LabStrings.en.progressDefault), findsOneWidget);
-    });
-
   });
 }
 

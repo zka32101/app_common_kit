@@ -3,7 +3,6 @@ import 'kit_strings_zh_hans.dart';
 import 'kit_strings_zh_hant.dart';
 import 'package:flutter/widgets.dart';
 
-import 'lab_strings.dart';
 
 /// キット内蔵ウィジェットの既定文言（日本語・英語）。
 ///
@@ -138,10 +137,19 @@ class KitStrings {
     required this.shareCardBrand,
     required this.shareCardPassed,
     required this.shareDate,
+    this.questionNo = _jaQuestionNo,
+    this.questionNoOfTotal = _jaQuestionNoOfTotal,
+    this.progressDefault = '進捗',
   });
 
   /// 言語コード（`ja` / `en`）。マスコットのセリフ選びなどに使う。
   final String languageCode;
+
+  /// 問題カードの見出し（「第3問」）と、進捗リングの既定ラベル。
+  /// 指定しない言語では日本語になる（英語は [en] で指定）。
+  final String Function(int index) questionNo;
+  final String Function(int index, int total) questionNoOfTotal;
+  final String progressDefault;
   final String reviewEnjoyTitle;
   final String updateRequiredTitle;
   final String updateRequiredBody;
@@ -406,6 +414,9 @@ class KitStrings {
     String? shareCardBrand,
     String? shareCardPassed,
     String Function(DateTime date)? shareDate,
+    String Function(int index)? questionNo,
+    String Function(int index, int total)? questionNoOfTotal,
+    String? progressDefault,
   }) => KitStrings(
     languageCode: languageCode ?? this.languageCode,
     reviewEnjoyTitle: reviewEnjoyTitle ?? this.reviewEnjoyTitle,
@@ -536,6 +547,9 @@ class KitStrings {
     shareCardBrand: shareCardBrand ?? this.shareCardBrand,
     shareCardPassed: shareCardPassed ?? this.shareCardPassed,
     shareDate: shareDate ?? this.shareDate,
+    questionNo: questionNo ?? this.questionNo,
+    questionNoOfTotal: questionNoOfTotal ?? this.questionNoOfTotal,
+    progressDefault: progressDefault ?? this.progressDefault,
   );
 
   static const ja = KitStrings(
@@ -842,6 +856,9 @@ class KitStrings {
     shareCardBrand: 'Qualab',
     shareCardPassed: 'I passed!',
     shareDate: _enShareDate,
+    questionNo: _enQuestionNo,
+    questionNoOfTotal: _enQuestionNoOfTotal,
+    progressDefault: 'Progress',
   );
 
   /// 言語から選ぶ。内蔵は ja・en・簡体字(zh)・繁体字(zh-Hant、`zh_TW`/`zh_HK`/`zh_MO` も)・ko。
@@ -948,6 +965,11 @@ const _enShortMonths = [
 String _enShareDate(DateTime d) =>
     '${_enShortMonths[d.month - 1]} ${d.day}, ${d.year}';
 
+String _jaQuestionNo(int i) => '第$i問';
+String _enQuestionNo(int i) => 'Question $i';
+String _jaQuestionNoOfTotal(int i, int total) => '第$i問 / $total問';
+String _enQuestionNoOfTotal(int i, int total) => 'Question $i of $total';
+
 String _jaAboutVersion(String v) => 'バージョン $v';
 String _enAboutVersion(String v) => 'Version $v';
 
@@ -963,7 +985,6 @@ String _enAboutVersion(String v) => 'Version $v';
 /// ```dart
 /// KitStringsScope(
 ///   strings: zh,          // KitStrings（画面の文言）
-///   labs: zhLabs,         // LabStrings（ラボ系ウィジェットの文言）
 ///   child: ...,
 /// )
 /// ```
@@ -971,20 +992,12 @@ class KitStringsScope extends InheritedWidget {
   const KitStringsScope({
     super.key,
     required this.strings,
-    this.labs,
     required super.child,
   });
 
   final KitStrings strings;
 
-  /// ラボ系ウィジェットの文言。null なら [LabStrings.ja]／[LabStrings.en]。
-  final LabStrings? labs;
-
-  /// 最も近い [KitStringsScope] の [labs]。無ければ null。
-  static LabStrings? labsOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<KitStringsScope>()?.labs;
-
   @override
   bool updateShouldNotify(KitStringsScope old) =>
-      strings != old.strings || labs != old.labs;
+      strings != old.strings;
 }

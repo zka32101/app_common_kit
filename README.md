@@ -144,17 +144,15 @@ KitStringsScope(strings: KitStrings.forLocale(Locale('en')), child: app)
 
 ### 言語を足す（中国語・韓国語など）
 
-文言は3つの束に分かれている。どれも `copyWith` で一部だけ差し替えられるので、英語を土台に訳していくのが早い（項目を足したときの訳し忘れは、土台の英語のまま出る）。
+文言は2つの束に分かれている（ラボ系の `LabStrings` は v2.0.0 で `ukalab_core` に移った）。どれも `copyWith` で一部だけ差し替えられるので、英語を土台に訳していくのが早い（項目を足したときの訳し忘れは、土台の英語のまま出る）。
 
 | 束 | 内容 |
 |---|---|
 | `KitStrings` | 画面の文言（結果・コイン・フィードバック・着替え・共有カードなど） |
-| `LabStrings` | ラボ系ウィジェット（機械学習ラボ・用語マップ・ストーリーなど） |
 | 推しのセリフ | `Map<MascotTone, MascotLines>`（口調ごとのセリフ集） |
 
 ```dart
 final zh = KitStrings.en.copyWith(languageCode: 'zh', coinTotal: '合计' /* … */);
-final zhLabs = LabStrings.en.copyWith(progressDefault: '进度' /* … */);
 
 KitStringsScope(
   strings: KitStrings.forLocale(locale, supported: {'zh': zh}), // 無い言語は ja（en は英語）
@@ -172,7 +170,7 @@ KitStringsScope(
 画面の文言（`KitStrings`）は、ja・en・簡体字(`zh`)・繁体字(`zh-Hant`)・韓国語(`ko`) を内蔵している。`KitStrings.forLocale(locale)` が選ぶ（`zh_TW`・`zh_HK`・`zh_MO` は繁体字）。
 
 - zh・zh-Hant・ko は**機械翻訳の下書き**。公開前に、母語話者の確認が要る
-- ラボ系ウィジェットの文言（`LabStrings`）と推しのセリフ（`ukalab_core`）は、まだ ja/en のみ。これらは zh・ko では日本語で出る（次の段階で対応）
+- ラボ系ウィジェットの文言（`ukalab_core` の `LabStrings`）と推しのセリフ（`ukalab_core`）は、まだ ja/en のみ。これらは zh・ko では日本語で出る（次の段階で対応）
 
 ## 構成
 
@@ -506,6 +504,8 @@ HandsFreeQuestionLayout(
 
 ## 全国平均点・偏差値の匿名集計（決定32）
 
+> **v2.0.0 で `ukalab_core` に移った**（`package:ukalab_core/ui.dart`）。以下は仕様の説明として残す。
+
 `ExamStatsService` は模擬試験結果を匿名で集計し、全国平均点・偏差値を結果画面に表示するための抽象。
 
 ```dart
@@ -528,6 +528,8 @@ final summary = await ref.read(examStatsServiceProvider)
 
 
 ## 用語マップ・AI系譜図（決定41、画期的な機能9）
+
+> **v2.0.0 で `ukalab_core` に移った**（`package:ukalab_core/ui.dart`）。以下は仕様の説明として残す。
 
 `TermMapWidget` は、関連用語でつながる地図（用語マップ）と、時代区分に沿ったタイムライン（系譜図）の両方を1つのウィジェットで出す。
 
