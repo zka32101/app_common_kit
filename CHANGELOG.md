@@ -2,6 +2,15 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.7.0]
+
+### 追加
+
+- **機能フラグ**: `FeatureFlags` / `FeatureFlagBackend`（`FakeFeatureFlagBackend`）/ `FeatureFlagCache`（`SharedPreferencesFeatureFlagCache`）/ `featureFlagsProvider`
+  - 段階リリース・緊急停止・実験の切り替え用。リモート取得はアプリが `FeatureFlagBackend` を実装して渡す（Remote Config 等。キットは依存しない）
+  - `defaults` に載せたキーだけ有効で、型は既定値に合わせる。`load()` は前回値を先に反映し、取得失敗でも例外を出さず前回値か既定値で動く
+  - 追加のみ。既存の挙動は変えない
+
 ## [3.6.0]
 
 ### 追加
