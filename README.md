@@ -581,6 +581,9 @@ NagaraSessionView(
       NagaraQuestion(id: q.id, prompt: q.prompt, choices: q.choices, correctIndex: q.answerIndex, explanation: q.explanation),
   ],
   maxQuestions: 10, // ひと続きの上限（任意）。達すると休憩を促して終わる
+  // 正答・誤答とも（1 問 1 回）。通常の解答と同じ記録経路へ。未回答・スキップでは呼ばれない。
+  // 順序: 解答確定 → onAnswered → （誤答なら）onWrongAnswer
+  onAnswered: (q, chosen, correct) => recordAnswer(q.id, chosen, correct),
   onWrongAnswer: (q, chosen) => reviewQueue.add(q.id), // タップ回答が不正解のとき
   onUnanswered: (q) => reviewQueue.add(q.id),          // 考える間に答えがなかったとき（任意）
   onFinished: (summary) { /* summary.correctCount, finishReason */ },

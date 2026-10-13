@@ -133,6 +133,7 @@ class NagaraSessionController {
     required this.settings,
     this.strings = NagaraStrings.ja,
     int? maxQuestions,
+    this.onAnswered,
     this.onWrongAnswer,
     this.onUnanswered,
     this.onFinished,
@@ -152,6 +153,14 @@ class NagaraSessionController {
 
   /// このセッションで出す問題数。アプリが指定した上限（ひと続きの上限）を反映する。
   final int total;
+
+  /// タップで答えが確定したとき（正答・誤答の両方）。`chosen` は [NagaraQuestion.choices] の位置、
+  /// `correct` は正解かどうか。アプリの通常の解答と同じ記録経路（履歴・間隔反復など）に載せる。
+  ///
+  /// - 1 問につき最大 1 回。呼び出し順は「解答確定 → onAnswered → （誤答なら onWrongAnswer）」。
+  /// - 考える間に答えがなかった問題（[onUnanswered]）とスキップでは呼ばない（未回答は解答ではない）。
+  /// - 一時停止・再開、画面離脱では呼ばない／重複しない。
+  final void Function(NagaraQuestion question, int chosen, bool correct)? onAnswered;
 
   /// タップ回答で正解でなかったとき。アプリが復習キューや間違いノートに積む。
   final void Function(NagaraQuestion question, int chosen)? onWrongAnswer;
@@ -284,6 +293,7 @@ class NagaraSessionController {
     _result = ok ? NagaraResult.correct : NagaraResult.incorrect;
     _completed++;
     if (ok) _correct++;
+    _safe(() => onAnswered?.call(q, chosen, ok));
     if (!ok) _safe(() => onWrongAnswer?.call(q, chosen));
     _phase = NagaraPhase.readingAnswer;
     _notify();

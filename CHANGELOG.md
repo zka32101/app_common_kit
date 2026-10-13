@@ -2,6 +2,15 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.5.0]
+
+### 追加
+
+- **ながらセッションに `onAnswered(question, chosen, correct)`**（`NagaraSessionController` / `NagaraSessionView`）。正答を含む全てのタップ回答をアプリに返す。追加のみで、既存の `onWrongAnswer` / `onUnanswered` / `onFinished` の意味は変えない
+  - 呼び出し順: 解答確定 → `onAnswered` → （誤答なら）`onWrongAnswer`。1 問につき最大 1 回
+  - **未回答（`onUnanswered`）とスキップでは呼ばない**（未回答は解答ではない）。一時停止・再開、画面離脱でも重複しない
+  - `chosen` は選択肢の位置（0 始まり）。アプリは通常の解答と同じ記録経路（履歴・間隔反復・デイリーミッション）に載せると、間違いノートの「克服」や週間ふりかえりに正答も反映される
+
 ## [3.4.0]
 
 ### 追加

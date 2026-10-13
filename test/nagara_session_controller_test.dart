@@ -34,7 +34,14 @@ class _Harness {
       backend: backend ?? fake,
       settings: () => settings,
       maxQuestions: max,
-      onWrongAnswer: (q, i) => wrong.add((q.id, i)),
+      onAnswered: (q, i, ok) {
+        order.add('answered');
+        answered.add((q.id, i, ok));
+      },
+      onWrongAnswer: (q, i) {
+        order.add('wrong');
+        wrong.add((q.id, i));
+      },
       onUnanswered: (q) => unanswered.add(q.id),
       onFinished: finished.add,
     );
@@ -43,6 +50,8 @@ class _Harness {
   HandsFreeSettings settings;
   final FakeSpeechBackend fake;
   late final NagaraSessionController controller;
+  final answered = <(String, int, bool)>[];
+  final order = <String>[];
   final wrong = <(String, int)>[];
   final unanswered = <String>[];
   final finished = <NagaraSessionState>[];
@@ -463,6 +472,94 @@ void main() {
       a.flushMicrotasks();
       expect(c.state.phase, NagaraPhase.pausedBetween);
       c.dispose();
+    });
+  });
+
+  test('onAnswered: 正答タップで correct=true が1回、onWrongAnswer は呼ばれない', () {
+    fakeAsync((a) {
+      final h = _Harness();
+      h.controller.start();
+      a.flushMicrotasks();
+      h.controller.answer(0);
+      h.controller.answer(0); // 二重タップ
+      _tick(a, 30);
+      expect(h.answered.where((e) => e.$1 == 'q1'), [('q1', 0, true)]);
+      expect(h.wrong, isEmpty);
+      h.controller.dispose();
+    });
+  });
+
+  test('onAnswered: 誤答タップで correct=false が1回、続けて onWrongAnswer が1回', () {
+    fakeAsync((a) {
+      final h = _Harness();
+      h.controller.start();
+      a.flushMicrotasks();
+      h.controller.answer(1);
+      _tick(a, 1);
+      expect(h.answered, [('q1', 1, false)]);
+      expect(h.wrong, [('q1', 1)]);
+      expect(h.order, ['answered', 'wrong']);
+      h.controller.dispose();
+    });
+  });
+
+  test('onAnswered: 未回答では呼ばず onUnanswered だけ', () {
+    fakeAsync((a) {
+      final h = _Harness();
+      h.controller.start();
+      a.flushMicrotasks();
+      _tick(a, 5);
+      expect(h.unanswered, ['q1']);
+      expect(h.answered, isEmpty);
+      h.controller.dispose();
+    });
+  });
+
+  test('onAnswered: スキップでは呼ばない', () {
+    fakeAsync((a) {
+      final h = _Harness();
+      h.controller.start();
+      a.flushMicrotasks();
+      h.controller.skip();
+      a.flushMicrotasks();
+      h.controller.skip();
+      a.flushMicrotasks();
+      expect(h.answered, isEmpty);
+      h.controller.dispose();
+    });
+  });
+
+  test('onAnswered: 回答後の一時停止→再開・dispose で重複しない', () {
+    fakeAsync((a) {
+      final h = _Harness();
+      h.controller.start();
+      a.flushMicrotasks();
+      h.controller.answer(0);
+      h.controller.pause();
+      h.controller.resume();
+      h.controller.pause();
+      h.controller.resume();
+      _tick(a, 1);
+      h.controller.answer(1); // 読み上げ中の2回目は受け付けない
+      h.controller.dispose();
+      _tick(a, 30);
+      expect(h.answered, [('q1', 0, true)]);
+    });
+  });
+
+  test('onAnswered: 考える間に一時停止→再開しても呼ばれず、再開後の回答は1回', () {
+    fakeAsync((a) {
+      final h = _Harness();
+      h.controller.start();
+      a.flushMicrotasks();
+      h.controller.pause();
+      h.controller.resume();
+      a.flushMicrotasks();
+      expect(h.answered, isEmpty);
+      h.controller.answer(2);
+      _tick(a, 1);
+      expect(h.answered, [('q1', 2, false)]);
+      h.controller.dispose();
     });
   });
 }
