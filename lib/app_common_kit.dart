@@ -51,3 +51,4 @@ export 'legal/legal_links.dart';
 export 'feedback_effects/answer_feedback.dart';
 export 'consent/consent.dart';
 export 'consent/consent_ui.dart';
+export 'parental_gate/parental_gate.dart';
