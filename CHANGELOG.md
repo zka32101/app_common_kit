@@ -2,6 +2,15 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.6.0]
+
+### 追加
+
+- **What's New（更新内容の表示）**: `WhatsNew` / `WhatsNewEntry` / `WhatsNewStore`（`SharedPreferencesWhatsNewStore`）/ `WhatsNewStrings`（5 言語）/ `showWhatsNewIfNeeded`
+  - 更新後の初回起動で、前回見せたバージョンより新しい変更点を新しい順に一度だけ表示する。初回インストールでは出さず、現在のバージョンを記録する
+  - 文面はアプリが現在の言語で渡す。バージョン比較は既存の `compareVersions` を使う
+  - 追加のみ。既存の挙動は変えない
+
 ## [3.5.0]
 
 ### 追加
