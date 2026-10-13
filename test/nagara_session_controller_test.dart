@@ -474,13 +474,6 @@ void main() {
       c.dispose();
     });
   });
-}
-
-class _ThrowingBackend implements SpeechBackend {
-  @override
-  Future<void> speak(String text, {double rate = 1.0}) => throw StateError('sync');
-  @override
-  Future<void> stop() => throw StateError('sync');
 
   test('onAnswered: 正答タップで correct=true が1回、onWrongAnswer は呼ばれない', () {
     fakeAsync((a) {
@@ -569,4 +562,11 @@ class _ThrowingBackend implements SpeechBackend {
       h.controller.dispose();
     });
   });
+}
+
+class _ThrowingBackend implements SpeechBackend {
+  @override
+  Future<void> speak(String text, {double rate = 1.0}) => throw StateError('sync');
+  @override
+  Future<void> stop() => throw StateError('sync');
 }
