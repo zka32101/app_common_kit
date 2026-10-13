@@ -31,6 +31,7 @@ Widget _app(
   ProviderContainer c, {
   List<NagaraQuestion>? questions,
   int? maxQuestions,
+  void Function(NagaraQuestion, int, bool)? onAnswered,
   void Function(NagaraQuestion, int)? onWrongAnswer,
   void Function(NagaraSessionState)? onFinished,
   VoidCallback? onClose,
@@ -39,6 +40,7 @@ Widget _app(
   final view = NagaraSessionView(
     questions: questions ?? _qs(),
     maxQuestions: maxQuestions,
+    onAnswered: onAnswered,
     onWrongAnswer: onWrongAnswer,
     onFinished: onFinished,
     onClose: onClose,
@@ -154,6 +156,33 @@ void main() {
     await _settle(tester, const Duration(seconds: 2));
     expect(find.text('問題 2 / 3'), findsOneWidget);
     await _leave(tester);
+  });
+
+  testWidgets('ビュー: 正答・誤答のタップで onAnswered が各1回、未回答では呼ばれない', (tester) async {
+    bigScreen(tester);
+    final (c, _) = await _container();
+    addTearDown(c.dispose);
+    final answered = <(String, int, bool)>[];
+    final wrong = <(String, int)>[];
+    await tester.pumpWidget(_app(c,
+        onAnswered: (q, i, ok) => answered.add((q.id, i, ok)),
+        onWrongAnswer: (q, i) => wrong.add((q.id, i))));
+    await _settle(tester);
+    await tester.tap(find.text('こたえA'));
+    await _settle(tester, const Duration(seconds: 2));
+    expect(answered, [('q1', 0, true)]);
+    expect(find.text('問題 2 / 3'), findsOneWidget);
+    await _settle(tester);
+    await tester.tap(find.text('こたえB'));
+    await _settle(tester, const Duration(seconds: 2));
+    expect(answered, [('q1', 0, true), ('q2', 1, false)]);
+    expect(wrong, [('q2', 1)]);
+    // 問3は未回答のまま考える間が過ぎる
+    await _settle(tester);
+    await _settle(tester, const Duration(seconds: 5));
+    expect(answered.length, 2);
+    await _leave(tester);
+    expect(answered.length, 2);
   });
 
   testWidgets('正解のタップは誤答として返さず、正解を読む', (tester) async {

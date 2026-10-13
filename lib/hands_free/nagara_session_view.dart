@@ -21,6 +21,7 @@ class NagaraSessionView extends ConsumerStatefulWidget {
     super.key,
     required this.questions,
     this.maxQuestions,
+    this.onAnswered,
     this.onWrongAnswer,
     this.onUnanswered,
     this.onFinished,
@@ -33,6 +34,10 @@ class NagaraSessionView extends ConsumerStatefulWidget {
   final int? maxQuestions;
 
   /// 誤答（タップ回答）。アプリが復習キューや間違いノートに積む。
+  /// タップで答えが確定したとき（正答・誤答とも。未回答・スキップでは呼ばない）。
+  /// [NagaraSessionController.onAnswered] と同じ。
+  final void Function(NagaraQuestion question, int chosen, bool correct)? onAnswered;
+
   final void Function(NagaraQuestion question, int chosen)? onWrongAnswer;
 
   /// 考える間のうちに答えがなかった問題。
@@ -61,6 +66,7 @@ class _NagaraSessionViewState extends ConsumerState<NagaraSessionView> {
       settings: () => ref.read(handsFreeProvider),
       strings: KitStrings.of(context).nagara,
       maxQuestions: widget.maxQuestions,
+      onAnswered: (q, i, ok) => widget.onAnswered?.call(q, i, ok),
       onWrongAnswer: (q, i) => widget.onWrongAnswer?.call(q, i),
       onUnanswered: (q) => widget.onUnanswered?.call(q),
       onFinished: (s) => widget.onFinished?.call(s),
