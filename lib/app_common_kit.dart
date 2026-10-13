@@ -51,3 +51,5 @@ export 'legal/legal_links.dart';
 export 'feedback_effects/answer_feedback.dart';
 export 'consent/consent.dart';
 export 'consent/consent_ui.dart';
+export 'diagnostics/diagnostic_log.dart';
+export 'diagnostics/diagnostics.dart';

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/feedback_limits.dart';
 import '../models/feedback_model.dart';
+import '../diagnostics/diagnostics.dart';
 import '../providers/feedback_provider.dart';
 import '../ui_kit/kit_strings.dart';
 
@@ -31,12 +32,17 @@ class FeedbackFormPage extends ConsumerStatefulWidget {
   /// 画面は Navigator の上に積まれるため、Scope は `MaterialApp.builder` など Navigator より上に置くか、ここで渡す。
   final KitStrings? strings;
 
+  /// 渡すと「診断情報を添える」のチェックを出す（既定でオン）。送る内容は、画面で確認できる。
+  /// `DiagnosticsCollector(...).collect` を渡す。
+  final String Function()? collectDiagnostics;
+
   const FeedbackFormPage({
     super.key,
     required this.appName,
     this.appVersion = '',
     this.userId,
     this.strings,
+    this.collectDiagnostics,
   });
 
   @override
@@ -48,6 +54,7 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   FeedbackType _type = FeedbackType.bug;
+  bool _attachDiagnostics = true;
 
   @override
   void dispose() {
@@ -68,6 +75,9 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
           appName: widget.appName,
           appVersion: widget.appVersion,
           userId: widget.userId,
+          diagnostics: widget.collectDiagnostics != null && _attachDiagnostics
+              ? widget.collectDiagnostics!()
+              : null,
         );
 
     if (!mounted) return;
@@ -152,6 +162,16 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
               validator: (v) => FeedbackLimits.standard
                   .validateDescription(v, KitStrings.of(context)),
             ),
+            if (widget.collectDiagnostics != null) ...[
+              const SizedBox(height: 12),
+              _DiagnosticsTile(
+                strings: DiagnosticsStrings.forCode(strings.languageCode),
+                value: _attachDiagnostics,
+                enabled: !isSubmitting,
+                onChanged: (v) => setState(() => _attachDiagnostics = v),
+                collect: widget.collectDiagnostics!,
+              ),
+            ],
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -172,6 +192,54 @@ class _FeedbackFormPageState extends ConsumerState<FeedbackFormPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 「診断情報を添える」のチェックと、送る内容を見るボタン。
+class _DiagnosticsTile extends StatelessWidget {
+  const _DiagnosticsTile({
+    required this.strings,
+    required this.value,
+    required this.enabled,
+    required this.onChanged,
+    required this.collect,
+  });
+
+  final DiagnosticsStrings strings;
+  final bool value;
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
+  final String Function() collect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+          value: value,
+          onChanged: enabled ? (v) => onChanged(v ?? false) : null,
+          title: Text(strings.attach),
+          subtitle: Text(strings.attachHint),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text(strings.preview),
+                content: SingleChildScrollView(child: SelectableText(collect())),
+                actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(strings.close))],
+              ),
+            ),
+            child: Text(strings.preview),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -10,6 +10,8 @@ export interface FeedbackDoc {
   platform?: string;
   createdAt?: string;
   userId?: string;
+  /** 診断情報（版・端末・直近の操作の記録）。利用者が添えたときだけ付く。 */
+  diagnostics?: string;
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -19,6 +21,7 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 export const MAX_BODY = 4000;
+export const MAX_DIAGNOSTICS = 3000;
 
 /** 同じ内容の報告を同じ値にまとめるための指紋。アプリ・種別・題名（大小文字と空白を無視）で決まる。 */
 export function fingerprint(r: FeedbackDoc): string {
@@ -33,6 +36,21 @@ export interface IssueDraft {
   title: string;
   body: string;
   labels: string[];
+}
+
+/**
+ * 診断情報を、折りたたみ（`<details>`）の中のコードブロックにして返す。無ければ空。
+ * 利用者が書いた文字列なので、コードブロックを閉じる記号（```）と HTML のタグは無害にする。長さも切り詰める。
+ */
+export function diagnosticsSection(diagnostics?: string): string[] {
+  const text = (diagnostics ?? '').trim();
+  if (!text) return [];
+  const safe = text
+    .slice(0, MAX_DIAGNOSTICS)
+    .replace(/`/g, "'")
+    .replace(/</g, '＜')
+    .replace(/>/g, '＞');
+  return ['', '<details><summary>診断情報</summary>', '', '```', safe, '```', '', '</details>'];
 }
 
 /** Issue の題名・本文・ラベルを組み立てる。アプリ名のラベル（`app:<名前>`）で絞り込める。 */
@@ -52,6 +70,7 @@ export function buildIssue(r: FeedbackDoc): IssueDraft {
     `| 種別 | ${r.type ?? 'unknown'} |`,
     `| 報告日時 | ${r.createdAt ?? ''} |`,
     r.userId ? `| userId | ${r.userId} |` : null,
+    ...diagnosticsSection(r.diagnostics),
     '',
     fingerprintMarker(fingerprint(r)),
   ]

@@ -68,6 +68,7 @@ class SettingsScreen extends ConsumerWidget {
     this.examDate,
     this.onExamDateChanged,
     this.showFeedback = true,
+    this.collectDiagnostics,
     this.onTransfer,
     this.consent,
     this.legal,
@@ -110,6 +111,9 @@ class SettingsScreen extends ConsumerWidget {
   final ValueChanged<DateTime?>? onExamDateChanged;
 
   final bool showFeedback;
+
+  /// 渡すと、ご意見・不具合報告の画面に「診断情報を添える」のチェックを出す（`DiagnosticsCollector(...).collect`）。
+  final String Function()? collectDiagnostics;
 
   /// 渡すと「学習の引き継ぎ」の欄を出す。押したら、アプリ側が引き継ぎの画面を開く。
   final VoidCallback? onTransfer;
@@ -163,6 +167,7 @@ class SettingsScreen extends ConsumerWidget {
               appVersion: appVersion,
               userId: userId,
               strings: s,
+              collectDiagnostics: collectDiagnostics,
             ),
           )),
         ),

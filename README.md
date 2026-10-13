@@ -337,6 +337,25 @@ await ref.read(answerFeedbackProvider).correct();   // incorrect / badgeUnlocked
 - 音・触覚は `soundEnabled` / `hapticsEnabled` で個別に切れる。音量は `volume`（0〜1、既定 0.7）
 - 音源の未配置・触覚に非対応の端末でも例外を出さない
 
+## 診断情報つきの不具合報告
+
+不具合報告に、アプリの版・端末・直近の操作の記録を添える。**利用者がチェックを入れたときだけ**付き、送る内容を画面で確認できる。名前・メールアドレス・利用者IDは含まない（メール・長いトークン・電話番号らしい数字は伏せる）。
+
+```dart
+final log = DiagnosticLog();                                   // 直近の操作の記録（メモリ上だけ）
+final crash = CrashReporter(myBackend, diagnosticLog: log);    // crash.log('…') が log にも残る
+final diag = DiagnosticsCollector(appName: 'myapp', appVersion: '1.2.3', log: log,
+    extra: {'購入': 'プレミアム'});                              // 補足は任意
+
+FeedbackFormPage(appName: 'myapp', appVersion: '1.2.3', collectDiagnostics: diag.collect)
+// 設定画面から開くなら
+SettingsScreen(appName: 'myapp', collectDiagnostics: diag.collect)
+```
+
+- `collectDiagnostics` を渡さなければ、従来どおり（チェックは出ず、何も付かない）
+- Issue の本文には、折りたたみのコードブロックで載る。**各アプリの Cloud Functions に `functions/src/feedback-issue.ts` をコピーし直して配備する**（しないと Issue には載らない）
+- 何を集めて何を送るかは、プライバシーポリシーと合わせる（`docs/法務文書_確認用チェックリスト.md`）
+
 ## 保護者ゲート（子ども向けアプリ）
 
 購入や外部リンクの前に出す、簡易な確認。ランダムな足し算・引き算を出し、**3回まちがえたら閉じる**（`maxAttempts`）。
