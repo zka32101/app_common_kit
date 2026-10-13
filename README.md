@@ -341,6 +341,8 @@ await ref.read(answerFeedbackProvider).correct();   // incorrect / badgeUnlocked
 
 購入や外部リンクの前に出す、簡易な確認。ランダムな足し算・引き算を出し、**3回まちがえたら閉じる**（`maxAttempts`）。
 
+別の入口 `import 'package:app_common_kit/parental_gate.dart';`（`app_common_kit.dart` からは出さない。アプリが同名の部品を自前で持っていても衝突しない）。
+
 ```dart
 // 外部リンクや設定の操作の前に
 if (!await requireParentalGate(context, strings: ParentalGateStrings.forCode(languageCode))) return;

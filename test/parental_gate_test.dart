@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:app_common_kit/app_common_kit.dart';
+import 'package:app_common_kit/parental_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
