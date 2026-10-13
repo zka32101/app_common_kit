@@ -337,6 +337,35 @@ await ref.read(answerFeedbackProvider).correct();   // incorrect / badgeUnlocked
 - 音・触覚は `soundEnabled` / `hapticsEnabled` で個別に切れる。音量は `volume`（0〜1、既定 0.7）
 - 音源の未配置・触覚に非対応の端末でも例外を出さない
 
+## 同意管理（分析・クラッシュ収集・広告のパーソナライズ）
+
+同意を保存し、分析とクラッシュ収集の送り先に反映する。**未回答は「同意なし」**（安全側）。
+
+```dart
+final consent = ConsentController(
+  store: SharedPreferencesConsentStore('myapp'),
+  // 子ども向けは personalizedAds を入れない（常に「同意なし」になる）
+  categories: const [ConsentCategory.analytics, ConsentCategory.crashReports],
+);
+await consent.load();
+final analytics = Analytics(null);
+final crash = CrashReporter(null)..install();
+ConsentBinder(consent,
+    analytics: analytics, analyticsBackend: MyAnalyticsBackend(),
+    crashReporter: crash, crashBackend: MyCrashBackend());
+final adConfig = adConfigWithConsent(baseAdConfig, consent);   // AdGate.init(config: adConfig, ...)
+
+// 初回の案内（回答済みなら何も出ない）
+await showConsentPrompt(context, consent, strings: ConsentStrings.forCode(languageCode));
+
+// 設定画面から、あとで変えられる
+SettingsScreen(appName: '…', consent: consent)
+```
+
+- 同意が無い間、`Analytics`／`CrashReporter` の `backend` は null（何も送らない）
+- データ削除と組み合わせるなら、`CallbackEraser('consent', consent.reset)` を並べる
+- 同意が必要な範囲は法域で違う。何に同意を取るか、文面は、専門家の確認を経て決める
+
 ## 法務リンク（プライバシーポリシー・利用規約）
 
 文面はキットに含めず、アプリが公開した文書へのリンクだけを設定画面に出す。専門家の確認の手順は

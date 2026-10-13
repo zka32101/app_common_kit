@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../entitlement/purchase_section.dart';
 import '../hands_free/hands_free_settings.dart';
+import '../consent/consent.dart';
+import '../consent/consent_ui.dart';
 import '../legal/legal_links.dart';
 import '../privacy/data_deletion.dart';
 import '../theme/theme_mode_store.dart';
@@ -31,6 +33,7 @@ class SettingsLanguage {
 /// | 片手・ながら学習 | [showHandsFree]（既定 true）。`handsFreeStoreProvider` の override が要る |
 /// | ご意見・不具合報告 | [showFeedback]（既定 true） |
 /// | 学習の引き継ぎ | [onTransfer] を渡す（画面はアプリ側が出す） |
+/// | プライバシーの設定 | [consent] を渡す（同意の保存と反映はキットが行う） |
 /// | 法務リンク | [legal] と [onOpenLink] を渡す（文面は各アプリが公開する） |
 /// | データを削除 | [dataDeletion] を渡す（確認と削除はキットが行う） |
 /// | このアプリについて | 常に出す（[disclaimer] があれば表示する） |
@@ -66,6 +69,7 @@ class SettingsScreen extends ConsumerWidget {
     this.onExamDateChanged,
     this.showFeedback = true,
     this.onTransfer,
+    this.consent,
     this.legal,
     this.onOpenLink,
     this.dataDeletion,
@@ -109,6 +113,9 @@ class SettingsScreen extends ConsumerWidget {
 
   /// 渡すと「学習の引き継ぎ」の欄を出す。押したら、アプリ側が引き継ぎの画面を開く。
   final VoidCallback? onTransfer;
+
+  /// 渡すと「プライバシーの設定」の欄を出す。分析・クラッシュ収集・広告への同意を、あとから変えられる。
+  final ConsentController? consent;
 
   /// 渡すと「プライバシーポリシー」「利用規約」などの欄を出す。URL を開く処理 [onOpenLink] も要る。
   final LegalLinks? legal;
@@ -166,6 +173,16 @@ class SettingsScreen extends ConsumerWidget {
           trailing: const Icon(Icons.chevron_right),
           onTap: onTransfer,
         ),
+      if (consent != null && consent!.categories.isNotEmpty)
+        Builder(builder: (context) {
+          final c = ConsentStrings.forCode(s.languageCode);
+          return ListTile(
+            leading: const Icon(Icons.shield_outlined),
+            title: Text(c.menu),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => showConsentSettings(context, consent!, strings: c),
+          );
+        }),
       if (legal != null && onOpenLink != null && !legal!.isEmpty)
         LegalSection(
           links: legal!,

@@ -2,6 +2,17 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.2.0]
+
+### 追加
+- **同意管理の共通の窓口** `ConsentController`（分析・クラッシュ収集・広告のパーソナライズに対する同意）。追加のみで、既存 API に破壊的変更はない
+  - **未回答は「同意なし」**（安全側）。`categories` に無い対象（子ども向けアプリは `personalizedAds` を入れない）は、常に「同意なし」で書き込めない
+  - 回答は端末内（`SharedPreferencesConsentStore(appId)`）に保存し、設定画面から変えられる。`reset()` で未回答に戻せる（データ削除と組み合わせる）
+  - `ConsentBinder`: 同意に合わせて `Analytics` / `CrashReporter` の `backend` を付け外しする（同意が無い間は null で何も送らない）。`adConfigWithConsent`: 広告の設定に、同意を反映する（同意が無ければ非パーソナライズ）
+  - `showConsentPrompt`（初回の案内: すべて同意／同意しない／項目ごとに選ぶ）、`showConsentSettings`（項目ごとのスイッチ）。文言 `ConsentStrings` は ja・en・zh・zh-Hant・ko（zh・zh-Hant・ko は機械翻訳の下書き）。`KitStrings` には項目を足していない
+  - `SettingsScreen(consent:)`: 渡すと「プライバシーの設定」の欄を出す。既定は出ない
+- 同意が必要な範囲は法域で違う。何に同意を取るか、文面は、専門家の確認を経て決める（`docs/法務文書_確認用チェックリスト.md`）
+
 ## [3.1.0]
 
 ### 追加
