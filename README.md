@@ -502,6 +502,30 @@ HandsFreeQuestionLayout(
 - 設定: 有効／問題を読む／解説を読む／読み上げの速さ（0.5〜1.5）。保存先は `SharedPreferencesHandsFreeStore(appId)`
 - 数式・図の読み上げは対象外（問題文・解説の文字だけ）。読ませたくない部分は、アプリ側で読み上げ用の文を別に渡す
 
+### ながらセッション（画面点灯中の自動進行）
+
+`import 'package:app_common_kit/hands_free_tts.dart';` で使える。問題と選択肢を読む → 考える間 → 正解と解説を読む → 短い間 → 次へ、を自動で進める。**画面を点けている間だけ**動く（バックグラウンド再生・音声入力・新しい権限は無い）。
+
+```dart
+NagaraSessionView(
+  questions: [
+    for (final q in todays)
+      NagaraQuestion(id: q.id, prompt: q.prompt, choices: q.choices, correctIndex: q.answerIndex, explanation: q.explanation),
+  ],
+  maxQuestions: 10, // ひと続きの上限（任意）。達すると休憩を促して終わる
+  onWrongAnswer: (q, chosen) => reviewQueue.add(q.id), // タップ回答が不正解のとき
+  onUnanswered: (q) => reviewQueue.add(q.id),          // 考える間に答えがなかったとき（任意）
+  onFinished: (summary) { /* summary.correctCount, finishReason */ },
+  onClose: () => Navigator.pop(context),
+)
+```
+
+- 進行は純 Dart の `NagaraSessionController`（状態: idle／readingQuestion／waitingAnswer／readingAnswer／pausedBetween／paused／finished）。一時停止・再開・スキップ・停止、`dispose` で必ず止まる。タイマーは `timerFactory` で注入できる
+- 設定（`HandsFreeSettings`、旧データは既定値で読む）: `thinkSeconds`（既定 5、候補 3/5/8/12）／`betweenSeconds`（既定 2、候補 1/2/3/5）／`autoAdvance`（既定 true。false ならスキップで次へ）。「問題を読む」「解説を読む」「速さ」は既存の設定を使う
+- 読み終わりを待つには `AwaitableSpeechBackend.speakAndWait`（`FlutterTtsSpeechBackend` と `FakeSpeechBackend` は対応）。**`SpeechBackend` 自体には足していない**（アプリの `implements SpeechBackend` が壊れるため）。非対応の実装は、文字数からの目安の時間で進む
+- 音声が失敗したら、例外は出さずその読み上げを飛ばして画面だけで進む（画面に案内を出す）。仕様の詳細は `CHANGELOG.md` の 3.1.0
+- 文言は `KitStrings.nagara`（ja／en）。ko・zh は日本語のまま。責める言い方は使わない（`test/nagara_settings_strings_test.dart` で禁止語を機械検証）
+
 ## 全国平均点・偏差値の匿名集計（決定32）
 
 > **v2.0.0 で `ukalab_core` に移った**（`package:ukalab_core/ui.dart`）。以下は仕様の説明として残す。

@@ -31,6 +31,8 @@ export 'ui_kit/kit_strings.dart';
 export 'ui_kit/choice_tile.dart';
 export 'ui_kit/hands_free.dart';
 export 'hands_free/hands_free_settings.dart';
+export 'hands_free/nagara_session_controller.dart';
+export 'hands_free/nagara_strings.dart';
 export 'hands_free/speech.dart';
 export 'ui_kit/question_card.dart';
 export 'ui_kit/explanation_panel.dart';

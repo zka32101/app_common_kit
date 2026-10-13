@@ -2,6 +2,21 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.1.0]
+
+### 追加
+- **ながらセッション**（画面点灯中の自動進行ハンズフリー学習）。問題と選択肢を読む → 考える間 → 正解と解説を読む → 短い間 → 次へ、を自動で進める
+  - `NagaraSessionController`（純 Dart。一時停止・再開・スキップ・停止・`dispose` で必ず止まる。タイマー注入可）、`NagaraQuestion`、`NagaraSessionView`（`hands_free_tts.dart`。72pt 以上の操作ボタン・Semantics・動きを減らす設定に配慮。誤答は `onWrongAnswer`）
+  - `AwaitableSpeechBackend.speakAndWait`（読み終わりを待てる）。`FlutterTtsSpeechBackend`・`FakeSpeechBackend` が対応。`FakeSpeechBackend` は `speakDuration`／`holdUntilReleased`／`release()`／`error` で完了タイミングと失敗を制御できる
+  - `HandsFreeSettings` に `thinkSeconds`（既定 5）・`betweenSeconds`（既定 2）・`autoAdvance`（既定 true）を追加。保存データに無い場合は既定値で読む（旧データ互換）
+  - `KitStrings.nagara`（`NagaraStrings` の ja／en。省略時は日本語、ko・zh は日本語のまま）
+- `readAloudChoiceLabel(index)`（読み上げ用の ア・イ・ウ…）
+
+### 互換性
+- 破壊的変更なし。`SpeechBackend` には何も足していない（読み終わり待ちは別の型 `AwaitableSpeechBackend`）。`KitStrings` の新項目は省略可（既定は日本語）
+- 音声が失敗したときの仕様: 例外を出さず、その読み上げを飛ばして画面だけで進む（`NagaraSessionState.speechFailed`）。完了通知が来ない端末のため、目安の約 2 倍 + 5 秒で打ち切って先へ進む
+- 一時停止からの再開は、止めた段階の頭から（読み上げ中は読み直し、考える間は待ち直し）
+
 ## [3.0.1]
 
 ### 変更
