@@ -2,13 +2,26 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
-## [3.4.0]
+## [3.5.0]
 
 ### 追加
+
 - **ながらセッションに `onAnswered(question, chosen, correct)`**（`NagaraSessionController` / `NagaraSessionView`）。正答を含む全てのタップ回答をアプリに返す。追加のみで、既存の `onWrongAnswer` / `onUnanswered` / `onFinished` の意味は変えない
   - 呼び出し順: 解答確定 → `onAnswered` → （誤答なら）`onWrongAnswer`。1 問につき最大 1 回
   - **未回答（`onUnanswered`）とスキップでは呼ばない**（未回答は解答ではない）。一時停止・再開、画面離脱でも重複しない
   - `chosen` は選択肢の位置（0 始まり）。アプリは通常の解答と同じ記録経路（履歴・間隔反復・デイリーミッション）に載せると、間違いノートの「克服」や週間ふりかえりに正答も反映される
+
+## [3.4.0]
+
+### 追加
+- **診断情報つきの不具合報告**。追加のみで、既存 API に破壊的変更はない（`FeedbackReport` の新しい項目は任意で、無ければ JSON にも出ない）
+  - `DiagnosticsCollector(appName:, appVersion:, extra:, log:).collect()`: アプリの版・プラットフォームと OS の版・言語・アプリが足す補足・直近の操作の記録を、文字列にまとめる。**利用者の識別子・名前・メールアドレスは含めない**（メール・長いトークン・電話番号らしい数字は伏せる）。長さの上限（既定3000字）内に、先頭の情報と新しい記録を残す
+  - `DiagnosticLog`: 直近の操作の記録（メモリ上だけ。既定50件）。`CrashReporter(diagnosticLog:)` を渡すと、`log()` の内容がここにも残る（クラッシュの送り先が無い・同意が無い間も、端末内だけに残る）
+  - `FeedbackFormPage(collectDiagnostics:)`: 渡すと「診断情報を添える」のチェック（既定オン）と「送る内容を見る」を出す。**チェックを外せば添えない（集めもしない）**。`SettingsScreen(collectDiagnostics:)` からも渡せる。文言 `DiagnosticsStrings` は ja・en・zh・zh-Hant・ko（zh・zh-Hant・ko は機械翻訳の下書き）
+  - `FeedbackReport.diagnostics` / `submitFeedback(diagnostics:)`
+  - Cloud Functions（`functions/src/feedback-issue.ts`）: 診断情報があれば、Issue の本文に折りたたみ（`<details>`）のコードブロックで載せる。利用者の文字列なので、コードブロックを閉じる記号（\`\`\`）と HTML のタグは無害にし、3000字で切る。重複検知の指紋には影響しない
+- `scrubText`: クラッシュ収集と診断情報で共通の整形（`CrashReporter.scrub` の挙動は変わらない）
+- **各アプリが Cloud Functions を更新する必要がある**: `functions/src/feedback-issue.ts` を、各アプリの `functions/` にコピーし直して配備する（更新しないと、診断情報は Firestore には入るが Issue には載らない）
 
 ## [3.3.0]
 

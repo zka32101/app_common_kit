@@ -82,6 +82,8 @@ class FeedbackNotifier extends Notifier<FeedbackSubmitState> {
   ///
   /// [userId] はアプリ側で取得したユーザー識別子（匿名認証のUID等）。
   /// app_common_kit は認証手段に依存しないため、必要であれば呼び出し側から渡す。
+  ///
+  /// [diagnostics] は診断情報（`DiagnosticsCollector.collect()`）。利用者が添えると決めたときだけ渡す。
   Future<void> submitFeedback({
     required FeedbackType type,
     required String title,
@@ -89,6 +91,7 @@ class FeedbackNotifier extends Notifier<FeedbackSubmitState> {
     required String appName,
     String appVersion = '',
     String? userId,
+    String? diagnostics,
   }) async {
     final invalid = _limits.validate(title: title, description: description);
     if (invalid != null) {
@@ -120,6 +123,7 @@ class FeedbackNotifier extends Notifier<FeedbackSubmitState> {
       platform: _detectPlatform(),
       createdAt: DateTime.now(),
       userId: userId,
+      diagnostics: diagnostics,
     );
 
     final handler = _submitHandler;

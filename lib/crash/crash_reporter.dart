@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../diagnostics/diagnostic_log.dart';
+
 /// クラッシュ・エラーの送り先。Firebase Crashlytics や Sentry などをアプリが実装して渡す
 /// （キットはプラグインに依存しない）。
 abstract class CrashBackend {
@@ -32,8 +34,12 @@ class FakeCrashBackend implements CrashBackend {
 ///
 /// 使い方: `main()` で `ProviderContainer` か直接 `CrashReporter(MyBackend()).install()` を呼ぶ。
 class CrashReporter {
-  CrashReporter(this.backend, {this.dedupeWindow = const Duration(minutes: 1), DateTime Function()? clock})
+  CrashReporter(this.backend,
+      {this.dedupeWindow = const Duration(minutes: 1), DateTime Function()? clock, this.diagnosticLog})
       : _clock = clock ?? DateTime.now;
+
+  /// 渡すと、[log] の内容を、不具合報告に添える診断情報の記録にも残す（送り先 [backend] が無くても残す。端末内だけ）。
+  final DiagnosticLog? diagnosticLog;
 
   /// null なら何もしない。
   CrashBackend? backend;
@@ -44,19 +50,9 @@ class CrashReporter {
   final Map<String, DateTime> _sent = {};
 
   static const maxLogLength = 300;
-  static final _email = RegExp(r'[\w.+-]+@[\w-]+(\.[\w-]+)+');
-  static final _token = RegExp(r'\b[A-Za-z0-9_\-]{32,}\b');
-  static final _digits = RegExp(r'\b\d[\d\- ]{8,}\d\b');
 
   /// 送る前の整形（テストしやすいよう公開）。個人情報らしい部分を伏せ、長さを切り詰める。
-  static String scrub(String text) {
-    var t = text
-        .replaceAll(_email, '[email]')
-        .replaceAll(_token, '[token]')
-        .replaceAll(_digits, '[number]');
-    if (t.length > maxLogLength) t = t.substring(0, maxLogLength);
-    return t;
-  }
+  static String scrub(String text) => scrubText(text, maxLength: maxLogLength);
 
   /// エラーを送る。送った（試みた）なら true。重複・送り先なしは false。
   Future<bool> record(Object error, StackTrace? stack, {bool fatal = false, String? reason}) async {
@@ -77,6 +73,7 @@ class CrashReporter {
 
   /// 直前の操作を記録する（クラッシュ報告に添わる）。
   Future<void> log(String message) async {
+    diagnosticLog?.add(message);
     final b = backend;
     if (b == null) return;
     try {

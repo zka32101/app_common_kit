@@ -45,6 +45,9 @@ class FeedbackReport {
   final String status; // 'open' / 'reviewing' / 'resolved' など。初期値'open'
   final String? githubIssueUrl; // Cloud Functions が Issue 化した後に埋め込む
 
+  /// 診断情報（版・端末・直近の操作の記録）。利用者がチェックを入れたときだけ付く。個人情報は含めない。
+  final String? diagnostics;
+
   const FeedbackReport({
     required this.id,
     required this.type,
@@ -57,6 +60,7 @@ class FeedbackReport {
     this.userId,
     this.status = 'open',
     this.githubIssueUrl,
+    this.diagnostics,
   });
 
   FeedbackReport copyWith({
@@ -71,6 +75,7 @@ class FeedbackReport {
     String? userId,
     String? status,
     String? githubIssueUrl,
+    String? diagnostics,
   }) =>
       FeedbackReport(
         id: id ?? this.id,
@@ -84,6 +89,7 @@ class FeedbackReport {
         userId: userId ?? this.userId,
         status: status ?? this.status,
         githubIssueUrl: githubIssueUrl ?? this.githubIssueUrl,
+        diagnostics: diagnostics ?? this.diagnostics,
       );
 
   Map<String, dynamic> toJson() => {
@@ -98,6 +104,7 @@ class FeedbackReport {
         'userId': userId,
         'status': status,
         'githubIssueUrl': githubIssueUrl,
+        if (diagnostics != null) 'diagnostics': diagnostics,
       };
 
   factory FeedbackReport.fromJson(Map<String, dynamic> json) => FeedbackReport(
@@ -115,5 +122,6 @@ class FeedbackReport {
         userId: json['userId'] as String?,
         status: json['status'] as String? ?? 'open',
         githubIssueUrl: json['githubIssueUrl'] as String?,
+        diagnostics: json['diagnostics'] as String?,
       );
 }
