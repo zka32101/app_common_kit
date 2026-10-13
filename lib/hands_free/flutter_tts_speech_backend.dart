@@ -2,7 +2,7 @@ import 'speech.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 /// 端末標準の音声合成（flutter_tts）による読み上げ。ながら学習モードで使う。
-class FlutterTtsSpeechBackend implements SpeechBackend {
+class FlutterTtsSpeechBackend implements AwaitableSpeechBackend {
   FlutterTtsSpeechBackend({FlutterTts? tts}) : _tts = tts ?? FlutterTts();
 
   final FlutterTts _tts;
@@ -21,6 +21,17 @@ class FlutterTtsSpeechBackend implements SpeechBackend {
   Future<void> speak(String text, {double rate = 1.0}) async {
     await _prepare();
     await _tts.setSpeechRate(ttsRate(rate));
+    await _tts.awaitSpeakCompletion(false);
+    await _tts.speak(text);
+  }
+
+  /// 読み終わるまで待つ。端末によって完了通知が来ないことがあるため、
+  /// 呼び出し側（[NagaraSessionController]）が時間切れで先へ進める。
+  @override
+  Future<void> speakAndWait(String text, {double rate = 1.0}) async {
+    await _prepare();
+    await _tts.setSpeechRate(ttsRate(rate));
+    await _tts.awaitSpeakCompletion(true);
     await _tts.speak(text);
   }
 

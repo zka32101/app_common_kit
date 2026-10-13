@@ -2,6 +2,7 @@ import 'kit_strings_ko.dart';
 import 'kit_strings_zh_hans.dart';
 import 'kit_strings_zh_hant.dart';
 import 'package:flutter/widgets.dart';
+import '../hands_free/nagara_strings.dart';
 
 /// キット内蔵ウィジェットの既定文言（日本語・英語）。
 ///
@@ -42,6 +43,7 @@ class KitStrings {
     required this.themeLight,
     required this.themeDark,
     required this.settingsLanguage,
+    this.nagara = NagaraStrings.ja,
     required this.settingsHandsFree,
     required this.handsFreeEnable,
     required this.handsFreeSpeakQuestion,
@@ -133,6 +135,9 @@ class KitStrings {
   final String themeLight;
   final String themeDark;
   final String settingsLanguage;
+  /// ながらセッションの文言（省略すると日本語。ko・zh も日本語のまま）。
+  final NagaraStrings nagara;
+
   final String settingsHandsFree;
   final String handsFreeEnable;
   final String handsFreeSpeakQuestion;
@@ -213,6 +218,7 @@ class KitStrings {
     String? themeLight,
     String? themeDark,
     String? settingsLanguage,
+    NagaraStrings? nagara,
     String? settingsHandsFree,
     String? handsFreeEnable,
     String? handsFreeSpeakQuestion,
@@ -292,6 +298,7 @@ class KitStrings {
     themeLight: themeLight ?? this.themeLight,
     themeDark: themeDark ?? this.themeDark,
     settingsLanguage: settingsLanguage ?? this.settingsLanguage,
+    nagara: nagara ?? this.nagara,
     settingsHandsFree: settingsHandsFree ?? this.settingsHandsFree,
     handsFreeEnable: handsFreeEnable ?? this.handsFreeEnable,
     handsFreeSpeakQuestion:
@@ -455,6 +462,7 @@ class KitStrings {
     themeLight: 'Light',
     themeDark: 'Dark',
     settingsLanguage: 'Language',
+    nagara: NagaraStrings.en,
     settingsHandsFree: 'One-handed study',
     handsFreeEnable: 'Use one-handed mode',
     handsFreeSpeakQuestion: 'Read questions aloud',

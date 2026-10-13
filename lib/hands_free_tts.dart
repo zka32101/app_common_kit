@@ -7,3 +7,4 @@ library;
 export 'hands_free/flutter_tts_speech_backend.dart';
 export 'hands_free/hands_free_choice_body.dart';
 export 'hands_free/hands_free_providers.dart';
+export 'hands_free/nagara_session_view.dart';

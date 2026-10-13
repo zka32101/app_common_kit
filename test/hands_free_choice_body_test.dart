@@ -91,4 +91,26 @@ void main() {
     expect(FlutterTtsSpeechBackend.ttsRate(0.1), 0.1);
     expect(FlutterTtsSpeechBackend.ttsRate(5.0), 1.0);
   });
+
+  test('FakeSpeechBackend: speakAndWait は記録して完了し、release / stop で保留が解ける', () async {
+    final fake = FakeSpeechBackend()..holdUntilReleased = true;
+    var done = false;
+    final f = fake.speakAndWait('こんにちは', rate: 1.25).then((_) => done = true);
+    await Future<void>.delayed(Duration.zero);
+    expect(fake.spoken, ['こんにちは']);
+    expect(fake.rates, [1.25]);
+    expect(fake.pendingCount, 1);
+    expect(done, isFalse);
+    await fake.stop();
+    await f;
+    expect(done, isTrue);
+    expect(fake.pendingCount, 0);
+  });
+
+  test('既存の speak は従来どおり記録だけで、保留しない', () async {
+    final fake = FakeSpeechBackend()..holdUntilReleased = true;
+    await fake.speak('a');
+    expect(fake.spoken, ['a']);
+    expect(fake.pendingCount, 0);
+  });
 }
