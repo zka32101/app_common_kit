@@ -2,6 +2,20 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.3.0]
+
+### 追加
+- **保護者ゲート** `ParentalGateDialog` / `requireParentalGate`（子ども向けアプリで、購入や外部リンクの前に出す簡易な確認）。追加のみで、既存 API に破壊的変更はない。kanken の独自実装（`parental_gate_dialog.dart`）をキットに昇格した
+  - **別の入口**: `import 'package:app_common_kit/parental_gate.dart';`。`app_common_kit.dart` からは出さない（アプリが同じ名前の部品を自前で持っていても、名前が衝突しないように。ながら学習の `hands_free_tts.dart` と同じ方針）
+  - ランダムな足し算・引き算を出し、正解したときだけ `true`。**`maxAttempts`（既定3）回まちがえたら閉じて `false`**（当てずっぽうで通れない）
+  - 文言 `ParentalGateStrings`（ja・en・zh・zh-Hant・ko。zh・zh-Hant・ko は機械翻訳の下書き）。色は直書きせずテーマに従う。計算式に読み上げ用のラベルを付けた。絵文字をやめてアイコンにした
+  - `parentalGateBeforePurchase(navigatorKey)`: 購入の前に出す `BeforePurchase`（`RevenueCatEntitlementService.init(beforePurchase:)` に渡す）
+- **kanken の元の実装にあった不具合を直した**: 引き算で2つの数が同じだと、答えが 0 になっていた。答えは必ず1以上にする
+- これは簡易な確認で、年齢確認・本人確認ではない。より強い確認が要るかどうかは、ストアの規約・法令に照らして専門家に確認する
+
+### 移行（kanken など、独自の保護者ゲートを持つアプリ）
+- 自前の `parental_gate_dialog.dart` を消し、`import 'package:app_common_kit/parental_gate.dart';` に切り替える。文言を変えていたなら `strings:`（`ParentalGateStrings`）で渡す。`primaryColor` の引数は無くなった（テーマに従う）
+
 ## [3.2.0]
 
 ### 追加

@@ -337,6 +337,26 @@ await ref.read(answerFeedbackProvider).correct();   // incorrect / badgeUnlocked
 - 音・触覚は `soundEnabled` / `hapticsEnabled` で個別に切れる。音量は `volume`（0〜1、既定 0.7）
 - 音源の未配置・触覚に非対応の端末でも例外を出さない
 
+## 保護者ゲート（子ども向けアプリ）
+
+購入や外部リンクの前に出す、簡易な確認。ランダムな足し算・引き算を出し、**3回まちがえたら閉じる**（`maxAttempts`）。
+
+別の入口 `import 'package:app_common_kit/parental_gate.dart';`（`app_common_kit.dart` からは出さない。アプリが同名の部品を自前で持っていても衝突しない）。
+
+```dart
+// 外部リンクや設定の操作の前に
+if (!await requireParentalGate(context, strings: ParentalGateStrings.forCode(languageCode))) return;
+
+// 購入の前に（BuildContext を持たないので navigatorKey を使う）
+RevenueCatEntitlementService.init(
+  publicSdkKey: key,
+  beforePurchase: parentalGateBeforePurchase(navigatorKey),  // MaterialApp(navigatorKey: navigatorKey)
+);
+```
+
+- 簡易な確認で、年齢確認・本人確認ではない。ストアの規約・法令で、より強い確認が要るかは、専門家に確認する
+- 文言は ja・en・zh・zh-Hant・ko。色はテーマに従う
+
 ## 同意管理（分析・クラッシュ収集・広告のパーソナライズ）
 
 同意を保存し、分析とクラッシュ収集の送り先に反映する。**未回答は「同意なし」**（安全側）。
