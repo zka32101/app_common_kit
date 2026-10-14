@@ -132,7 +132,11 @@ class _NagaraSessionViewState extends ConsumerState<NagaraSessionView> {
     final explanation = q.explanation;
     final showExplanation = st.result != null && explanation != null && explanation.trim().isNotEmpty;
 
-    return Column(
+    // 文字が非常に大きいときは、固定の操作ボタンだけで画面が埋まってしまうので、
+    // 画面全体（見出し・問題・ボタン）をひとつにしてスクロールさせる。
+    final scrollAll = MediaQuery.textScalerOf(context).scale(14) / 14 > 2.0;
+
+    final page = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
@@ -147,9 +151,16 @@ class _NagaraSessionViewState extends ConsumerState<NagaraSessionView> {
                 excludeSemantics: true,
                 child: Row(
                   children: [
-                    Text(t.positionLabel(st.index + 1, st.total), style: theme.textTheme.titleMedium),
-                    const Spacer(),
-                    Text(t.remainingLabel(st.remaining), style: theme.textTheme.titleMedium),
+                    // 文字を大きくしても 2 つとも折り返して全部見えるようにする
+                    Flexible(child: Text(t.positionLabel(st.index + 1, st.total), style: theme.textTheme.titleMedium)),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        t.remainingLabel(st.remaining),
+                        textAlign: TextAlign.end,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -158,10 +169,9 @@ class _NagaraSessionViewState extends ConsumerState<NagaraSessionView> {
             ],
           ),
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
+        _middle(
+          scrollAll: scrollAll,
+          child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Semantics(
@@ -212,7 +222,6 @@ class _NagaraSessionViewState extends ConsumerState<NagaraSessionView> {
                 const SizedBox(height: 16),
               ],
             ),
-          ),
         ),
         SafeArea(
           top: false,
@@ -241,6 +250,13 @@ class _NagaraSessionViewState extends ConsumerState<NagaraSessionView> {
         ),
       ],
     );
+    return scrollAll ? SingleChildScrollView(child: page) : page;
+  }
+
+  static Widget _middle({required bool scrollAll, required Widget child}) {
+    const pad = EdgeInsets.symmetric(horizontal: 16);
+    if (scrollAll) return Padding(padding: pad, child: child);
+    return Expanded(child: SingleChildScrollView(padding: pad, child: child));
   }
 
   static IconData _phaseIcon(NagaraPhase p) {
@@ -283,7 +299,8 @@ class _ControlButton extends StatelessWidget {
           children: [
             Icon(icon, size: 32),
             const SizedBox(height: 4),
-            Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+            // 「…」で隠さず、狭いときは折り返して全文を見せる
+            Text(label, textAlign: TextAlign.center),
           ],
         ),
       );
