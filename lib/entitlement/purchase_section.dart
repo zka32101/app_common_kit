@@ -39,12 +39,25 @@ class PurchaseSection extends ConsumerWidget {
               return Column(
                 children: [
                   for (final offer in offers)
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(offer.title),
-                      trailing: FilledButton(
-                        onPressed: () => _purchase(context, ref, offer),
-                        child: Text(offer.priceString),
+                    // ListTile の trailing だと、価格ボタンが文字拡大で幅いっぱいになり描画エラーになる。
+                    // 入りきらないときは価格ボタンを次の行に回す。
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 16,
+                          runSpacing: 8,
+                          children: [
+                            Text(offer.title, style: Theme.of(context).textTheme.bodyLarge),
+                            FilledButton(
+                              onPressed: () => _purchase(context, ref, offer),
+                              child: Text(offer.priceString),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                 ],

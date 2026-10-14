@@ -169,11 +169,14 @@ Future<bool> showWhatsNewIfNeeded(
   await showDialog<void>(
     context: context,
     builder: (ctx) => AlertDialog(
+      // 文字を大きくした小さい画面でも、題名ごとスクロールして切れないようにする
+      scrollable: true,
       title: Text(s.title),
       content: SizedBox(
         width: double.maxFinite,
-        child: ListView(
-          shrinkWrap: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             for (final e in list) ...[
               Text(

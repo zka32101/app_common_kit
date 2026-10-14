@@ -171,23 +171,23 @@ class _ConsentSettingsDialog extends StatelessWidget {
     return ListenableBuilder(
       listenable: consent,
       builder: (context, _) => AlertDialog(
+        // 文字を大きくした小さい画面でも、題名ごとスクロールして切れないようにする
+        scrollable: true,
         title: Text(strings.settingsTitle),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(strings.settingsBody),
-              for (final c in consent.categories)
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: consent.allows(c),
-                  onChanged: (v) => consent.set(c, v),
-                  title: Text(strings.titleOf(c)),
-                  subtitle: Text(strings.bodyOf(c)),
-                ),
-            ],
-          ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(strings.settingsBody),
+            for (final c in consent.categories)
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                value: consent.allows(c),
+                onChanged: (v) => consent.set(c, v),
+                title: Text(strings.titleOf(c)),
+                subtitle: Text(strings.bodyOf(c)),
+              ),
+          ],
         ),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(strings.close))],
       ),
@@ -209,6 +209,9 @@ Future<void> showConsentPrompt(
     context: context,
     barrierDismissible: false,
     builder: (_) => AlertDialog(
+      scrollable: true,
+      // 3 つの操作ボタンを縦に並べても収まるよう、画面端の余白を詰める
+      insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       title: Text(strings.promptTitle),
       content: Text(strings.promptBody),
       actions: [

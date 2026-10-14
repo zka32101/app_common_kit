@@ -172,10 +172,11 @@ class _ParentalGateDialogState extends State<ParentalGateDialog> {
         .replaceAll('{op}', _q.isAddition ? '+' : '−')
         .replaceAll('{b}', '${_q.b}');
     return AlertDialog(
+      // 文字を大きくした小さい画面でも、アイコン・題名・本文が切れずにスクロールできる
+      scrollable: true,
       icon: const Icon(Icons.lock_outline),
       title: Text(s.title, textAlign: TextAlign.center),
-      content: SingleChildScrollView(
-        child: Column(
+      content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(s.description, textAlign: TextAlign.center),
@@ -200,7 +201,6 @@ class _ParentalGateDialogState extends State<ParentalGateDialog> {
               onSubmitted: (_) => _submit(),
             ),
           ],
-        ),
       ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(context, false), child: Text(s.cancel)),

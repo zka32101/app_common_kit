@@ -23,6 +23,7 @@ Future<bool> showReviewPrePrompt(
   final answer = await showDialog<_Answer>(
     context: context,
     builder: (ctx) => AlertDialog(
+      scrollable: true,
       title: Text(s.reviewEnjoyTitle),
       actions: [
         TextButton(onPressed: () => Navigator.of(ctx).pop(_Answer.later), child: Text(s.reviewLater)),
