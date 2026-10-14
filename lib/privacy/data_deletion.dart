@@ -211,6 +211,7 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
   Widget build(BuildContext context) {
     final s = widget.strings;
     return AlertDialog(
+      scrollable: true,
       title: Text(s.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
