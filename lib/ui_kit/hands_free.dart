@@ -169,7 +169,15 @@ class HandsFreeQuestionLayout extends StatelessWidget {
   final double choiceSpacing;
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) => _build(context, constraints),
+      );
+
+  Widget _build(BuildContext context, BoxConstraints constraints) {
+    // 選択肢が長い・文字が大きいときも、問題文の領域を最低 4 割は残し、
+    // 選択肢の領域は超えた分だけスクロールさせる（はみ出して切れないようにする）。
+    final maxChoicesHeight = constraints.hasBoundedHeight ? constraints.maxHeight * 0.6 : double.infinity;
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
@@ -191,18 +199,24 @@ class HandsFreeQuestionLayout extends StatelessWidget {
             top: false,
             child: Padding(
               padding: EdgeInsets.fromLTRB(padding.left, 0, padding.right, padding.bottom),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (var i = 0; i < choices.length; i++) ...[
-                    if (i > 0) SizedBox(height: choiceSpacing),
-                    choices[i],
-                  ],
-                ],
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: maxChoicesHeight),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (var i = 0; i < choices.length; i++) ...[
+                        if (i > 0) SizedBox(height: choiceSpacing),
+                        choices[i],
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ],
       );
+  }
 }
