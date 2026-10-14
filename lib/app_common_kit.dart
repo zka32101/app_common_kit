@@ -29,6 +29,7 @@ export 'update/app_update.dart';
 export 'analytics/analytics.dart';
 export 'ui_kit/kit_strings.dart';
 export 'ui_kit/choice_tile.dart';
+export 'ui_kit/tap_guard.dart' show KitTapGuard;
 export 'ui_kit/hands_free.dart';
 export 'hands_free/hands_free_settings.dart';
 export 'hands_free/nagara_session_controller.dart';

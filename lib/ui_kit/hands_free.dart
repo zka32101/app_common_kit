@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'choice_tile.dart';
 import 'kit_strings.dart';
+import 'tap_guard.dart';
 
 /// 片手・ながら学習モード用の大きな選択肢ボタン。親指で押しやすいよう高さ 72pt 以上、
 /// 文字も大きくする。色だけに頼らず、✓／✕のアイコンと文言も出す（[ChoiceTile] と同じ）。
-class HandsFreeChoiceTile extends StatelessWidget {
+/// 問題切替直後のタップ無視は [ChoiceTile] と同じ（[KitTapGuard]）。
+class HandsFreeChoiceTile extends StatefulWidget {
   const HandsFreeChoiceTile({
     super.key,
     required this.label,
@@ -29,7 +31,22 @@ class HandsFreeChoiceTile extends StatelessWidget {
   static const minHeight = 72.0;
 
   @override
+  State<HandsFreeChoiceTile> createState() => _HandsFreeChoiceTileState();
+}
+
+class _HandsFreeChoiceTileState extends State<HandsFreeChoiceTile>
+    with TapGuardStateMixin<HandsFreeChoiceTile> {
+  @override
+  Object get tapGuardIdentity => (widget.label, widget.text);
+
+  @override
   Widget build(BuildContext context) {
+    final state = widget.state;
+    final onTap = widget.onTap;
+    final label = widget.label;
+    final text = widget.text;
+    final correctText = widget.correctText;
+    final incorrectText = widget.incorrectText;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final strings = KitStrings.of(context);
@@ -76,9 +93,9 @@ class HandsFreeChoiceTile extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
+          onTap: guardedTap(onTap),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: minHeight),
+            constraints: const BoxConstraints(minHeight: HandsFreeChoiceTile.minHeight),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(

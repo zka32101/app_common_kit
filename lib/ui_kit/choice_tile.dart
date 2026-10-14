@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'kit_strings.dart';
+import 'tap_guard.dart';
 
 /// 選択肢の状態。色だけに頼らず、✓／✕のアイコンと文言も出す。
 enum ChoiceState {
@@ -18,7 +19,10 @@ enum ChoiceState {
 }
 
 /// 問題の選択肢1つ。タップ領域は 44pt 以上。
-class ChoiceTile extends StatelessWidget {
+///
+/// 問題が切り替わった（label/text が変わった）直後は [KitTapGuard.duration] だけタップを無視する
+/// （「次へ」連打で次の問題を誤回答するのを防ぐ）。同じ問題内の [state] の変化ではガードしない。
+class ChoiceTile extends StatefulWidget {
   const ChoiceTile({
     super.key,
     required this.label,
@@ -39,7 +43,21 @@ class ChoiceTile extends StatelessWidget {
   final String? incorrectText;
 
   @override
+  State<ChoiceTile> createState() => _ChoiceTileState();
+}
+
+class _ChoiceTileState extends State<ChoiceTile> with TapGuardStateMixin<ChoiceTile> {
+  @override
+  Object get tapGuardIdentity => (widget.label, widget.text);
+
+  @override
   Widget build(BuildContext context) {
+    final state = widget.state;
+    final onTap = widget.onTap;
+    final label = widget.label;
+    final text = widget.text;
+    final correctText = widget.correctText;
+    final incorrectText = widget.incorrectText;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final strings = KitStrings.of(context);
@@ -91,7 +109,7 @@ class ChoiceTile extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
+          onTap: guardedTap(onTap),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 48),
             child: Padding(
