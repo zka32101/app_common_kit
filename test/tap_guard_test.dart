@@ -3,9 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final defaultDuration = KitTapGuard.duration;
+  testWidgets('duration 未指定のテスト環境では無効（アプリのテストは変更不要）', (t) async {
+    KitTapGuard.duration = null;
+    var n = 0;
+    Widget w(String x) => MaterialApp(home: Scaffold(body: ChoiceTile(label: 'A', text: x, state: ChoiceState.idle, onTap: () => n++)));
+    await t.pumpWidget(w('q1'));
+    await t.pumpWidget(w('q2'));
+    await t.tap(find.text('q2'));
+    expect(n, 1);
+    KitTapGuard.duration = KitTapGuard.defaultDuration;
+  });
+
+  setUp(() => KitTapGuard.duration = KitTapGuard.defaultDuration);
   tearDown(() {
-    KitTapGuard.duration = defaultDuration;
+    KitTapGuard.duration = null;
     KitTapGuard.guardOnFirstShow = false;
   });
 

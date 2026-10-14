@@ -10,8 +10,21 @@ import 'package:flutter/widgets.dart';
 class KitTapGuard {
   KitTapGuard._();
 
-  /// 無視する時間。[Duration.zero] でガードを無効にする（アプリのテストの setUp 用）。
-  static Duration duration = const Duration(milliseconds: 450);
+  /// 実アプリでの既定の無視時間。
+  static const defaultDuration = Duration(milliseconds: 450);
+
+  /// 無視する時間。null なら既定: 実アプリでは [defaultDuration]、Flutter のテスト環境
+  /// （TestWidgetsFlutterBinding 上）では無効。明示指定すればテスト環境でも有効になる。
+  /// [Duration.zero] で常に無効。
+  static Duration? duration;
+
+  /// 実際に使う時間。
+  static Duration get effectiveDuration {
+    final d = duration;
+    if (d != null) return d;
+    final testing = WidgetsBinding.instance.runtimeType.toString().contains('TestWidgetsFlutterBinding');
+    return testing ? Duration.zero : defaultDuration;
+  }
 
   /// true なら、初回表示（マウント直後）もガードする。既定は false
   /// （画面を開いてすぐのタップは誤操作ではないため）。
@@ -52,7 +65,7 @@ mixin TapGuardStateMixin<T extends StatefulWidget> on State<T> {
   }
 
   void _startGuard() {
-    final d = KitTapGuard.duration;
+    final d = KitTapGuard.effectiveDuration;
     _guardTimer?.cancel();
     if (d <= Duration.zero) {
       _guarding = false;
