@@ -2,6 +2,22 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.11.0]
+
+### 追加
+
+学習画面で「次へ」を連打すると、2回目のタップが次の問題の選択肢に当たって勝手に答えてしまう誤操作を防ぐ（公開 API は追加のみ。アプリ側の変更は不要で、タグを上げるだけで効く）。
+
+- `ChoiceTile`・`HandsFreeChoiceTile`（`HandsFreeChoiceBody` を含む）: 問題が切り替わった（`label`/`text` が変わった）直後の `KitTapGuard.duration`（既定 450ms）は `onTap` を無視する。同じ問題内の `state` の変化（idle→selected→correct）ではガードしない。初回表示（マウント直後）もガードしない。Semantics（ボタン・読み上げ）は変えない
+- `KitTapGuard`: `duration`（nullable。null=既定: 実アプリ 450ms／テスト環境は無効。`Duration.zero` で常に無効）と `guardOnFirstShow`（true なら初回表示もガード、既定 false）の設定を追加
+- Flutter のテスト環境（TestWidgetsFlutterBinding 上）では、`duration` 未指定ならガードは無効（アプリ側のテストは変更不要）。テストで有効にしたいときは `KitTapGuard.duration` を明示する
+- 制限: 連続する2問で label と text が完全に同じ場合は「切り替わり」と見なせずガードされない
+- テスト `test/tap_guard_test.dart` を追加
+
+### 修正
+
+- `EmptyState`/`ErrorState`: 大きい文字・狭い画面で縦に溢れていたのを、収まらないときはスクロールできるようにした（収まるときは従来どおり中央。公開 API の変更なし）。`text_overflow_test.dart` に回帰テストを追加
+
 ## [3.10.1]
 
 ### 修正

@@ -59,22 +59,32 @@ class _StateBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 48, color: theme.colorScheme.onSurfaceVariant),
-            const SizedBox(height: 12),
-            Text(message, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
-            if (actionLabel != null && onAction != null) ...[
-              const SizedBox(height: 16),
-              FilledButton(onPressed: onAction, child: Text(actionLabel!)),
-            ],
+    final content = Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 48, color: theme.colorScheme.onSurfaceVariant),
+          const SizedBox(height: 12),
+          Text(message, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+          if (actionLabel != null && onAction != null) ...[
+            const SizedBox(height: 16),
+            FilledButton(onPressed: onAction, child: Text(actionLabel!)),
           ],
-        ),
+        ],
       ),
+    );
+    // 収まるときは従来どおり中央、収まらない（大きい文字・狭い画面）ときはスクロール。
+    return LayoutBuilder(
+      builder: (context, c) {
+        if (!c.hasBoundedHeight) return Center(child: content);
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: c.maxHeight),
+            child: Center(child: content),
+          ),
+        );
+      },
     );
   }
 }
