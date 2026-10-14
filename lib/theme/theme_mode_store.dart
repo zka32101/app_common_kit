@@ -26,7 +26,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///       );
 /// }
 /// ```
-final ValueNotifier<ThemeMode> appThemeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
+final ValueNotifier<ThemeMode> appThemeMode = ValueNotifier<ThemeMode>(
+  ThemeMode.system,
+);
 
 const _key = 'app_common_kit_theme_mode';
 

@@ -2,6 +2,14 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.8.0]
+
+### 追加
+
+- **アプリ内の文字サイズ**: `AppTextScale`（標準 / 大 1.15 / 特大 1.3）/ `appTextScale` / `loadSavedTextScale` / `setTextScale` / `clearSavedTextScale` / `applyAppTextScale` / `TextScaleSetting`（設定画面に置く選択）/ `TextScaleStrings`（5 言語）
+  - `MaterialApp(builder: applyAppTextScale)` を渡すだけで全画面に反映する。端末の文字サイズ設定には**掛け合わせる**（端末側の拡大は消さない）
+  - 追加のみ。既存の挙動は変えない。使わなければ何も変わらない
+
 ## [3.7.0]
 
 ### 追加

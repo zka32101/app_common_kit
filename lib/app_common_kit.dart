@@ -53,5 +53,6 @@ export 'consent/consent.dart';
 export 'consent/consent_ui.dart';
 export 'whats_new/whats_new.dart';
 export 'feature_flags/feature_flags.dart';
+export 'theme/text_scale_store.dart';
 export 'diagnostics/diagnostic_log.dart';
 export 'diagnostics/diagnostics.dart';
