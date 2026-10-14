@@ -2,6 +2,16 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.9.0]
+
+### 追加
+
+- **バックアップ/復元**（機種変更用）: `BackupService` / `BackupSource`（`SharedPreferencesBackupSource` / `CallbackBackupSource`）/ `BackupRestoreResult` / `BackupFormatException`
+  - 区画ごとに JSON へ書き出し、復元する。ファイルの保存・共有はアプリ側
+  - 別アプリのバックアップ、新しい形式、壊れた JSON は拒否。復元は区画ごとに続行し、結果を返す
+  - `SharedPreferencesBackupSource` は対象のキー（または接頭辞）だけを書き出し・書き戻す。バックアップに細工された対象外のキーは書き込まない
+  - 追加のみ。既存の挙動は変えない
+
 ## [3.8.0]
 
 ### 追加

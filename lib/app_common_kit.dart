@@ -47,6 +47,7 @@ export 'ui_kit/countdown_progress_bar.dart';
 export 'ui_kit/mock_exam_trend_chart.dart';
 export 'crash/crash_reporter.dart';
 export 'privacy/data_deletion.dart';
+export 'privacy/backup.dart';
 export 'legal/legal_links.dart';
 export 'feedback_effects/answer_feedback.dart';
 export 'consent/consent.dart';
