@@ -87,6 +87,7 @@ Future<List<String>> _dialogErrors(
 );
 
 void main() {
+  _emptyErrorStateTests();
   testWidgets('MinutesBadge: ListTile の trailing で溢れない', (t) async {
     final e = await _errorsFor(
       t,
@@ -383,3 +384,32 @@ Future<List<String>> _settingsErrors(WidgetTester t) => _errorsFor(
     ),
   ],
 );
+
+void _emptyErrorStateTests() {
+  for (final size in _sizes) {
+    for (final scale in _scales) {
+      for (final err in [false, true]) {
+        testWidgets('${err ? 'ErrorState' : 'EmptyState'} 縦固定の領域でもはみ出さない ${size.width.toInt()}dp x$scale', (tester) async {
+          tester.view.physicalSize = size;
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.reset);
+          await tester.pumpWidget(MaterialApp(
+            builder: (c, child) => MediaQuery(
+              data: MediaQuery.of(c).copyWith(textScaler: TextScaler.linear(scale)),
+              child: child!,
+            ),
+            home: Scaffold(
+              body: SafeArea(
+                child: err
+                    ? ErrorState(message: _long * 3, onRetry: () {}, retryLabel: _long)
+                    : EmptyState(message: _long * 3, actionLabel: _long, onAction: () {}),
+              ),
+            ),
+          ));
+          await tester.pump();
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
+  }
+}
