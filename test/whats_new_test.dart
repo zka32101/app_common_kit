@@ -88,4 +88,32 @@ void main() {
     expect(await f, isTrue);
     expect(await store.loadSeenVersion(), '1.2.0');
   });
+
+  testWidgets('WhatsNewGate は更新後の初回だけ表示する', (tester) async {
+    final store = InMemoryWhatsNewStore();
+    await store.saveSeenVersion('1.0.0');
+    final w = WhatsNew(
+      store: store,
+      currentVersion: '1.2.0',
+      entries: _entries,
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: WhatsNewGate(
+          whatsNew: w,
+          strings: WhatsNewStrings.forLocale(const Locale('ja')),
+          child: const Scaffold(body: Text('home')),
+        ),
+      ),
+    );
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 10)),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('新しくなりました'), findsOneWidget);
+    await tester.tap(find.text('閉じる'));
+    await tester.pumpAndSettle();
+    expect(find.text('home'), findsOneWidget);
+    expect(await store.loadSeenVersion(), '1.2.0');
+  });
 }

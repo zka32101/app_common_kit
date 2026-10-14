@@ -75,4 +75,21 @@ void main() {
       'xLarge',
     );
   });
+
+  test('forCode は言語コードで文言を返し、未知は英語', () {
+    expect(TextScaleStrings.forCode('ja').title, '文字の大きさ');
+    expect(TextScaleStrings.forCode('zh-Hant').title, '文字大小');
+    expect(TextScaleStrings.forCode('xx').title, 'Text size');
+  });
+
+  test('loadKitPreferences は表示モードと文字サイズを復元する', () async {
+    SharedPreferences.setMockInitialValues({
+      'app_common_kit_text_scale': 'large',
+      'app_common_kit_theme_mode': 'dark',
+    });
+    await loadKitPreferences();
+    expect(appTextScale.value, AppTextScale.large);
+    expect(appThemeMode.value, ThemeMode.dark);
+    appThemeMode.value = ThemeMode.system;
+  });
 }

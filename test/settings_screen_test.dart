@@ -53,6 +53,24 @@ void main() {
     expect(find.text('学習の引き継ぎ（機種変更）'), findsNothing);
   });
 
+  testWidgets('文字の大きさは showTextScale: true のときだけ出る', (tester) async {
+    await _pump(tester);
+    expect(find.text('文字の大きさ'), findsNothing);
+  });
+
+  testWidgets('showTextScale: true で文字の大きさを選べる', (tester) async {
+    appTextScale.value = AppTextScale.standard;
+    await _pump(
+      tester,
+      screen: const SettingsScreen(appName: 'テスト', appVersion: '1.0.0', showTextScale: true),
+    );
+    expect(find.text('文字の大きさ'), findsOneWidget);
+    await tester.tap(find.text('大'));
+    await tester.pumpAndSettle();
+    expect(appTextScale.value, AppTextScale.large);
+    appTextScale.value = AppTextScale.standard;
+  });
+
   testWidgets('項目は引数で出し分ける', (tester) async {
     await _pump(
       tester,

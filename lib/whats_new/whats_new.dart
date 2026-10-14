@@ -208,3 +208,46 @@ Future<bool> showWhatsNewIfNeeded(
   await whatsNew.markSeen();
   return true;
 }
+
+/// ホーム画面などを包む。最初のフレームの後に、見せる変更点があれば一度だけ表示する。
+///
+/// ```dart
+/// home: WhatsNewGate(whatsNew: whatsNew, child: HomeScreen())
+/// ```
+class WhatsNewGate extends StatefulWidget {
+  const WhatsNewGate({
+    super.key,
+    required this.whatsNew,
+    required this.child,
+    this.strings,
+  });
+
+  final WhatsNew whatsNew;
+  final Widget child;
+  final WhatsNewStrings? strings;
+
+  @override
+  State<WhatsNewGate> createState() => _WhatsNewGateState();
+}
+
+class _WhatsNewGateState extends State<WhatsNewGate> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      try {
+        await showWhatsNewIfNeeded(
+          context,
+          widget.whatsNew,
+          strings: widget.strings,
+        );
+      } catch (_) {
+        // 更新内容の表示に失敗しても、アプリは使えるようにする。
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
