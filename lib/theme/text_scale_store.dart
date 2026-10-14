@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'theme_mode_store.dart';
+
 /// アプリ内の文字サイズ。端末の文字サイズ設定に**掛け合わせる**（端末側の拡大は消さない）。
 enum AppTextScale {
   standard(1.0),
@@ -108,6 +110,15 @@ class TextScaleStrings {
     xLarge: '매우 크게',
   );
 
+  /// `ja` / `en` / `zh` / `zh-Hant` / `ko`。それ以外は英語。
+  static TextScaleStrings forCode(String code) => switch (code) {
+    'ja' => ja,
+    'zh' => zh,
+    'zh-Hant' => zhHant,
+    'ko' => ko,
+    _ => en,
+  };
+
   static TextScaleStrings forLocale(Locale locale) {
     switch (locale.languageCode) {
       case 'ja':
@@ -164,4 +175,10 @@ class TextScaleSetting extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 起動時に、キットが持つ端末内の設定（表示モード・文字サイズ）をまとめて読み込む。`runApp` より前に呼ぶ。
+Future<void> loadKitPreferences() async {
+  await loadSavedThemeMode();
+  await loadSavedTextScale();
 }

@@ -2,6 +2,19 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.10.0]
+
+### 追加
+
+アプリごとの配線をキット側に寄せる（追加のみ。既定では何も変わらない）。
+
+- **`SettingsScreen(showTextScale: true)`**: 設定画面に文字の大きさ（標準・大・特大）の欄を出す。既定は false
+- **`loadKitPreferences()`**: 表示モードと文字サイズをまとめて復元する。`runApp` の前に 1 回呼ぶ
+- **`WhatsNewGate(whatsNew:, child:)`**: ホーム画面などを包むと、更新後の初回だけ変更点を表示する
+- `TextScaleStrings.forCode(code)`
+
+アプリ側に残る配線は、`MaterialApp(builder: applyAppTextScale)` と `WhatsNew(...)` の変更点リストだけ。
+
 ## [3.9.0]
 
 ### 追加

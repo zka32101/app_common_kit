@@ -7,6 +7,7 @@ import '../consent/consent.dart';
 import '../consent/consent_ui.dart';
 import '../legal/legal_links.dart';
 import '../privacy/data_deletion.dart';
+import '../theme/text_scale_store.dart';
 import '../theme/theme_mode_store.dart';
 import '../widgets/feedback_form_page.dart';
 import 'exam_date_tile.dart';
@@ -60,6 +61,7 @@ class SettingsScreen extends ConsumerWidget {
     this.userId,
     this.strings,
     this.showTheme = true,
+    this.showTextScale = false,
     this.languages = const [],
     this.languageCode,
     this.onLanguageChanged,
@@ -91,6 +93,9 @@ class SettingsScreen extends ConsumerWidget {
   final KitStrings? strings;
 
   final bool showTheme;
+
+  /// true にすると、文字の大きさ（標準・大・特大）の欄を出す。アプリの `MaterialApp` に `builder: applyAppTextScale` も要る。
+  final bool showTextScale;
 
   /// 選べる言語。2つ以上あるときだけ「言語」の欄を出す。
   final List<SettingsLanguage> languages;
@@ -147,6 +152,7 @@ class SettingsScreen extends ConsumerWidget {
         ExamDateTile(date: examDate, onChanged: onExamDateChanged!),
       if (showPurchase) const PurchaseSection(),
       if (showTheme) _ThemeSection(strings: s),
+      if (showTextScale) TextScaleSetting(strings: TextScaleStrings.forCode(s.languageCode)),
       if (languages.length >= 2 && onLanguageChanged != null)
         _LanguageSection(
           strings: s,
