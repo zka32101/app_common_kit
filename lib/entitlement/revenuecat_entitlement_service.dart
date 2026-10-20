@@ -47,6 +47,10 @@ class RevenueCatEntitlementService implements EntitlementService {
       hasNoAds: active.containsKey(ids.noAds),
       hasPremium: premium != null,
       premiumExpiresAt: expires == null ? null : DateTime.tryParse(expires),
+      extra: {
+        for (final id in active.keys)
+          if (id != ids.noAds && id != ids.premium) id,
+      },
     );
   }
 
