@@ -15,6 +15,16 @@ void main() {
     expect(premium.adsHidden, isTrue);
   });
 
+  test('extra: 追加パックなどの権利ID。広告の表示には影響せず、等価性に含まれる', () {
+    const pack = EntitlementState(extra: {'pack_hanse'});
+    expect(pack.has('pack_hanse'), isTrue);
+    expect(pack.has('other'), isFalse);
+    expect(pack.adsHidden, isFalse);
+    expect(pack, const EntitlementState(extra: {'pack_hanse'}));
+    expect(pack, isNot(EntitlementState.free));
+    expect(pack.hashCode, const EntitlementState(extra: {'pack_hanse'}).hashCode);
+  });
+
   test('購入成功で状態が更新されストリームに流れる', () async {
     final s = FakeEntitlementService(grantOnPurchase: {'noads_480': noAds});
     final events = <EntitlementState>[];
