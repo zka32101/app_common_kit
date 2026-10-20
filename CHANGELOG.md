@@ -2,6 +2,17 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [3.13.0]
+
+### 追加
+
+追加パック（エクストラの追加、見た目パックなど）を売れるように、`noads` / `premium` 以外の権利を扱えるようにする（公開 API は追加のみ。既存のアプリは変更不要で、タグを上げるだけで効く）。
+
+- `EntitlementState.extra`（追加）: `noads` / `premium` 以外で有効な Entitlement ID の集合。既定は空。`RevenueCatEntitlementService.stateFrom` が入れる
+- `EntitlementState.has(id)`（追加）: その権利IDを持つか
+- 等価性・`hashCode` に `extra` を含める（順序によらない）。`adsHidden` は変えない（extra は広告の表示に影響しない）
+- テスト `test/entitlement_test.dart` に追加
+
 ## [3.12.0]
 
 ### 変更
