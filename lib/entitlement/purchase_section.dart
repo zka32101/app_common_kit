@@ -7,12 +7,19 @@ import 'entitlement_state.dart';
 
 /// 設定タブに出す「購入」の欄。広告非表示・プレミアムの購入と、購入の復元。
 /// 広告は noads / premium のどちらかを持つと自動的に非表示になる（`AdGate.adsHidden`）。
+/// noads だけを持つ人には、プレミアムへのアップグレード（プレミアムの商品だけ）を出す。
 ///
 /// [titleStyle] を省くと `titleMedium`。アプリごとの見出しの大きさに合わせて渡す。
 class PurchaseSection extends ConsumerWidget {
-  const PurchaseSection({super.key, this.titleStyle});
+  const PurchaseSection({super.key, this.titleStyle, this.isPremiumOffer = _defaultIsPremiumOffer});
 
   final TextStyle? titleStyle;
+
+  /// プレミアムの商品か。既定は、ストアの商品IDに「premium」を含むこと（`<アプリ>_premium`）。
+  final bool Function(EntitlementOffer offer) isPremiumOffer;
+
+  static bool _defaultIsPremiumOffer(EntitlementOffer o) =>
+      o.productId.toLowerCase().contains('premium');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,17 +32,25 @@ class PurchaseSection extends ConsumerWidget {
       children: [
         Text(s.purchaseTitle, style: titleStyle ?? Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        if (entitlement.adsHidden)
+        if (entitlement.hasPremium)
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.check_circle, color: Colors.green),
-            title: Text(entitlement.hasPremium ? s.purchasedPremium : s.purchasedNoAds),
+            title: Text(s.purchasedPremium),
           )
-        else
+        else ...[
+          // noads だけの人には、プレミアムの商品だけを出す（アップグレード）。
+          if (entitlement.hasNoAds)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.check_circle, color: Colors.green),
+              title: Text(s.purchasedNoAds),
+            ),
           FutureBuilder<List<EntitlementOffer>>(
             future: service.offers(),
             builder: (context, snapshot) {
-              final offers = snapshot.data ?? const [];
+              final all = snapshot.data ?? const <EntitlementOffer>[];
+              final offers = entitlement.hasNoAds ? all.where(isPremiumOffer).toList() : all;
               return Column(
                 children: [
                   for (final offer in offers)
@@ -64,6 +79,7 @@ class PurchaseSection extends ConsumerWidget {
               );
             },
           ),
+        ],
         TextButton(
           onPressed: () => _restore(context, ref),
           child: Text(s.purchaseRestore),
