@@ -16,7 +16,7 @@ const T = {
   ja: {
     settings: ['設定', '表示モード', '片手・ながら学習', 'ご意見・不具合報告'],
     settingsTheme: ['ダーク'],
-    home: ['今日から始めよう', 'もう一度試す'],
+    home: ['もう一度試す'],
     feedback: ['ご意見・不具合報告', '不具合報告', '改善要望', '送信する'],
     correct: '正解',
     incorrect: '不正解',
@@ -24,7 +24,7 @@ const T = {
   en: {
     settings: ['Settings', 'Appearance', 'One-handed study', 'Feedback & bug reports'],
     settingsTheme: ['Dark'],
-    home: ['Start today', 'Try again'],
+    home: ['Try again'],
     feedback: ['Feedback & bug reports', 'Bug report', 'Feature request', 'Send'],
     correct: 'Correct',
     incorrect: 'Incorrect',
@@ -36,7 +36,7 @@ const T = {
 const MORE = {
   zh: {
     label: '简体中文',
-    home: ['从今天开始吧', '重试'],
+    home: ['重试'],
     settings: ['设置', '显示模式', '单手・边做边学', '意见反馈・问题报告'],
     feedback: ['意见反馈・问题报告', '问题报告', '改进建议', '提交'],
     correct: '正确',
@@ -44,7 +44,7 @@ const MORE = {
   },
   'zh-Hant': {
     label: '繁體中文',
-    home: ['從今天開始吧', '重試'],
+    home: ['重試'],
     settings: ['設定', '顯示模式', '單手・邊做邊學', '意見回饋・問題回報'],
     feedback: ['意見回饋・問題回報', '問題回報', '改善建議', '送出'],
     correct: '正確',
@@ -52,7 +52,7 @@ const MORE = {
   },
   ko: {
     label: '한국어',
-    home: ['오늘부터 시작해 봐요', '다시 시도'],
+    home: ['다시 시도'],
     settings: ['설정', '화면 모드', '한 손・틈틈이 학습', '의견・오류 신고'],
     feedback: ['의견・오류 신고', '오류 신고', '개선 요청', '보내기'],
     correct: '정답',

@@ -71,17 +71,6 @@ class _ExampleAppState extends State<ExampleApp> {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const StreakBadge(days: 3),
-            const SizedBox(height: 8),
-            const StreakBadge(days: 0),
-            const SizedBox(height: 16),
-            ResultSummary(
-              correct: 8,
-              total: 10,
-              passRatio: 0.7,
-              onRetry: () {},
-              onClose: () {},
-            ),
             SizedBox(height: 200, child: ErrorState(onRetry: () {})),
             const SizedBox(height: 16),
             // 積んだ画面（Navigator の上の Scope から文言が届くかの確認）。

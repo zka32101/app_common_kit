@@ -126,33 +126,16 @@ void main() {
     if (e.isNotEmpty) fail(e.join('\n'));
   });
 
-  testWidgets('StreakBadge / ProgressRing / ResultSummary', (t) async {
+  testWidgets('ProgressRing', (t) async {
     final e = await _errorsFor(
       t,
-      () => Column(
-        children: [
-          const StreakBadge(days: 123),
-          const StreakBadge(days: 0, zeroText: _long),
-          const ProgressRing(value: 0.5, label: _long),
-          ResultSummary(
-            correct: 7,
-            total: 10,
-            passRatio: 0.6,
-            passedText: _long,
-            notPassedText: _long,
-            onRetry: () {},
-            retryLabel: _long,
-            onClose: () {},
-            closeLabel: _long,
-          ),
-        ],
-      ),
+      () => const Column(children: [ProgressRing(value: 0.5, label: _long)]),
     );
     if (e.isNotEmpty) fail(e.join('\n'));
   });
 
   testWidgets(
-    'EmptyState / ErrorState / QuestionCard / ExplanationPanel / KitSectionHeader',
+    'EmptyState / ErrorState / KitSectionHeader / ExamDateTile',
     (t) async {
       final e = await _errorsFor(
         t,
@@ -160,13 +143,6 @@ void main() {
           children: [
             EmptyState(message: _long, actionLabel: _long, onAction: () {}),
             ErrorState(message: _long, retryLabel: _long, onRetry: () {}),
-            const QuestionCard(text: _long, index: 12, total: 100),
-            const ExplanationPanel(
-              title: _long,
-              body: _long,
-              sourceRef: _long,
-              checkedAt: '2026-10-14',
-            ),
             const KitSectionHeader(title: _long),
             ExamDateTile(date: DateTime(2026, 12, 31), onChanged: (_) {}),
           ],

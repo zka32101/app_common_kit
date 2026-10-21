@@ -57,30 +57,11 @@ final _catalog = <String, Widget Function()>{
     ),
   ),
   'ReadAloudButton': () => _body(ReadAloudButton(onPressed: () {})),
-  'ResultSummary': () => _body(
-    ResultSummary(
-      correct: 8,
-      total: 10,
-      passRatio: 0.7,
-      onRetry: () {},
-      onClose: () {},
-    ),
-  ),
   'ErrorState': () => _body(ErrorState(onRetry: () {})),
   'EmptyState': () => _body(
     EmptyState(message: 'まだありません', actionLabel: '始める', onAction: () {}),
   ),
-  'StreakBadge': () => _body(
-    const Column(children: [StreakBadge(days: 3), StreakBadge(days: 0)]),
-  ),
   'ProgressRing': () => _body(const ProgressRing(value: 0.8, label: '習得度')),
-  'ExplanationPanel': () => _body(
-    const ExplanationPanel(
-      body: '解説の本文です。',
-      sourceRef: '第1条',
-      checkedAt: '2026-10-09',
-    ),
-  ),
   'ExamDateTile': () =>
       _body(ExamDateTile(date: DateTime(2026, 11, 22), onChanged: (_) {})),
   'KitSectionHeader': () => _body(const KitSectionHeader(title: '今日のおすすめ')),
@@ -95,15 +76,6 @@ final _catalog = <String, Widget Function()>{
   ),
   'CountdownProgressBar': () =>
       _body(const CountdownProgressBar(daysLeft: 1, windowDays: 3)),
-  'MockExamTrendChart': () => _body(
-    const MockExamTrendChart(
-      points: [
-        MockExamTrendPoint(pct: 60, passed: false),
-        MockExamTrendPoint(pct: 80, passed: true),
-      ],
-      passPct: 70,
-    ),
-  ),
   'PurchaseSection': () => _body(const PurchaseSection()),
   'FeedbackFormPage': () => const FeedbackFormPage(appName: 'test'),
   'SettingsScreen': () => SettingsScreen(

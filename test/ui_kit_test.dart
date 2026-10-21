@@ -63,66 +63,6 @@ void main() {
     });
   });
 
-  group('StreakBadge', () {
-    testWidgets('0日でも責めない文言、1日以上は日数', (tester) async {
-      await tester.pumpWidget(_app(const Column(children: [
-        StreakBadge(days: 0),
-        StreakBadge(days: 7),
-      ])));
-      expect(find.text('今日から始めよう'), findsOneWidget);
-      expect(find.text('7日連続'), findsOneWidget);
-    });
-  });
-
-  group('ExplanationPanel', () {
-    testWidgets('出典があれば確認日つきで出る。なければ出ない', (tester) async {
-      await tester.pumpWidget(_app(const Column(children: [
-        ExplanationPanel(body: '本文', sourceRef: '道路交通法第34条', checkedAt: '2026-10-02'),
-        ExplanationPanel(body: '出典なし'),
-      ])));
-      expect(find.text('出典: 道路交通法第34条（2026-10-02 確認）'), findsOneWidget);
-      expect(find.textContaining('出典:'), findsOneWidget);
-    });
-
-    testWidgets('bodyWidget を渡すと body の代わりにそれが表示される', (tester) async {
-      await tester.pumpWidget(_app(const ExplanationPanel(
-        body: '使われない本文',
-        bodyWidget: Text('差し替えた本文'),
-      )));
-      expect(find.text('差し替えた本文'), findsOneWidget);
-      expect(find.text('使われない本文'), findsNothing);
-    });
-  });
-
-  group('QuestionCard', () {
-    testWidgets('textWidget を渡すと text の代わりにそれが表示される', (tester) async {
-      await tester.pumpWidget(_app(const QuestionCard(
-        text: '使われない問題文',
-        textWidget: Text('差し替えた問題文'),
-      )));
-      expect(find.text('差し替えた問題文'), findsOneWidget);
-      expect(find.text('使われない問題文'), findsNothing);
-    });
-  });
-
-  group('ResultSummary', () {
-    testWidgets('合格ライン到達と未到達で文言が変わる（アイコンも併用）', (tester) async {
-      await tester.pumpWidget(_app(const ResultSummary(correct: 8, total: 10, passRatio: 0.7)));
-      expect(find.text('合格ライン到達'), findsOneWidget);
-      expect(find.byIcon(Icons.check_circle), findsOneWidget);
-      expect(find.text('8 / 10 問正解'), findsOneWidget);
-
-      await tester.pumpWidget(_app(const ResultSummary(correct: 5, total: 10, passRatio: 0.7)));
-      expect(find.text('あと少し。弱点を復習しよう'), findsOneWidget);
-      expect(find.byIcon(Icons.flag_outlined), findsOneWidget);
-    });
-
-    testWidgets('問題数0でも落ちない', (tester) async {
-      await tester.pumpWidget(_app(const ResultSummary(correct: 0, total: 0)));
-      expect(find.text('0%'), findsOneWidget);
-    });
-  });
-
   group('EmptyState / ErrorState', () {
     testWidgets('操作ボタンが押せる', (tester) async {
       var retried = false;
@@ -140,21 +80,14 @@ void main() {
       testWidgets('全部品が例外なく表示される (${b.name})', (tester) async {
         await tester.pumpWidget(_app(
           Column(children: [
-            const QuestionCard(
-              index: 3,
-              total: 10,
-              text: '次のうち、生成AIの説明として最も適切なものはどれか。長い問題文でも折り返して読めること。',
-              child: Column(children: [
-                ChoiceTile(label: 'A', text: '長い選択肢の文章が二行三行にわたっても崩れないことを確認します', state: ChoiceState.correct),
-                SizedBox(height: 8),
-                ChoiceTile(label: 'B', text: '選択肢B', state: ChoiceState.incorrect),
-                SizedBox(height: 8),
-                ChoiceTile(label: 'C', text: '選択肢C', state: ChoiceState.selected),
-              ]),
-            ),
-            ExplanationPanel(body: '解説の文章です。' * 8, sourceRef: '教則 第8章', checkedAt: '2026-10-02'),
-            const Row(children: [ProgressRing(value: 0.6, label: '習得度'), StreakBadge(days: 12)]),
-            const ResultSummary(correct: 7, total: 10, passRatio: 0.7),
+            const Column(children: [
+              ChoiceTile(label: 'A', text: '長い選択肢の文章が二行三行にわたっても崩れないことを確認します', state: ChoiceState.correct),
+              SizedBox(height: 8),
+              ChoiceTile(label: 'B', text: '選択肢B', state: ChoiceState.incorrect),
+              SizedBox(height: 8),
+              ChoiceTile(label: 'C', text: '選択肢C', state: ChoiceState.selected),
+            ]),
+            const ProgressRing(value: 0.6, label: '習得度'),
           ]),
           scale: 2.0,
           b: b,
