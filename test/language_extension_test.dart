@@ -47,9 +47,9 @@ void main() {
 
   group('Scope', () {
     testWidgets('追加した言語の文言が画面に出る', (tester) async {
-      final zh = KitStrings.en.copyWith(languageCode: 'zh', streakZero: '今天开始吧');
-      await tester.pumpWidget(_app(const StreakBadge(days: 0), strings: zh));
-      expect(find.text('今天开始吧'), findsOneWidget);
+      final zh = KitStrings.en.copyWith(languageCode: 'zh', retry: '再试一次');
+      await tester.pumpWidget(_app(ErrorState(onRetry: () {}), strings: zh));
+      expect(find.text('再试一次'), findsOneWidget);
     });
   });
 }

@@ -13,8 +13,8 @@ Widget _wrap(Widget child, {KitStrings? strings}) => MaterialApp(
 
 void main() {
   testWidgets('Scope が無ければ日本語（端末が英語でも変わらない）', (tester) async {
-    await tester.pumpWidget(_wrap(const StreakBadge(days: 3)));
-    expect(find.text('3日連続'), findsOneWidget);
+    await tester.pumpWidget(_wrap(ErrorState(onRetry: () {})));
+    expect(find.text('もう一度試す'), findsOneWidget);
   });
 
   testWidgets('Scope で英語に切り替わる', (tester) async {
@@ -22,30 +22,13 @@ void main() {
       _wrap(
         Column(
           children: [
-            const StreakBadge(days: 3),
-            const StreakBadge(days: 0),
             ErrorState(onRetry: () {}),
-            const ResultSummary(correct: 8, total: 10, passRatio: 0.7),
           ],
         ),
         strings: KitStrings.en,
       ),
     );
-    expect(find.text('3-day streak'), findsOneWidget);
-    expect(find.text('Start today'), findsOneWidget);
     expect(find.text('Try again'), findsOneWidget);
-    expect(find.text('8 of 10 correct'), findsOneWidget);
-    expect(find.text('Passing line 70%'), findsOneWidget);
-  });
-
-  testWidgets('引数で渡した文言は Scope より優先される', (tester) async {
-    await tester.pumpWidget(
-      _wrap(
-        const StreakBadge(days: 0, zeroText: 'Go!'),
-        strings: KitStrings.en,
-      ),
-    );
-    expect(find.text('Go!'), findsOneWidget);
   });
 
   test('forLocale と全イベントの表示名', () {
@@ -80,25 +63,20 @@ void main() {
     expect(find.text('送信する'), findsOneWidget);
   });
 
-  testWidgets('選択肢・解説・読み上げ・下部タブが ja/en で切り替わる', (tester) async {
+  testWidgets('選択肢・読み上げが ja/en で切り替わる', (tester) async {
     Widget body() => Column(children: [
           ChoiceTile(label: 'A', text: 'x', state: ChoiceState.correct),
           ChoiceTile(label: 'B', text: 'y', state: ChoiceState.incorrect),
-          const ExplanationPanel(body: 'b', sourceRef: 'Act 1', checkedAt: '2026-10-09'),
           ReadAloudButton(onPressed: () {}),
         ]);
     await tester.pumpWidget(_wrap(body()));
     expect(find.text('正解'), findsOneWidget);
     expect(find.text('不正解'), findsOneWidget);
-    expect(find.text('解説'), findsOneWidget);
-    expect(find.text('出典: Act 1（2026-10-09 確認）'), findsOneWidget);
     expect(find.byTooltip('読み上げ'), findsOneWidget);
 
     await tester.pumpWidget(_wrap(body(), strings: KitStrings.en));
     expect(find.text('Correct'), findsOneWidget);
     expect(find.text('Incorrect'), findsOneWidget);
-    expect(find.text('Explanation'), findsOneWidget);
-    expect(find.text('Source: Act 1 (checked 2026-10-09)'), findsOneWidget);
     expect(find.byTooltip('Read aloud'), findsOneWidget);
   });
 

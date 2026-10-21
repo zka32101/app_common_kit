@@ -2,6 +2,24 @@
 
 破壊的変更は major を上げ、移行手順を記載する。タグは不変（付け替えない）。
 
+## [4.0.0]
+
+### 破壊的変更
+
+学習に依存する部品のうち、独立したものを `ukalab_core` に移した（キットは学習に限らない共通基盤に絞る第1段階）。`package:app_common_kit/app_common_kit.dart` から次の公開 API が消える。
+
+- `QuestionCard`・`ExplanationPanel`・`ResultSummary`・`StreakBadge`・`MockExamTrendChart`／`MockExamTrendPoint`
+- `recordStudyToday`・`loadCurrentStreak`（連続学習日数の保存）
+- `AnswerFeedback`・`SoundBackend`・`HapticBackend`・`SoundCue`・`SystemHapticBackend`・`FakeSoundBackend`・`FakeHapticBackend`
+
+### 移行手順
+
+1. `ukalab_core` を v0.81.0（キット v4.0.0 に追従する版）以降に上げる
+2. 上の名前を使っているファイルに `import 'package:ukalab_core/learning.dart';` を足す（名前・引数・挙動は同じ）
+3. `KitStrings` の文言（連続学習・結果・出典など）はキットに残っており、コアの部品がそのまま使う
+
+残した部品: `ChoiceTile`・`HandsFreeChoiceTile`・ながら学習一式・`ExamDateTile`（設定画面・文言表と絡むため。コアへ移すかは別途決める）。
+
 ## [3.13.0]
 
 ### 追加

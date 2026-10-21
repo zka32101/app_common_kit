@@ -326,16 +326,7 @@ final crash = CrashReporter(MyCrashBackend())..install(); // runApp の前に
 
 ## 解答時の音と触覚
 
-`AnswerFeedback`。音の再生は、アプリが `SoundBackend`（`audioplayers` など）を実装して渡す。音源ファイルもアプリが持つ。
-
-```dart
-final feedback = AnswerFeedback(sound: MySoundBackend()); // 音なしなら sound を省く（触覚のみ）
-// ProviderScope(overrides: [answerFeedbackProvider.overrideWithValue(feedback)], ...)
-await ref.read(answerFeedbackProvider).correct();   // incorrect / badgeUnlocked / combo / tap
-```
-
-- 音・触覚は `soundEnabled` / `hapticsEnabled` で個別に切れる。音量は `volume`（0〜1、既定 0.7）
-- 音源の未配置・触覚に非対応の端末でも例外を出さない
+v4.0.0 で `ukalab_core` の `package:ukalab_core/learning.dart` に移した（`AnswerFeedback`・`SoundBackend`）。使い方は同じ。
 
 ## 診断情報つきの不具合報告
 
@@ -504,12 +495,11 @@ final rewarded = await ads.showRewarded(); // 「今日の特訓10問」追加�
 テーマの上で使う。色は `Theme` から取るので直書きしない。文言は引数で差し替えられる（既定は日本語）。
 
 ```dart
-QuestionCard(index: 3, total: 10, text: '…', child: Column(children: [
-  ChoiceTile(label: 'A', text: '…', state: ChoiceState.correct),   // ✓＋「正解」
-  ChoiceTile(label: 'B', text: '…', state: ChoiceState.incorrect), // ✕＋「不正解」
-]));
-ExplanationPanel(body: '…', sourceRef: '道路交通法第34条', checkedAt: '2026-10-02');
+ChoiceTile(label: 'A', text: '…', state: ChoiceState.correct);   // ✓＋「正解」
+ChoiceTile(label: 'B', text: '…', state: ChoiceState.incorrect); // ✕＋「不正解」
 ```
+
+`QuestionCard`・`ExplanationPanel`・`ResultSummary`・`StreakBadge`・`MockExamTrendChart` は v4.0.0 で `ukalab_core`（`package:ukalab_core/learning.dart`）に移した。
 
 - 正誤は色だけにせず、✓／✕のアイコンと文言を必ず併記する
 - `ProgressRing` は文字拡大でも収まるよう縮める。値の範囲外・NaN は丸める
@@ -666,9 +656,7 @@ TermMapWidget(
 - `lib/theme/theme_mode_store.dart`：`appThemeMode`（`ValueNotifier<ThemeMode>`）・
   `loadSavedThemeMode()`・`setThemeMode(mode)`。`MaterialApp` の `themeMode` にリッスンさせるだけで、
   設定画面からライト/ダーク/端末設定に従うを切り替えられる。
-- `lib/progress/streak_store.dart`：`recordStudyToday({now})`・`loadCurrentStreak({now})`。
-  演習などを1件記録するたびに呼ぶと、前日から続けていれば+1、2日以上空けば1から数え直す連続学習日数を
-  `SharedPreferences` に保存する。表示は既存の `StreakBadge`（`ui_kit/streak_badge.dart`）と組み合わせる。
+- 連続学習日数（`recordStudyToday`・`loadCurrentStreak`）は v4.0.0 で `ukalab_core` の `learning.dart` に移した。
 
 どちらも保存キーをパッケージ非依存の固定文字列にしており、アプリごとに個別の名前空間指定は不要
 （各アプリはOS側で独立したストレージサンドボックスを持つため、キーの衝突は起きない）。
